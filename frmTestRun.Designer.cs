@@ -36,100 +36,133 @@
             this.lblExecFinished = new System.Windows.Forms.Label();
             this.btnRunAgain = new System.Windows.Forms.Button();
             this.btnExportResults = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(22, 40);
+            this.label1.Location = new System.Drawing.Point(33, 49);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(91, 20);
+            this.label1.Size = new System.Drawing.Size(110, 25);
             this.label1.TabIndex = 21;
             this.label1.Text = "Test Runs";
             // 
             // lblTestStatus
             // 
-            this.lblTestStatus.AutoSize = true;
-            this.lblTestStatus.BackColor = System.Drawing.Color.Blue;
+            this.lblTestStatus.BackColor = System.Drawing.Color.White;
             this.lblTestStatus.CornerRadius = 1000;
-            this.lblTestStatus.ForeColor = System.Drawing.Color.White;
-            this.lblTestStatus.Location = new System.Drawing.Point(132, 41);
+            this.lblTestStatus.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTestStatus.ForeColor = System.Drawing.Color.Black;
+            this.lblTestStatus.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblTestStatus.Location = new System.Drawing.Point(151, 46);
+            this.lblTestStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTestStatus.Name = "lblTestStatus";
-            this.lblTestStatus.Padding = new System.Windows.Forms.Padding(20, 3, 20, 3);
-            this.lblTestStatus.Size = new System.Drawing.Size(86, 19);
+            this.lblTestStatus.Padding = new System.Windows.Forms.Padding(27, 4, 27, 4);
+            this.lblTestStatus.Size = new System.Drawing.Size(118, 41);
             this.lblTestStatus.TabIndex = 23;
             this.lblTestStatus.Text = "Pending";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(26, 76);
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(34, 99);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.Size = new System.Drawing.Size(167, 22);
             this.label2.TabIndex = 24;
             this.label2.Text = "Execution started at ";
             // 
             // lblExecStarted
             // 
             this.lblExecStarted.AutoSize = true;
-            this.lblExecStarted.Location = new System.Drawing.Point(135, 76);
+            this.lblExecStarted.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExecStarted.Location = new System.Drawing.Point(209, 99);
+            this.lblExecStarted.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblExecStarted.Name = "lblExecStarted";
-            this.lblExecStarted.Size = new System.Drawing.Size(65, 13);
+            this.lblExecStarted.Size = new System.Drawing.Size(109, 22);
             this.lblExecStarted.TabIndex = 25;
             this.lblExecStarted.Text = "<date_time>";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(418, 76);
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(34, 131);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.Size = new System.Drawing.Size(173, 22);
             this.label3.TabIndex = 24;
             this.label3.Text = "Execution finished at ";
             // 
             // lblExecFinished
             // 
             this.lblExecFinished.AutoSize = true;
-            this.lblExecFinished.Location = new System.Drawing.Point(527, 76);
+            this.lblExecFinished.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblExecFinished.Location = new System.Drawing.Point(215, 131);
+            this.lblExecFinished.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblExecFinished.Name = "lblExecFinished";
-            this.lblExecFinished.Size = new System.Drawing.Size(65, 13);
+            this.lblExecFinished.Size = new System.Drawing.Size(109, 22);
             this.lblExecFinished.TabIndex = 25;
             this.lblExecFinished.Text = "<date_time>";
             // 
             // btnRunAgain
             // 
-            this.btnRunAgain.BackColor = System.Drawing.Color.Blue;
-            this.btnRunAgain.ForeColor = System.Drawing.Color.White;
-            this.btnRunAgain.Location = new System.Drawing.Point(421, 36);
+            this.btnRunAgain.BackColor = System.Drawing.Color.White;
+            this.btnRunAgain.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRunAgain.ForeColor = System.Drawing.Color.Black;
+            this.btnRunAgain.Image = global::PlatnedTestMatic.Properties.Resources.restart;
+            this.btnRunAgain.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRunAgain.Location = new System.Drawing.Point(7, 18);
+            this.btnRunAgain.Margin = new System.Windows.Forms.Padding(4);
             this.btnRunAgain.Name = "btnRunAgain";
-            this.btnRunAgain.Size = new System.Drawing.Size(75, 23);
+            this.btnRunAgain.Size = new System.Drawing.Size(148, 59);
             this.btnRunAgain.TabIndex = 26;
             this.btnRunAgain.Text = "Run Again";
+            this.btnRunAgain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnRunAgain.UseVisualStyleBackColor = false;
             // 
             // btnExportResults
             // 
-            this.btnExportResults.Location = new System.Drawing.Point(517, 37);
+            this.btnExportResults.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportResults.Image = global::PlatnedTestMatic.Properties.Resources.Export;
+            this.btnExportResults.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnExportResults.Location = new System.Drawing.Point(163, 19);
+            this.btnExportResults.Margin = new System.Windows.Forms.Padding(4);
             this.btnExportResults.Name = "btnExportResults";
-            this.btnExportResults.Size = new System.Drawing.Size(106, 23);
+            this.btnExportResults.Size = new System.Drawing.Size(177, 57);
             this.btnExportResults.TabIndex = 27;
             this.btnExportResults.Text = "Export Results";
+            this.btnExportResults.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnExportResults.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnRunAgain);
+            this.groupBox1.Controls.Add(this.btnExportResults);
+            this.groupBox1.Location = new System.Drawing.Point(544, 35);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(351, 85);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
             // 
             // frmTestRun
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 453);
-            this.Controls.Add(this.btnExportResults);
-            this.Controls.Add(this.btnRunAgain);
+            this.ClientSize = new System.Drawing.Size(907, 558);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lblExecFinished);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblExecStarted);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblTestStatus);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "frmTestRun";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmTestRun";
@@ -139,8 +172,8 @@
             this.Controls.SetChildIndex(this.lblExecStarted, 0);
             this.Controls.SetChildIndex(this.label3, 0);
             this.Controls.SetChildIndex(this.lblExecFinished, 0);
-            this.Controls.SetChildIndex(this.btnRunAgain, 0);
-            this.Controls.SetChildIndex(this.btnExportResults, 0);
+            this.Controls.SetChildIndex(this.groupBox1, 0);
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -156,5 +189,6 @@
         private System.Windows.Forms.Label lblExecFinished;
         private System.Windows.Forms.Button btnRunAgain;
         private System.Windows.Forms.Button btnExportResults;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

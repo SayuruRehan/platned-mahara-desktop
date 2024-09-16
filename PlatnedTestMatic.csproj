@@ -201,5 +201,14 @@
   <ItemGroup>
     <None Include="Resources\Reset.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pending.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Export.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\restart.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
