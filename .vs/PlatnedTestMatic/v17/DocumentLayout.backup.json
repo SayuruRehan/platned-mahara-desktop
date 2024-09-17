@@ -1,0 +1,155 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\frmtestrun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmtestrun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmtestrun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmtestrun.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\frmbasicdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmbasicdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmbasicdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmbasicdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\customclasses\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:customclasses\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\customclasses\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:customclasses\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{8F6F7907-E94B-4011-A7EE-452FF2E040A1}|PlatnedTestMatic.csproj|solutionrelative:frmmain.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "baseLogger.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\CustomClasses\\baseLogger.cs",
+              "RelativeDocumentMoniker": "CustomClasses\\baseLogger.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\CustomClasses\\baseLogger.cs",
+              "RelativeToolTip": "CustomClasses\\baseLogger.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAwBMAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-02T10:05:31.286Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "baseApiExecution.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\CustomClasses\\baseApiExecution.cs",
+              "RelativeDocumentMoniker": "CustomClasses\\baseApiExecution.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\CustomClasses\\baseApiExecution.cs",
+              "RelativeToolTip": "CustomClasses\\baseApiExecution.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAcwEoBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-09T09:03:46.82Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "frmTestRun.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmTestRun.cs",
+              "RelativeDocumentMoniker": "frmTestRun.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmTestRun.cs",
+              "RelativeToolTip": "frmTestRun.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAABsAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-07T17:23:26.848Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "frmTestRun.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmTestRun.cs",
+              "RelativeDocumentMoniker": "frmTestRun.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmTestRun.cs [Design]",
+              "RelativeToolTip": "frmTestRun.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-16T09:32:11.205Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "frmBasicData.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmBasicData.cs",
+              "RelativeDocumentMoniker": "frmBasicData.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmBasicData.cs [Design]",
+              "RelativeToolTip": "frmBasicData.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-17T13:14:54.02Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "frmBasicData.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmBasicData.cs",
+              "RelativeDocumentMoniker": "frmBasicData.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmBasicData.cs",
+              "RelativeToolTip": "frmBasicData.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAcwFEAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-04T03:16:00.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "frmMain.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmMain.cs",
+              "RelativeDocumentMoniker": "frmMain.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmMain.cs",
+              "RelativeToolTip": "frmMain.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAAABMAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-02T09:07:49.547Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "frmMain.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmMain.cs",
+              "RelativeDocumentMoniker": "frmMain.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\frmMain.cs [Design]",
+              "RelativeToolTip": "frmMain.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-03T12:40:31.333Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

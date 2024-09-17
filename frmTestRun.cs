@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static PlatnedTestMatic.CustomClasses.ApiExecution;
+using ClosedXML.Excel;
 
 namespace PlatnedTestMatic
 {
@@ -391,23 +392,6 @@ namespace PlatnedTestMatic
                 }
             }
         }
-        
-        /*private void WriteDataTableToCsv(DataTable dataTable, string filePath)
-        {
-            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
-            {
-                string[] columnNames = dataTable.Columns.Cast<DataColumn>()
-                                        .Select(column => column.ColumnName)
-                                        .ToArray();
-                writer.WriteLine(string.Join(",", columnNames));
-
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    string[] fields = row.ItemArray.Select(field => field.ToString()).ToArray();
-                    writer.WriteLine(string.Join(",", fields));
-                }
-            }
-        }*/
 
         private void InitializeTestResultsGrid()
         {
@@ -431,5 +415,59 @@ namespace PlatnedTestMatic
             this.Controls.Add(dgvTestResults);
         }
 
+        private void btnExportResults_Click(object sender, EventArgs e)
+        {
+            ConvertCsvToExcelAndPromptSave(csvFilePath);
+        }
+
+        public void ConvertCsvToExcelAndPromptSave(string csvFilePath)
+        {
+            if (!File.Exists(csvFilePath))
+            {
+                MessageBox.Show("CSV file not found.");
+                Logger.Log("CSV file not found.");
+                return;
+            }
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                saveFileDialog.DefaultExt = "xlsx";
+                saveFileDialog.FileName = "Platned-TestMatic_Report.xlsx";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedExcelFilePath = saveFileDialog.FileName;
+
+                    using (var workbook = new XLWorkbook())
+                    {
+                        var worksheet = workbook.Worksheets.Add("Sheet1");
+
+                        using (var reader = new StreamReader(csvFilePath))
+                        {
+                            int currentRow = 1;
+
+                            while (!reader.EndOfStream)
+                            {
+                                var line = reader.ReadLine();
+                                var values = line.Split(',');
+
+                                for (int i = 0; i < values.Length; i++)
+                                {
+                                    worksheet.Cell(currentRow, i + 1).Value = values[i];
+                                }
+
+                                currentRow++;
+                            }
+                        }
+
+                        workbook.SaveAs(selectedExcelFilePath);
+                    }
+
+                    MessageBox.Show($"Excel file saved at: {selectedExcelFilePath}");
+                    Logger.Log($"Excel file saved at: {selectedExcelFilePath}");
+                }
+            }
+        }
     }
 }
