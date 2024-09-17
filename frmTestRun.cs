@@ -8,34 +8,34 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static PlatnedTestMatic.CustomClasses.ApiExecution;
 
 namespace PlatnedTestMatic
 {
     public partial class frmTestRun : frmBaseForm
     {
         private DataGridView dgvTestResults;
-        private int totalIterations = 2;
+        private int totalIterations;
         private string token = "";
         private List<JObject> apiCalls;
         private DataTable csvData;
         private string tempFolderPath;
         private bool testingStausFailed = false;
+        string jsonFilePath;
+        string csvFilePath;
+        bool errorFound = false;
 
         public frmTestRun()
         {
             InitializeComponent();
-            InitializeAsync();
-            InitializeTestResultsGrid();
         }
 
         private async Task InitializeAsync()
         {
             tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
-
-            string jsonFilePath = Path.Combine(tempFolderPath, "postman_collection_create_usergroups.json");
-            string csvFilePath = Path.Combine(tempFolderPath, "data.csv");
 
             string jsonContent = File.ReadAllText(jsonFilePath);
             JObject jsonObject = JObject.Parse(jsonContent);
@@ -57,12 +57,22 @@ namespace PlatnedTestMatic
                     string[] rows = reader.ReadLine().Split(',');
                     csvData.Rows.Add(rows);
                 }
+                totalIterations = csvData.Rows.Count;
+                Logger.Log($"{totalIterations} data items retrieved from CSV.");
                 Logger.Log("CSV data loaded.");
             }
         }
 
-        public async Task RunTestIterationsAsync()
+        public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
         {
+            lblTestStatus.Text = "In Progress";
+
+            jsonFilePath = uploadedJSONFilePath;
+            csvFilePath = uploadedCSVFilePath;
+            Logger.Log("jsonFilePath, csvFilePath received for execution!");
+            InitializeAsync();
+            InitializeTestResultsGrid();
+
             if (string.IsNullOrEmpty(token))
             {
                 Logger.Log("No saved token found. Refreshing the token...");
@@ -74,11 +84,24 @@ namespace PlatnedTestMatic
             for (int iteration = 1; iteration <= totalIterations; iteration++)
             {
                 Logger.Log($"Starting iteration {iteration} =============================================> ");
+                errorFound = false;
+                var apiLoop = 0;
+                UpdateIterationStatus(iteration, $"{apiLoop}/{apiCalls.Count}", "", "", "In Progress...");
 
+                
                 foreach (var apiCall in apiCalls)
                 {
-                    Logger.Log("API Call: " + apiCall);
-                    await RunTestIteration(iteration, apiCall);
+                    apiLoop += 1;
+                    if (!errorFound)
+                    {
+                        UpdateIterationStatus(iteration, $"{apiLoop}/{apiCalls.Count}", "", "", "In Progress...");
+                        Logger.Log("API Call: " + apiCall);
+                        await RunTestIteration(iteration, apiLoop, apiCalls.Count, apiCall);
+                    }
+                    else {
+                        Logger.Log($"Skipped the remaining API calls due to previous error in iteration {iteration}.");
+                        break;
+                    }
                 }
             }
 
@@ -94,10 +117,8 @@ namespace PlatnedTestMatic
             }
         }
 
-        private async Task RunTestIteration(int iterationNumber, JObject apiCall)
+        private async Task RunTestIteration(int iterationNumber, int apiLoop, int apiCount, JObject apiCall)
         {
-            InitializeAsync();
-
             string method = apiCall["request"]["method"].ToString();
             string url = apiCall["request"]["url"]["raw"].ToString();
             string headers = "";
@@ -116,30 +137,48 @@ namespace PlatnedTestMatic
                 csvParameters[column.ColumnName] = csvRow[column.ColumnName]?.ToString();
             }
 
-            if (method == "GET")
+            switch (method)
             {
-                apiResponse = await api.Get(url, headers, requestBody, token);
+                case "GET":
+                    requestBody = BuildRequestBody(csvParameters);
+                    Logger.Log("GET - Request body: " + requestBody);
+                    apiResponse = await api.Get(url, headers, requestBody, token);
+                    break;
+
+                case "POST":
+                    requestBody = BuildRequestBody(csvParameters);
+                    Logger.Log("POST - Request body: " + requestBody);
+                    apiResponse = await api.Post(url, headers, requestBody, token);
+                    break;
+
+                case "PATCH":
+                    requestBody = BuildRequestBody(csvParameters); 
+                    Logger.Log("PATCH - Request body: " + requestBody);
+                    apiResponse = await api.Patch(url, headers, requestBody, token);
+                    break;
+
+                case "DELETE":
+                    Logger.Log("DELETE - Request body: " + requestBody);
+                    apiResponse = await api.Delete(url, headers, token); 
+                    break;
+
+                default:
+                    Logger.Log($"Unsupported HTTP method: {method}", "Error");
+                    return;
             }
-            else if (method == "POST")
-            {
-                requestBody = BuildRequestBody(csvParameters);
-                Logger.Log("Request body: " + requestBody);
-                apiResponse = await api.Post(url, headers, requestBody, token);
-            }
-            // PATCH, DELETE to be added
 
 
             Logger.Log($"Iteration {iterationNumber}: Response StatusCode={apiResponse.StatusCode}, ResponseBody={apiResponse.ResponseBody}");
-            bool errorFound = false;
+            
             if (apiResponse != null && (apiResponse.StatusCode == 200 || apiResponse.StatusCode == 201) && errorFound != true)
             {
-                UpdateIterationStatus(iterationNumber, apiResponse.StatusCode.ToString(), "Successful", "OK");
+                UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
             }
             else
             {
                 errorFound = true;
                 testingStausFailed = true;
-                UpdateIterationStatus(iterationNumber, apiResponse?.StatusCode.ToString() ?? "N/A", apiResponse?.ResponseBody, "Error");
+                UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse?.StatusCode.ToString() ?? "N/A", apiResponse?.ResponseBody, "Error");
             }
 
             if (!errorFound)
@@ -150,20 +189,83 @@ namespace PlatnedTestMatic
 
                 foreach (var property in responseJson.Properties())
                 {
-                    if (!csvData.Columns.Contains(property.Name) && property.Name != "error")
+                    try
                     {
-                        csvData.Columns.Add(property.Name);
-                        Logger.Log($"Iteration {iterationNumber}: Added new column '{property.Name}' to CSV.");
-                    }
-                    if (row[property.Name] == DBNull.Value || string.IsNullOrEmpty(row[property.Name]?.ToString()))
-                    {
-                        if (!string.IsNullOrEmpty(property.Value.ToString()))
+                        Logger.Log($"Processing property: '{property.Name}' with value: '{property.Value}'");
+
+                        // Add the column if it doesn't exist, but exclude the "error" property
+                        if (!csvData.Columns.Contains(property.Name) && !new[] { "error", "@odata.context", "value"}.Contains(property.Name))
                         {
-                            row[property.Name] = property.Value.ToString();
+                            // Sanitize column names to avoid special characters
+                            string sanitizedColumnName = property.Name.Replace("@", "").Replace(".", "_");
+
+                            // Determine the data type of the property dynamically and add the appropriate column type
+                            JTokenType propertyType = property.Value.Type;
+                            Type columnType = typeof(string); // Default to string if no match
+
+                            switch (propertyType)
+                            {
+                                case JTokenType.Integer:
+                                    columnType = typeof(double);
+                                    break;
+                                case JTokenType.Float:
+                                    columnType = typeof(double); // Use double for decimals or floats
+                                    break;
+                                case JTokenType.Boolean:
+                                    columnType = typeof(bool);
+                                    break;
+                                case JTokenType.Date:
+                                    columnType = typeof(DateTime);
+                                    break;
+                                case JTokenType.Null:
+                                    columnType = typeof(DBNull);
+                                    break;
+                                default:
+                                    columnType = typeof(string); // Default to string for unknown types
+                                    break;
+                            }
+
+                            csvData.Columns.Add(sanitizedColumnName, columnType);
+                            Logger.Log($"Iteration {iterationNumber}: Added new column '{sanitizedColumnName}' of type '{columnType.Name}' to CSV.");
+                        }
+
+                        // Only update the row if the value is null or empty
+                        string propertyName = property.Name.Replace("@", "").Replace(".", "_");
+                        if (row[propertyName] == DBNull.Value || string.IsNullOrEmpty(row[propertyName]?.ToString()))
+                        {
+                            if (property.Value.Type != JTokenType.Null)
+                            {
+                                switch (property.Value.Type)
+                                {
+                                    case JTokenType.Integer:
+                                        row[propertyName] = property.Value.ToObject<int>();
+                                        break;
+                                    case JTokenType.Float:
+                                        row[propertyName] = property.Value.ToObject<double>();
+                                        break;
+                                    case JTokenType.Boolean:
+                                        row[propertyName] = property.Value.ToObject<bool>();
+                                        break;
+                                    case JTokenType.Date:
+                                        row[propertyName] = property.Value.ToObject<DateTime>();
+                                        break;
+                                    default:
+                                        row[propertyName] = property.Value.ToString(); // Default to string
+                                        break;
+                                }
+
+                                Logger.Log($"Iteration {iterationNumber}: Updated column '{propertyName}' with value '{row[propertyName]}' of type '{row[propertyName].GetType().Name}'.");
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"Error processing property '{property.Name}': {ex.Message}");
+                    }
                 }
-                string csvFilePath = Path.Combine(tempFolderPath, "data.csv");
+
+                Logger.Log("Starting to write data to CSV...");
+
                 WriteDataTableToCsv(csvData, csvFilePath);
 
                 Logger.Log($"Iteration {iterationNumber}: CSV file updated.");
@@ -177,6 +279,129 @@ namespace PlatnedTestMatic
 
             foreach (var param in parameters)
             {
+                if (param.Value != null)
+                {
+                    string paramValue = param.Value.ToString();
+
+                    // Check if the value contains leading zeros and is numeric
+                    if (Regex.IsMatch(paramValue, @"^0[0-9]+$"))
+                    {
+                        // Preserve leading zeros and treat as a string
+                        requestBodyJson[param.Key] = paramValue;
+                        Logger.Log($"Preserved leading zero value for '{param.Key}' as string: {paramValue}");
+                    }
+                    else if (double.TryParse(paramValue, out double doubleValue))
+                    {
+                        // If it's a decimal, treat as double
+                        if (paramValue.Contains("."))
+                        {
+                            requestBodyJson[param.Key] = doubleValue;
+                            Logger.Log($"Formatted double value for '{param.Key}': {doubleValue}");
+                        }
+                        else
+                        {
+                            // Otherwise, treat as an integer
+                            requestBodyJson[param.Key] = Convert.ToInt32(doubleValue);
+                            Logger.Log($"Formatted integer value for '{param.Key}': {Convert.ToInt32(doubleValue)}");
+                        }
+                    }
+                    // Check if it's a valid date
+                    else if (DateTime.TryParse(paramValue, out DateTime dateValue))
+                    {
+                        // Format date in ISO 8601 format
+                        requestBodyJson[param.Key] = dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                        Logger.Log($"Formatted date value for '{param.Key}': {dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
+                    }
+                    // Check if it's a boolean value
+                    else if (bool.TryParse(paramValue, out bool boolValue))
+                    {
+                        requestBodyJson[param.Key] = boolValue;
+                        Logger.Log($"Formatted boolean value for '{param.Key}': {boolValue}");
+                    }
+                    else
+                    {
+                        // Treat as string if it's none of the above
+                        requestBodyJson[param.Key] = paramValue;
+                        Logger.Log($"Added string value for '{param.Key}': {paramValue}");
+                    }
+                }
+                else
+                {
+                    Logger.Log($"Skipped null or empty value for '{param.Key}'");
+                }
+            }
+
+            string requestBody = requestBodyJson.ToString();
+            Logger.Log($"Built request body: {requestBody}");
+            return requestBody;
+        }
+
+
+        /*private string BuildRequestBody(Dictionary<string, string> parameters)
+        {
+            JObject requestBodyJson = new JObject();
+            string fLetter = "";
+            foreach (var param in parameters)
+            {
+                if (param.Value != null)
+                {
+                    string paramValue = param.Value.ToString();
+
+                    // Try to parse the value as a double
+                    if (double.TryParse(paramValue, out double doubleValue))
+                    {
+                        fLetter = paramValue.Substring(0, 1);
+                        if (paramValue.Contains("."))
+                        {
+                            // If it's a decimal, treat as double
+                            requestBodyJson[param.Key] = doubleValue;
+                            Logger.Log($"Formatted double value for '{param.Key}': {doubleValue}");
+                        }
+                        else
+                        {
+                            // Otherwise, treat as an integer if it's whole
+                            requestBodyJson[param.Key] = (fLetter.Equals("0") ? "0" : "") + Convert.ToInt32(doubleValue).ToString();
+                            Logger.Log($"Formatted integer value for '{param.Key}': {Convert.ToInt32(doubleValue)}");
+                        }
+                    }
+                    // Check if it's a valid date
+                    else if (DateTime.TryParse(paramValue, out DateTime dateValue))
+                    {
+                        // Format date in ISO 8601 format
+                        requestBodyJson[param.Key] = dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ");
+                        Logger.Log($"Formatted date value for '{param.Key}': {dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
+                    }
+                    // Check if it's a boolean value
+                    else if (bool.TryParse(paramValue, out bool boolValue))
+                    {
+                        requestBodyJson[param.Key] = boolValue;
+                        Logger.Log($"Formatted boolean value for '{param.Key}': {boolValue}");
+                    }
+                    else
+                    {
+                        // Treat as string if it's none of the above
+                        requestBodyJson[param.Key] = paramValue;
+                        Logger.Log($"Added string value for '{param.Key}': {paramValue}");
+                    }
+                }
+                else
+                {
+                    Logger.Log($"Skipped null or empty value for '{param.Key}'");
+                }
+            }
+
+            string requestBody = requestBodyJson.ToString();
+            Logger.Log($"Built request body: {requestBody}");
+            return requestBody;
+        }
+        */
+
+        /*private string BuildRequestBody(Dictionary<string, string> parameters)
+        {
+            JObject requestBodyJson = new JObject();
+
+            foreach (var param in parameters)
+            {
                 if (!string.IsNullOrEmpty(param.Value))
                 {
                     requestBodyJson[param.Key] = param.Value;
@@ -184,11 +409,12 @@ namespace PlatnedTestMatic
             }
 
             return requestBodyJson.ToString();
-        }
+        }*/
 
-        private void UpdateIterationStatus(int iterationNumber, string statusCode, string description, string result)
+        private void UpdateIterationStatus(int iterationNumber, string currentApiLoop, string statusCode, string description, string result)
         {
             var row = dgvTestResults.Rows[iterationNumber - 1];
+            row.Cells["API Calls"].Value = currentApiLoop;
             row.Cells["Description"].Value = description;
             row.Cells["Status Code"].Value = statusCode; 
             row.Cells["Result"].Value = result; 
@@ -196,6 +422,70 @@ namespace PlatnedTestMatic
         }
 
         private void WriteDataTableToCsv(DataTable dataTable, string filePath)
+        {
+            Logger.Log("Starting to write data to CSV...");
+
+            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                try
+                {
+                    Logger.Log("Writing column headers...");
+                    // Write the column headers
+                    string[] columnNames = dataTable.Columns.Cast<DataColumn>()
+                                            .Select(column => column.ColumnName)
+                                            .ToArray();
+                    writer.WriteLine(string.Join(",", columnNames));
+                    Logger.Log($"Column headers written: {string.Join(", ", columnNames)}");
+
+                    // Write the data rows
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string[] fields = row.ItemArray.Select(field =>
+                        {
+                            if (field is decimal decimalValue)
+                            {
+                                // Format decimal with two decimal places
+                                Logger.Log($"Formatting decimal value: {decimalValue}");
+                                return decimalValue.ToString("F2");
+                            }
+                            else if (field is double doubleValue)
+                            {
+                                // Format double with two decimal places
+                                Logger.Log($"Formatting double value: {doubleValue}");
+                                return doubleValue.ToString("F2");
+                            }
+                            else if (field is int || field is long)
+                            {
+                                // Keep leading zeros for integer types
+                                Logger.Log($"Preserving integer value: {field}");
+                                return field.ToString();
+                                //double doubleValueConv = Convert.ToDouble(field);
+                                //Logger.Log($"Converting integer value to double: {doubleValueConv}");
+                                //return doubleValueConv.ToString("F2");
+                            }
+                            else
+                            {
+                                // Handle all other data types
+                                Logger.Log($"Handling non-numeric value: {field}");
+                                return field.ToString();
+                            }
+                        }).ToArray();
+
+                        writer.WriteLine(string.Join(",", fields));
+                        Logger.Log($"Written row to CSV: {string.Join(", ", fields)}");
+                    }
+
+                    Logger.Log("CSV writing completed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Error writing to CSV: {ex.Message}");
+                    throw;
+                }
+            }
+        }
+        
+        /*private void WriteDataTableToCsv(DataTable dataTable, string filePath)
         {
             using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
             {
@@ -210,7 +500,7 @@ namespace PlatnedTestMatic
                     writer.WriteLine(string.Join(",", fields));
                 }
             }
-        }
+        }*/
 
         private void InitializeTestResultsGrid()
         {
@@ -218,15 +508,16 @@ namespace PlatnedTestMatic
             dgvTestResults.Location = new Point(20, 160);
             dgvTestResults.Size = new Size(600, 300);
 
-            dgvTestResults.ColumnCount = 4;
+            dgvTestResults.ColumnCount = 5;
             dgvTestResults.Columns[0].Name = "Iteration";
-            dgvTestResults.Columns[1].Name = "Description";
-            dgvTestResults.Columns[2].Name = "Status Code";
-            dgvTestResults.Columns[3].Name = "Result";
+            dgvTestResults.Columns[1].Name = "API Calls";
+            dgvTestResults.Columns[2].Name = "Description";
+            dgvTestResults.Columns[3].Name = "Status Code";
+            dgvTestResults.Columns[4].Name = "Result";
 
             for (int i = 1; i <= totalIterations; i++)
             {
-                dgvTestResults.Rows.Add($"Iteration {i}", "Pending...", "", "");
+                dgvTestResults.Rows.Add($"Iteration {i}", "", "Pending...", "", "Queued...");
             }
 
             dgvTestResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;

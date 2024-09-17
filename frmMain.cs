@@ -161,7 +161,7 @@ namespace PlatnedTestMatic
         {
             frmTestRun frmTestRun = new frmTestRun();
             frmTestRun.Show();
-            frmTestRun.RunTestIterationsAsync();
+            frmTestRun.RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
         }
     }
 }
