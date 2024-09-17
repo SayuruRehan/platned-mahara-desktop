@@ -193,15 +193,12 @@ namespace PlatnedTestMatic
                     {
                         Logger.Log($"Processing property: '{property.Name}' with value: '{property.Value}'");
 
-                        // Add the column if it doesn't exist, but exclude the "error" property
-                        if (!csvData.Columns.Contains(property.Name) && !new[] { "error", "@odata.context", "value"}.Contains(property.Name))
+                        if (!csvData.Columns.Contains(property.Name) && !new[] { "error", "@odata.context", "value" }.Contains(property.Name) && !property.Name.Contains("Ref"))
                         {
-                            // Sanitize column names to avoid special characters
                             string sanitizedColumnName = property.Name.Replace("@", "").Replace(".", "_");
 
-                            // Determine the data type of the property dynamically and add the appropriate column type
                             JTokenType propertyType = property.Value.Type;
-                            Type columnType = typeof(string); // Default to string if no match
+                            Type columnType = typeof(string); 
 
                             switch (propertyType)
                             {
@@ -209,7 +206,7 @@ namespace PlatnedTestMatic
                                     columnType = typeof(double);
                                     break;
                                 case JTokenType.Float:
-                                    columnType = typeof(double); // Use double for decimals or floats
+                                    columnType = typeof(double); 
                                     break;
                                 case JTokenType.Boolean:
                                     columnType = typeof(bool);
@@ -221,7 +218,7 @@ namespace PlatnedTestMatic
                                     columnType = typeof(DBNull);
                                     break;
                                 default:
-                                    columnType = typeof(string); // Default to string for unknown types
+                                    columnType = typeof(string); 
                                     break;
                             }
 
@@ -229,7 +226,6 @@ namespace PlatnedTestMatic
                             Logger.Log($"Iteration {iterationNumber}: Added new column '{sanitizedColumnName}' of type '{columnType.Name}' to CSV.");
                         }
 
-                        // Only update the row if the value is null or empty
                         string propertyName = property.Name.Replace("@", "").Replace(".", "_");
                         if (row[propertyName] == DBNull.Value || string.IsNullOrEmpty(row[propertyName]?.ToString()))
                         {
@@ -250,7 +246,7 @@ namespace PlatnedTestMatic
                                         row[propertyName] = property.Value.ToObject<DateTime>();
                                         break;
                                     default:
-                                        row[propertyName] = property.Value.ToString(); // Default to string
+                                        row[propertyName] = property.Value.ToString(); 
                                         break;
                                 }
 
@@ -279,50 +275,42 @@ namespace PlatnedTestMatic
 
             foreach (var param in parameters)
             {
-                if (param.Value != null)
+                if (param.Value != null && param.Value != "")
                 {
                     string paramValue = param.Value.ToString();
 
-                    // Check if the value contains leading zeros and is numeric
                     if (Regex.IsMatch(paramValue, @"^0[0-9]+$"))
                     {
-                        // Preserve leading zeros and treat as a string
                         requestBodyJson[param.Key] = paramValue;
-                        Logger.Log($"Preserved leading zero value for '{param.Key}' as string: {paramValue}");
+                        //Logger.Log($"Preserved leading zero value for '{param.Key}' as string: {paramValue}");
                     }
                     else if (double.TryParse(paramValue, out double doubleValue))
                     {
-                        // If it's a decimal, treat as double
                         if (paramValue.Contains("."))
                         {
                             requestBodyJson[param.Key] = doubleValue;
-                            Logger.Log($"Formatted double value for '{param.Key}': {doubleValue}");
+                            //Logger.Log($"Formatted double value for '{param.Key}': {doubleValue}");
                         }
                         else
                         {
-                            // Otherwise, treat as an integer
                             requestBodyJson[param.Key] = Convert.ToInt32(doubleValue);
-                            Logger.Log($"Formatted integer value for '{param.Key}': {Convert.ToInt32(doubleValue)}");
+                            //Logger.Log($"Formatted integer value for '{param.Key}': {Convert.ToInt32(doubleValue)}");
                         }
                     }
-                    // Check if it's a valid date
                     else if (DateTime.TryParse(paramValue, out DateTime dateValue))
                     {
-                        // Format date in ISO 8601 format
                         requestBodyJson[param.Key] = dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ");
-                        Logger.Log($"Formatted date value for '{param.Key}': {dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
+                        //Logger.Log($"Formatted date value for '{param.Key}': {dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
                     }
-                    // Check if it's a boolean value
                     else if (bool.TryParse(paramValue, out bool boolValue))
                     {
                         requestBodyJson[param.Key] = boolValue;
-                        Logger.Log($"Formatted boolean value for '{param.Key}': {boolValue}");
+                        //Logger.Log($"Formatted boolean value for '{param.Key}': {boolValue}");
                     }
                     else
                     {
-                        // Treat as string if it's none of the above
                         requestBodyJson[param.Key] = paramValue;
-                        Logger.Log($"Added string value for '{param.Key}': {paramValue}");
+                        //Logger.Log($"Added string value for '{param.Key}': {paramValue}");
                     }
                 }
                 else
@@ -336,80 +324,6 @@ namespace PlatnedTestMatic
             return requestBody;
         }
 
-
-        /*private string BuildRequestBody(Dictionary<string, string> parameters)
-        {
-            JObject requestBodyJson = new JObject();
-            string fLetter = "";
-            foreach (var param in parameters)
-            {
-                if (param.Value != null)
-                {
-                    string paramValue = param.Value.ToString();
-
-                    // Try to parse the value as a double
-                    if (double.TryParse(paramValue, out double doubleValue))
-                    {
-                        fLetter = paramValue.Substring(0, 1);
-                        if (paramValue.Contains("."))
-                        {
-                            // If it's a decimal, treat as double
-                            requestBodyJson[param.Key] = doubleValue;
-                            Logger.Log($"Formatted double value for '{param.Key}': {doubleValue}");
-                        }
-                        else
-                        {
-                            // Otherwise, treat as an integer if it's whole
-                            requestBodyJson[param.Key] = (fLetter.Equals("0") ? "0" : "") + Convert.ToInt32(doubleValue).ToString();
-                            Logger.Log($"Formatted integer value for '{param.Key}': {Convert.ToInt32(doubleValue)}");
-                        }
-                    }
-                    // Check if it's a valid date
-                    else if (DateTime.TryParse(paramValue, out DateTime dateValue))
-                    {
-                        // Format date in ISO 8601 format
-                        requestBodyJson[param.Key] = dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ");
-                        Logger.Log($"Formatted date value for '{param.Key}': {dateValue.ToString("yyyy-MM-ddTHH:mm:ssZ")}");
-                    }
-                    // Check if it's a boolean value
-                    else if (bool.TryParse(paramValue, out bool boolValue))
-                    {
-                        requestBodyJson[param.Key] = boolValue;
-                        Logger.Log($"Formatted boolean value for '{param.Key}': {boolValue}");
-                    }
-                    else
-                    {
-                        // Treat as string if it's none of the above
-                        requestBodyJson[param.Key] = paramValue;
-                        Logger.Log($"Added string value for '{param.Key}': {paramValue}");
-                    }
-                }
-                else
-                {
-                    Logger.Log($"Skipped null or empty value for '{param.Key}'");
-                }
-            }
-
-            string requestBody = requestBodyJson.ToString();
-            Logger.Log($"Built request body: {requestBody}");
-            return requestBody;
-        }
-        */
-
-        /*private string BuildRequestBody(Dictionary<string, string> parameters)
-        {
-            JObject requestBodyJson = new JObject();
-
-            foreach (var param in parameters)
-            {
-                if (!string.IsNullOrEmpty(param.Value))
-                {
-                    requestBodyJson[param.Key] = param.Value;
-                }
-            }
-
-            return requestBodyJson.ToString();
-        }*/
 
         private void UpdateIterationStatus(int iterationNumber, string currentApiLoop, string statusCode, string description, string result)
         {
@@ -444,29 +358,22 @@ namespace PlatnedTestMatic
                         {
                             if (field is decimal decimalValue)
                             {
-                                // Format decimal with two decimal places
-                                Logger.Log($"Formatting decimal value: {decimalValue}");
+                                //Logger.Log($"Formatting decimal value: {decimalValue}");
                                 return decimalValue.ToString("F2");
                             }
                             else if (field is double doubleValue)
                             {
-                                // Format double with two decimal places
-                                Logger.Log($"Formatting double value: {doubleValue}");
+                                //Logger.Log($"Formatting double value: {doubleValue}");
                                 return doubleValue.ToString("F2");
                             }
                             else if (field is int || field is long)
                             {
-                                // Keep leading zeros for integer types
-                                Logger.Log($"Preserving integer value: {field}");
+                                //Logger.Log($"Preserving integer value: {field}");
                                 return field.ToString();
-                                //double doubleValueConv = Convert.ToDouble(field);
-                                //Logger.Log($"Converting integer value to double: {doubleValueConv}");
-                                //return doubleValueConv.ToString("F2");
                             }
                             else
                             {
-                                // Handle all other data types
-                                Logger.Log($"Handling non-numeric value: {field}");
+                                //Logger.Log($"Handling non-numeric value: {field}");
                                 return field.ToString();
                             }
                         }).ToArray();

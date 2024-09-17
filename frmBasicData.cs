@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -18,6 +19,7 @@ namespace PlatnedTestMatic
         protected string clientSecret = "";
         protected string scope = "";
         protected string accessToken = "";
+        protected Boolean appLoggingEnabled = false;
 
         public frmBasicData()
         {
@@ -43,7 +45,7 @@ namespace PlatnedTestMatic
                 accessToken = token;
                 Logger.Log("Authenticated successfully!");
                 btnAuthenticate.Enabled = false;
-                btnResetAuthBasicData.Enabled = true;
+                chkEnableLogging.Enabled = true;
 
                 Logger.Log("Saving configuration started...");
                 SaveConfigData(accessTokenUrl, clientId, clientSecret, scope);
@@ -102,7 +104,7 @@ namespace PlatnedTestMatic
             Logger.Log("Basic Data has been reset.");
         }
 
-        private void SaveConfigData(string accessTokenUrl, string clientId, string clientSecret, string scope)
+        private void SaveConfigData(string accessTokenUrl, string clientId, string clientSecret, string scope, Boolean appLoggingEnabled = false)
         {
             Logger.Log("Saving configurations...");
             var configXml = new XDocument(
@@ -110,7 +112,8 @@ namespace PlatnedTestMatic
                     new XElement("AccessTokenUrl", accessTokenUrl),
                     new XElement("ClientId", clientId),
                     new XElement("ClientSecret", clientSecret),
-                    new XElement("Scope", scope)
+                    new XElement("Scope", scope),
+                    new XElement("LoggingEnabled", appLoggingEnabled)
                 )
             );
 
@@ -137,6 +140,7 @@ namespace PlatnedTestMatic
                     txtClientId.Text = configXml.Root.Element("ClientId")?.Value ?? string.Empty;
                     txtClientSecret.Text = configXml.Root.Element("ClientSecret")?.Value ?? string.Empty;
                     txtScope.Text = configXml.Root.Element("Scope")?.Value ?? string.Empty;
+                    chkEnableLogging.Checked = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
                     Logger.Log("Configuration retrieval completed!");
                 }
                 catch (Exception ex)
@@ -212,6 +216,41 @@ namespace PlatnedTestMatic
             {
                 Logger.Log("No saved basic data configurations found!");
                 return "No saved basic data configurations found!";
+            }
+        }
+
+        private void chkEnableLogging_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Logger.Log("Changing application logging state...");
+
+                accessTokenUrl = txtAccessTokenUrl.Text;
+                clientId = txtClientId.Text;
+                clientSecret = txtClientSecret.Text;
+                scope = txtScope.Text;
+                appLoggingEnabled = chkEnableLogging.Checked;
+
+                Logger.Log("Saving configuration started...");
+                SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled);
+                Logger.Log("Saving configuration completed!");
+
+                if (appLoggingEnabled)
+                {
+                    Logger.Log("Application Logging Enabled!");
+                    MessageBox.Show("Application Logging Enabled!");
+                }
+                else
+                {
+                    Logger.Log("Application Logging Disabled!");
+                    MessageBox.Show("Application Logging Disabled!");
+                }
+                Logger.Log("Changed application logging state.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Authentication failed: {ex.Message}", "Error");
+                MessageBox.Show($"Authentication failed! Refer to application logs for more info.");
             }
         }
     }

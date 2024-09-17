@@ -4,4 +4,5 @@
   <ClientId>Plat_APT_Service</ClientId>
   <ClientSecret>JawpIl0UXtCABshpP8TlWHFL9ghtzGue</ClientSecret>
   <Scope>openid microprofile-jwt</Scope>
+  <LoggingEnabled>true</LoggingEnabled>
 </Configuration>
