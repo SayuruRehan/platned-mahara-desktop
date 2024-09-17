@@ -72,6 +72,7 @@ namespace PlatnedTestMatic
             lblTestStatus.Text = "In Progress";
             btnRunAgain.Visible = false;
             btnStopExecution.Visible = true;
+            lblExecStarted.Text = DateTime.Now.ToString();
 
             jsonFilePath = uploadedJSONFilePath;
             csvFilePath = uploadedCSVFilePath;
@@ -92,11 +93,11 @@ namespace PlatnedTestMatic
 
             for (int iteration = 1; iteration <= totalIterations; iteration++)
             {
-                if (cancellationToken.IsCancellationRequested) // Check if cancellation was requested
+                if (cancellationToken.IsCancellationRequested) 
                 {
                     Logger.Log("Test execution cancelled.");
                     lblTestStatus.Text = "Cancelled";
-                    return; // Exit the method if cancelled
+                    return; 
                 }
 
                 Logger.Log($"Starting iteration {iteration} =============================================> ");
@@ -131,12 +132,14 @@ namespace PlatnedTestMatic
             if (!testingStausFailed)
             {
                 lblTestStatus.Text = "Completed";
+                lblExecFinished.Text = DateTime.Now.ToString();
             }
             else
             {
                 lblTestStatus.Text = "Failed";
                 lblTestStatus.BackColor = Color.Red;
                 lblTestStatus.ForeColor = Color.White;
+                lblExecFinished.Text = DateTime.Now.ToString();
             }
         }
 
