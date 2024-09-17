@@ -37,6 +37,7 @@
             this.btnRunAgain = new System.Windows.Forms.Button();
             this.btnExportResults = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnStopExecution = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -111,20 +112,21 @@
             this.btnRunAgain.ForeColor = System.Drawing.Color.Black;
             this.btnRunAgain.Image = global::PlatnedTestMatic.Properties.Resources.restart;
             this.btnRunAgain.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRunAgain.Location = new System.Drawing.Point(5, 15);
+            this.btnRunAgain.Location = new System.Drawing.Point(121, 15);
             this.btnRunAgain.Name = "btnRunAgain";
             this.btnRunAgain.Size = new System.Drawing.Size(111, 48);
             this.btnRunAgain.TabIndex = 26;
             this.btnRunAgain.Text = "Run Again";
             this.btnRunAgain.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnRunAgain.UseVisualStyleBackColor = false;
+            this.btnRunAgain.Click += new System.EventHandler(this.btnRunAgain_Click);
             // 
             // btnExportResults
             // 
             this.btnExportResults.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportResults.Image = global::PlatnedTestMatic.Properties.Resources.Export;
             this.btnExportResults.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExportResults.Location = new System.Drawing.Point(122, 15);
+            this.btnExportResults.Location = new System.Drawing.Point(238, 15);
             this.btnExportResults.Name = "btnExportResults";
             this.btnExportResults.Size = new System.Drawing.Size(133, 46);
             this.btnExportResults.TabIndex = 27;
@@ -135,15 +137,32 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnStopExecution);
             this.groupBox1.Controls.Add(this.btnRunAgain);
             this.groupBox1.Controls.Add(this.btnExportResults);
-            this.groupBox1.Location = new System.Drawing.Point(408, 28);
+            this.groupBox1.Location = new System.Drawing.Point(292, 28);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox1.Size = new System.Drawing.Size(263, 69);
+            this.groupBox1.Size = new System.Drawing.Size(379, 69);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
+            // 
+            // btnStopExecution
+            // 
+            this.btnStopExecution.BackColor = System.Drawing.Color.White;
+            this.btnStopExecution.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStopExecution.ForeColor = System.Drawing.Color.Black;
+            this.btnStopExecution.Image = global::PlatnedTestMatic.Properties.Resources.restart;
+            this.btnStopExecution.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnStopExecution.Location = new System.Drawing.Point(6, 15);
+            this.btnStopExecution.Name = "btnStopExecution";
+            this.btnStopExecution.Size = new System.Drawing.Size(111, 48);
+            this.btnStopExecution.TabIndex = 28;
+            this.btnStopExecution.Text = "Stop";
+            this.btnStopExecution.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnStopExecution.UseVisualStyleBackColor = false;
+            this.btnStopExecution.Click += new System.EventHandler(this.btnStopExecution_Click);
             // 
             // frmTestRun
             // 
@@ -185,5 +204,6 @@
         private System.Windows.Forms.Button btnRunAgain;
         private System.Windows.Forms.Button btnExportResults;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnStopExecution;
     }
 }

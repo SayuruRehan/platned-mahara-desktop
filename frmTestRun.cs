@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static PlatnedTestMatic.CustomClasses.ApiExecution;
 using ClosedXML.Excel;
+using System.Threading;
 
 namespace PlatnedTestMatic
 {
@@ -28,6 +29,8 @@ namespace PlatnedTestMatic
         string jsonFilePath;
         string csvFilePath;
         bool errorFound = false;
+        private CancellationTokenSource cancellationTokenSource;
+
 
         public frmTestRun()
         {
@@ -67,12 +70,17 @@ namespace PlatnedTestMatic
         public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
         {
             lblTestStatus.Text = "In Progress";
+            btnRunAgain.Visible = false;
+            btnStopExecution.Visible = true;
 
             jsonFilePath = uploadedJSONFilePath;
             csvFilePath = uploadedCSVFilePath;
             Logger.Log("jsonFilePath, csvFilePath received for execution!");
             InitializeAsync();
             InitializeTestResultsGrid();
+
+            cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = cancellationTokenSource.Token;
 
             if (string.IsNullOrEmpty(token))
             {
@@ -84,6 +92,13 @@ namespace PlatnedTestMatic
 
             for (int iteration = 1; iteration <= totalIterations; iteration++)
             {
+                if (cancellationToken.IsCancellationRequested) // Check if cancellation was requested
+                {
+                    Logger.Log("Test execution cancelled.");
+                    lblTestStatus.Text = "Cancelled";
+                    return; // Exit the method if cancelled
+                }
+
                 Logger.Log($"Starting iteration {iteration} =============================================> ");
                 errorFound = false;
                 var apiLoop = 0;
@@ -92,6 +107,13 @@ namespace PlatnedTestMatic
                 
                 foreach (var apiCall in apiCalls)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        Logger.Log("Test execution cancelled.");
+                        lblTestStatus.Text = "Cancelled";
+                        return;
+                    }
+
                     apiLoop += 1;
                     if (!errorFound)
                     {
@@ -469,5 +491,32 @@ namespace PlatnedTestMatic
                 }
             }
         }
+
+        private void btnStopExecution_Click(object sender, EventArgs e)
+        {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                Logger.Log("Cancellation requested.");
+            }
+            btnRunAgain.Visible = true;
+            btnStopExecution.Visible = false;
+        }
+
+        private async void btnRunAgain_Click(object sender, EventArgs e)
+        {
+            var csvFile = csvFilePath;
+            var jsonFile = jsonFilePath;
+
+            btnRunAgain.Visible = false;
+            btnStopExecution.Visible = true;
+
+            frmTestRun frmTestRunNew = new frmTestRun();
+            this.Close();
+            frmTestRunNew.Show(); 
+
+            await frmTestRunNew.RunTestIterationsAsync(jsonFile, csvFile); 
+        }
+
     }
 }
