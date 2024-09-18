@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace PlatnedTestMatic
     {
         private string uploadedJSONFilePath;
         private string uploadedCSVFilePath;
+
         public frmMain()
         {
             InitializeComponent();
@@ -161,7 +163,7 @@ namespace PlatnedTestMatic
         {
             frmTestRun frmTestRun = new frmTestRun();
             frmTestRun.Show();
-            frmTestRun.RunTestIterationsAsync();
+            frmTestRun.RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
         }
     }
 }

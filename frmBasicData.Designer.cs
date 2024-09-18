@@ -45,6 +45,7 @@
             this.txtScope = new System.Windows.Forms.TextBox();
             this.btnAuthenticate = new System.Windows.Forms.Button();
             this.btnResetAuthBasicData = new System.Windows.Forms.Button();
+            this.chkEnableLogging = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -218,11 +219,23 @@
             this.btnResetAuthBasicData.MouseEnter += new System.EventHandler(this.btnResetAuthBasicData_MouseEnter);
             this.btnResetAuthBasicData.MouseLeave += new System.EventHandler(this.btnResetAuthBasicData_MouseLeave);
             // 
+            // chkEnableLogging
+            // 
+            this.chkEnableLogging.AutoSize = true;
+            this.chkEnableLogging.Location = new System.Drawing.Point(32, 400);
+            this.chkEnableLogging.Name = "chkEnableLogging";
+            this.chkEnableLogging.Size = new System.Drawing.Size(140, 17);
+            this.chkEnableLogging.TabIndex = 26;
+            this.chkEnableLogging.Text = "Enable Application Logs";
+            this.chkEnableLogging.UseVisualStyleBackColor = true;
+            this.chkEnableLogging.Click += new System.EventHandler(this.chkEnableLogging_Click);
+            // 
             // frmBasicData
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(678, 440);
+            this.Controls.Add(this.chkEnableLogging);
             this.Controls.Add(this.btnResetAuthBasicData);
             this.Controls.Add(this.btnAuthenticate);
             this.Controls.Add(this.txtScope);
@@ -240,7 +253,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmBasicData";
             this.Text = "frmBasicData";
             this.Controls.SetChildIndex(this.label1, 0);
@@ -260,6 +273,7 @@
             this.Controls.SetChildIndex(this.txtScope, 0);
             this.Controls.SetChildIndex(this.btnAuthenticate, 0);
             this.Controls.SetChildIndex(this.btnResetAuthBasicData, 0);
+            this.Controls.SetChildIndex(this.chkEnableLogging, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,5 +298,6 @@
         private System.Windows.Forms.TextBox txtScope;
         private System.Windows.Forms.Button btnAuthenticate;
         private System.Windows.Forms.Button btnResetAuthBasicData;
+        private System.Windows.Forms.CheckBox chkEnableLogging;
     }
 }

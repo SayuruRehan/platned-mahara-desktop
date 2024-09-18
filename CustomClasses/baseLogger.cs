@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace PlatnedTestMatic
 {
@@ -32,21 +34,52 @@ namespace PlatnedTestMatic
 
         public static void Log(string message, string logType = "Info")
         {
-            logLineNumber++; 
-
-            string logEntry = $"{logLineNumber}, {DateTime.Now}, {logType}, {message}";
-
-            try
+            if (LoadConfigData())
             {
-                using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                logLineNumber++;
+
+                string logEntry = $"{logLineNumber}, {DateTime.Now}, {logType}, {message}";
+
+                try
                 {
-                    writer.WriteLine(logEntry);
+                    using (StreamWriter writer = new StreamWriter(logFilePath, true))
+                    {
+                        writer.WriteLine(logEntry);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to write log: {ex.Message}");
+                }
+            }            
+        }
+
+        private static Boolean LoadConfigData()
+        {
+            var configFilePath  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+            Boolean LoggingEnabled = false;
+
+            if (File.Exists(configFilePath))
+            {
+                try
+                {
+                    var configXml = XDocument.Load(configFilePath);
+
+                    LoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+                    return LoggingEnabled;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading configuration!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return LoggingEnabled;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine($"Failed to write log: {ex.Message}");
+                MessageBox.Show($"No saved basic data configurations found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return LoggingEnabled;
             }
         }
+
     }
 }
