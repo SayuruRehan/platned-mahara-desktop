@@ -103,7 +103,7 @@
             // 
             this.lblExecFinished.AutoSize = true;
             this.lblExecFinished.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExecFinished.Location = new System.Drawing.Point(215, 131);
+            this.lblExecFinished.Location = new System.Drawing.Point(209, 131);
             this.lblExecFinished.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblExecFinished.Name = "lblExecFinished";
             this.lblExecFinished.Size = new System.Drawing.Size(109, 22);
