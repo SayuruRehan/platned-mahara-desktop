@@ -172,7 +172,7 @@
             this.txtClientId.Name = "txtClientId";
             this.txtClientId.Size = new System.Drawing.Size(485, 26);
             this.txtClientId.TabIndex = 24;
-            this.txtClientId.Text = "IFS_aurena_native_services";
+            this.txtClientId.Text = "Plat_APT_Service";
             // 
             // txtClientSecret
             // 
@@ -182,7 +182,7 @@
             this.txtClientSecret.PasswordChar = '*';
             this.txtClientSecret.Size = new System.Drawing.Size(485, 26);
             this.txtClientSecret.TabIndex = 24;
-            this.txtClientSecret.Text = "0ngd7ghtldK9luV0ds50";
+            this.txtClientSecret.Text = "JawpIl0UXtCABshpP8TlWHFL9ghtzGue";
             // 
             // txtScope
             // 

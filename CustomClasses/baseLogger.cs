@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office.CustomXsn;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -59,24 +60,44 @@ namespace PlatnedTestMatic
             var configFilePath  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
             Boolean LoggingEnabled = false;
 
-            if (File.Exists(configFilePath))
+            if (!string.IsNullOrEmpty(configFilePath))
             {
-                try
+                if (File.Exists(configFilePath))
                 {
-                    var configXml = XDocument.Load(configFilePath);
+                    try
+                    {
+                        var configXml = XDocument.Load(configFilePath);
 
-                    LoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
-                    return LoggingEnabled;
+                        LoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+                        return LoggingEnabled;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error loading configuration!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return LoggingEnabled;
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Error loading configuration!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    var configXml = new XDocument(
+                        new XElement("Configuration",
+                            new XElement("AccessTokenUrl", ""),
+                            new XElement("ClientId", ""),
+                    new XElement("ClientSecret", ""),
+                            new XElement("Scope", ""),
+                            new XElement("LoggingEnabled", false)
+                        )
+                    );
+
+                    configXml.Save(configFilePath);
+                    Logger.Log($"Blank configurations saved to location: {configFilePath}");
+
                     return LoggingEnabled;
                 }
             }
             else
             {
-                MessageBox.Show($"No saved basic data configurations found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Logger.Log("Config file path is null or empty.");
                 return LoggingEnabled;
             }
         }

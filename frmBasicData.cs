@@ -141,6 +141,13 @@ namespace PlatnedTestMatic
                     txtClientSecret.Text = configXml.Root.Element("ClientSecret")?.Value ?? string.Empty;
                     txtScope.Text = configXml.Root.Element("Scope")?.Value ?? string.Empty;
                     chkEnableLogging.Checked = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+
+                    if (txtAccessTokenUrl.Text == string.Empty && txtClientId.Text == string.Empty && txtClientSecret.Text == string.Empty && txtScope.Text == string.Empty)
+                    {
+                        btnAuthenticate.Enabled = true;
+                        btnResetAuthBasicData.Enabled = false;
+                    }
+
                     Logger.Log("Configuration retrieval completed!");
                 }
                 catch (Exception ex)
