@@ -19,7 +19,7 @@ namespace PlatnedTestMatic
 {
     public partial class frmTestRun : frmBaseForm
     {
-        private DataGridView dgvTestResults;
+        //private DataGridView dgvTestResults;
         private int totalIterations;
         private string token = "";
         private List<JObject> apiCalls;
@@ -78,7 +78,7 @@ namespace PlatnedTestMatic
             csvFilePath = uploadedCSVFilePath;
             Logger.Log("jsonFilePath, csvFilePath received for execution!");
             InitializeAsync();
-            InitializeTestResultsGrid();
+            //InitializeTestResultsGrid();
 
             cancellationTokenSource = new CancellationTokenSource();
             var cancellationToken = cancellationTokenSource.Token;
@@ -420,24 +420,24 @@ namespace PlatnedTestMatic
 
         private void InitializeTestResultsGrid()
         {
-            dgvTestResults = new DataGridView();
-            dgvTestResults.Location = new Point(20, 160);
-            dgvTestResults.Size = new Size(600, 300);
+            //dgvTestResults = new DataGridView();
+            //dgvTestResults.Location = new Point(20, 160);
+            //dgvTestResults.Size = new Size(600, 300);
 
-            dgvTestResults.ColumnCount = 5;
-            dgvTestResults.Columns[0].Name = "Iteration";
-            dgvTestResults.Columns[1].Name = "API Calls";
-            dgvTestResults.Columns[2].Name = "Description";
-            dgvTestResults.Columns[3].Name = "Status Code";
-            dgvTestResults.Columns[4].Name = "Result";
+            //dgvTestResults.ColumnCount = 5;
+            //dgvTestResults.Columns[0].Name = "Iteration";
+            //dgvTestResults.Columns[1].Name = "API Calls";
+            //dgvTestResults.Columns[2].Name = "Description";
+            //dgvTestResults.Columns[3].Name = "Status Code";
+            //dgvTestResults.Columns[4].Name = "Result";
 
-            for (int i = 1; i <= totalIterations; i++)
-            {
-                dgvTestResults.Rows.Add($"Iteration {i}", "", "Pending...", "", "Queued...");
-            }
+            //for (int i = 1; i <= totalIterations; i++)
+            //{
+            //    dgvTestResults.Rows.Add($"Iteration {i}", "", "Pending...", "", "Queued...");
+            //}
 
-            dgvTestResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            this.Controls.Add(dgvTestResults);
+            //dgvTestResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            //this.Controls.Add(dgvTestResults);
         }
 
         private void btnExportResults_Click(object sender, EventArgs e)
