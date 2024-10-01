@@ -29,7 +29,7 @@
     <AppXManifest Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-10-01T19:27:32.681</Modified>
+      <Modified>2024-10-01T21:01:42.250</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -43,7 +43,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.dll">
       <PackagePath>PL-PlatnedTestMatic.dll</PackagePath>
-      <Modified>2024-10-01T19:27:32.032</Modified>
+      <Modified>2024-10-01T21:01:40.690</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\Logos\BadgeLogo.scale-100.png">
       <PackagePath>Assets\Logos\BadgeLogo.scale-100.png</PackagePath>
@@ -299,7 +299,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\apphost.exe">
       <PackagePath>PL-PlatnedTestMatic.exe</PackagePath>
-      <Modified>2024-10-01T19:27:32.113</Modified>
+      <Modified>2024-10-01T21:01:40.768</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\.nuget\packages\microsoft.web.webview2\1.0.2651.64\runtimes\win-x86\native\WebView2Loader.dll">
       <PackagePath>runtimes\win-x86\native\WebView2Loader.dll</PackagePath>
@@ -2151,7 +2151,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.xml">
       <PackagePath>PL-PlatnedTestMatic.xml</PackagePath>
-      <Modified>2024-10-01T19:27:31.967</Modified>
+      <Modified>2024-10-01T21:01:40.613</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.deps.json">
       <PackagePath>PL-PlatnedTestMatic.deps.json</PackagePath>

@@ -33,6 +33,8 @@ using ClosedXML.Graphics;
 using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Text;
+using System.Net.NetworkInformation;
+using Newtonsoft.Json;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -97,7 +99,9 @@ namespace PL_PlatnedTestMatic.Pages
                         appLoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
                         Logger.Log("Configuration retrieval completed!");
 
-                        Logger.Log("Changing application logging state...");
+                        var userMac = GetMacAddress();
+
+                        Logger.Log("Changing application registration state...");
 
                         licenseKey = txtLicenseCode.Text;
 
@@ -133,7 +137,7 @@ namespace PL_PlatnedTestMatic.Pages
 
                         Logger.Log("GET - Request body: " + requestBody);
                         apiResponse = await api.Get(url, headers, requestBody, token);
-                        
+
 
                         Logger.Log($"Response StatusCode={apiResponse.StatusCode}, ResponseBody={apiResponse.ResponseBody}");
 
@@ -150,21 +154,60 @@ namespace PL_PlatnedTestMatic.Pages
                                 foreach (var item in valueElement.EnumerateArray())
                                 {
                                     var responseLicenseKey = item.GetProperty("Cf_License_Key").GetString();
+                                    var responseMacAddress = item.GetProperty("Cf_Mac_Address").GetString();
+                                    var objkey = item.GetProperty("Objkey").GetString();
+                                    var clientIdValue = item.GetProperty("Cf_Client_Id").GetString();
 
                                     // Check if the license key matches the one from the request
                                     if (responseLicenseKey == cfLicenseKey)
                                     {
                                         Logger.Log("License Key validated with Platned Pass");
-                                        Logger.Log("Saving configuration started...");
 
-                                        PageConfig pageConfig = new PageConfig();
-                                        pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, licenseKey);
-
-                                        Logger.Log("Saving configuration completed!");
-
-                                        if (App.MainWindow is MainWindow mainWindow)
+                                        if (string.IsNullOrEmpty(responseMacAddress))
                                         {
-                                            mainWindow.ShowInfoBar("Success!", "License Key validated with Platned Pass.", InfoBarSeverity.Success);
+                                            bool updateSuccessful = await UpdateMacAddressAsync(clientIdValue, objkey, userMac, token);
+
+                                            if (updateSuccessful)
+                                            {
+                                                Logger.Log("Saving configuration started...");
+                                                PageConfig pageConfig = new PageConfig();
+                                                pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, licenseKey);
+                                                Logger.Log("Saving configuration completed!");
+
+                                                if (App.MainWindow is MainWindow mainWindow)
+                                                {
+                                                    mainWindow.ShowInfoBar("Success!", "License Key validated with Platned Pass.", InfoBarSeverity.Success);
+                                                }
+
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                if (App.MainWindow is MainWindow mainWindow)
+                                                {
+                                                    mainWindow.ShowInfoBar("Attention!", "MAC Address registration issue found! Please contact Platned.", InfoBarSeverity.Warning);
+                                                }
+                                            }
+                                        }
+                                        else if (userMac != responseMacAddress)
+                                        {
+                                            if (App.MainWindow is MainWindow mainWindow)
+                                            {
+                                                mainWindow.ShowInfoBar("Attention!", "Registered MAC Address mismatch found! Please contact Platned.", InfoBarSeverity.Warning);
+                                            }
+                                        }else if (userMac == responseMacAddress)
+                                        {
+                                            Logger.Log("Saving configuration started...");
+                                            PageConfig pageConfig = new PageConfig();
+                                            pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, licenseKey);
+                                            Logger.Log("Saving configuration completed!");
+
+                                            if (App.MainWindow is MainWindow mainWindow)
+                                            {
+                                                mainWindow.ShowInfoBar("Success!", "License Key validated with Platned Pass.", InfoBarSeverity.Success);
+                                            }
+
+                                            return true;
                                         }
 
                                         return validLicense;
@@ -202,7 +245,7 @@ namespace PL_PlatnedTestMatic.Pages
                             return validLicense;
                         }
 
-                        
+
 
                     }
                     catch (System.Exception ex)
@@ -287,6 +330,122 @@ namespace PL_PlatnedTestMatic.Pages
 
             return tokenResponse.access_token;
         }
+
+        private static string GetMacAddress()
+        {
+            var networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+            // Prioritize Ethernet (LAN) interfaces, which are more likely to have permanent MAC addresses
+            var macAddress = networkInterfaces
+                .Where(nic => nic.OperationalStatus == OperationalStatus.Up &&
+                              nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet &&
+                              !nic.Description.ToLower().Contains("virtual") && // Skip virtual network interfaces
+                              !nic.Description.ToLower().Contains("pseudo"))   // Skip pseudo or loopback interfaces
+                .Select(nic => nic.GetPhysicalAddress().ToString())
+                .FirstOrDefault();
+
+            // If no Ethernet, fall back to any other available interface
+            if (string.IsNullOrEmpty(macAddress))
+            {
+                macAddress = networkInterfaces
+                    .Where(nic => nic.OperationalStatus == OperationalStatus.Up &&
+                                  nic.NetworkInterfaceType != NetworkInterfaceType.Loopback &&
+                                  !nic.Description.ToLower().Contains("virtual"))
+                    .Select(nic => nic.GetPhysicalAddress().ToString())
+                    .FirstOrDefault();
+            }
+
+            // Insert colons between every two characters
+            string formattedMac = string.Join(":", Enumerable.Range(0, macAddress.Length / 2).Select(i => macAddress.Substring(i * 2, 2)));
+
+            Logger.Log($"User MAC Address Retrieved: {formattedMac}");
+            return formattedMac;
+        }
+
+        // Method to POST MAC Address
+        private async Task<bool> UpdateMacAddressAsync(string clientIdValue, string secondObjKey, string userMac, string token)
+        {
+            try
+            {
+                // Base URL for the GET request
+                var baseUrl = "https://cloud.platnedcloud.com/main/ifsapplications/projection/v1/AptLicensing.svc/AptLicensingOverviewSet";
+
+                // JSON body containing Cf_Client_Id
+                var jsonBody = $@"
+                        {{
+                            ""Cf_Client_Id"": ""{clientIdValue}""
+                        }}";
+
+                // Filter based on Cf_Client_Id
+                var filter = $"Cf_Client_Id eq IfsApp.AptLicensing.CfEnum_AptLicensingClient'{clientIdValue}'";
+
+                // Build the GET request URL with the filter applied
+                var uriBuilder = new UriBuilder(baseUrl)
+                {
+                    Query = $"$filter={System.Uri.EscapeDataString(filter)}&$select=Cf_Client_Id,Cf_Active,Cf_License_Purchased,Cf_License_Consumed,Objgrants,luname,keyref&$skip=0&$top=25"
+                };
+
+                string url = uriBuilder.ToString();
+
+                // Sending GET request with Cf_Client_Id in the body
+                ApiExecution api = new ApiExecution();
+                ApiExecution.ApiResponse apiResponse = await api.Get(url, "", jsonBody, token);
+
+                if (apiResponse != null && (apiResponse.StatusCode == 200 || apiResponse.StatusCode == 201))
+                {
+                    var content = apiResponse?.ResponseBody;
+                    var apiResponseParsed = JsonDocument.Parse(content);
+
+                    if (apiResponseParsed.RootElement.TryGetProperty("value", out JsonElement valueElement))
+                    {
+                        foreach (var item in valueElement.EnumerateArray())
+                        {
+                            var firstObjKey = item.GetProperty("Objkey").GetString();
+
+                            var patchJsonBody = $@"
+                                    {{
+                                        ""Cf_Mac_Address"": ""{userMac}""
+                                    }}";
+
+                            // Create PATCH URL with the retrieved Objkeys
+                            string patchUrl = $"https://cloud.platnedcloud.com/main/ifsapplications/projection/v1/AptLicensing.svc/AptLicensingOverviewSet(Objkey='{firstObjKey}')/ClientId_to_ClientId(Objkey='{secondObjKey}')?select-fields=Cf_Mac_Address";
+
+                            // Sending PATCH request
+                            apiResponse = await api.Patch(patchUrl, "", patchJsonBody, token);
+
+                            if (apiResponse != null && (apiResponse.StatusCode == 200 || apiResponse.StatusCode == 204))
+                            {
+                                Logger.Log("PATCH - MAC address updated successfully!");
+                                return true; // Return true if update is successful
+                            }
+                            else
+                            {
+                                Logger.Log($"Error PATCHing MAC address: {apiResponse.StatusCode}");
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Logger.Log("No valid entries found in the GET response.");
+                    }
+
+                }
+                else
+                {
+                    Logger.Log($"Error during GET request: {apiResponse.StatusCode}");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log($"Error during MAC address update: {ex.Message}", "Error");
+            }
+            return false; // Return false if any errors occur
+        }
+
+
+
+
 
 
     }
