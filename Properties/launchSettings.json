@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PL-PlatnedTestMatic (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "PL-PlatnedTestMatic (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

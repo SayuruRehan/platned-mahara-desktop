@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PL_PlatnedTestMatic.Pages.PageConfig"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PL_PlatnedTestMatic.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Column="1">
+            <TextBlock Text="Authentication Configuration" FontFamily="Arial"
+                FontSize="24" TextWrapping="WrapWholeWords"
+                CharacterSpacing="200" Foreground="CornflowerBlue" Margin="50" HorizontalAlignment="Center" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="10" Width="150" MinWidth="150">
+                    <Bold>
+                            <Run FontFamily="Times New Roman" Foreground="DarkGray">Access Token URL</Run>
+                    </Bold>
+                </TextBlock>
+                <TextBox x:Name="txtAccessTokenUrl" AutomationProperties.Name="simple TextBox" Margin="5" Width="700" MinWidth="400"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="10" Width="150" MinWidth="150">
+                    <Bold>
+                        <Run FontFamily="Times New Roman" Foreground="DarkGray">Client ID</Run>
+                    </Bold>
+                </TextBlock>
+                <TextBox x:Name="txtClientId" AutomationProperties.Name="simple TextBox" Margin="5" Width="700" MinWidth="400"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="10" Width="150" MinWidth="150">
+                    <Bold>
+                        <Run FontFamily="Times New Roman" Foreground="DarkGray">Client Secret</Run>
+                    </Bold>
+                </TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <PasswordBox Name="txtClientSecret"
+                        PasswordRevealMode="Hidden" AutomationProperties.Name="Sample password box" Margin="5" Width="700" MinWidth="400"/>
+                    <CheckBox Name="revealModeCheckBox" Content="Show password" IsChecked="False"
+                        Checked="RevealModeCheckbox_Changed" Unchecked="RevealModeCheckbox_Changed" Margin="5"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="10" Width="150" MinWidth="150">
+                    <Bold>
+                        <Run FontFamily="Times New Roman" Foreground="DarkGray">Scope</Run>
+                    </Bold>
+                </TextBlock>
+                <TextBox x:Name="txtScope" AutomationProperties.Name="simple TextBox" Margin="5" Width="700" MinWidth="400"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,135,10">
+                <ProgressBar x:Name="progAuth" Width="150" IsIndeterminate="True" ShowPaused="False" ShowError="False" Margin="5" MinWidth="130" Visibility="Collapsed"/>
+                <Button x:Name="btnAuthenticate" Style="{StaticResource AccentButtonStyle}" Content="Authenticate" Background="{StaticResource StartButtonBrush}" Margin="5" Width="120" MinWidth="120" Click="btnAuthenticate_Click"/>
+                <Button x:Name="btnResetAuth" Style="{StaticResource AccentButtonStyle}" Content="Reset" Background="{StaticResource StopButtonBrush}" Margin="5" Width="120" MinWidth="120" Click="btnResetAuthBasicData_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
