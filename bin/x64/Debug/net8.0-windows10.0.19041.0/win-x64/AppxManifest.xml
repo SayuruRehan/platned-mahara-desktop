@@ -7,7 +7,7 @@
 
     For more information on package manifest files, see http://go.microsoft.com/fwlink/?LinkID=241727
   -->
-  <Identity Name="Platned.Apt" Publisher="CN=Platned Pvt Ltd" Version="1.0.3.0" ProcessorArchitecture="x64" />
+  <Identity Name="Platned.Apt" Publisher="CN=Platned Pvt Ltd" Version="1.1.1.0" ProcessorArchitecture="x64" />
   <mp:PhoneIdentity PhoneProductId="a8eab9e5-3e96-4b85-8a51-850c4713d0a9" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>PL-PlatnedTestMatic</DisplayName>

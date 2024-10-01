@@ -265,6 +265,7 @@ namespace PL_PlatnedTestMatic.Pages
             {
                 progExec.ShowPaused = false;
                 progExec.ShowError = false;
+                progExec.IsIndeterminate = true;
                 progExec.Visibility = Visibility.Visible;
                 btnStart.IsEnabled = false;
                 btnRerun.IsEnabled = false;
@@ -444,6 +445,8 @@ namespace PL_PlatnedTestMatic.Pages
             {
                 progExec.ShowPaused = false;
                 progExec.ShowError = false;
+                progExec.IsIndeterminate = false;
+                progExec.Value = 100;
                 progExec.Visibility = Visibility.Visible;
                 btnStart.IsEnabled = false;
                 btnStop.IsEnabled = false;
@@ -478,6 +481,7 @@ namespace PL_PlatnedTestMatic.Pages
             string url = apiCall["request"]["url"]["raw"].ToString();
             string headers = "";
             string requestBody = "";
+            System.Boolean multipartErrorSkip = false;
 
             ApiExecution api = new ApiExecution();
             ApiExecution.ApiResponse apiResponse = null;
@@ -541,21 +545,70 @@ namespace PL_PlatnedTestMatic.Pages
                     return;
             }
 
-
-
-
-
-
-
-
-
-
-
             Logger.Log($"Iteration {iterationNumber}: Response StatusCode={apiResponse.StatusCode}, ResponseBody={apiResponse.ResponseBody}");
 
             if (apiResponse != null && (apiResponse.StatusCode == 200 || apiResponse.StatusCode == 201) && errorFound != true && !apiResponse.ResponseBody.Contains("error"))
             {
                 UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+            }
+            else if (apiResponse != null && errorFound != true && apiResponse.ResponseBody.Contains("DB_OBJECT_EXIST")){
+                UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+                multipartErrorSkip = true;
+
+            }
+            else if (apiResponse != null && errorFound != true)
+            {
+                try
+                {
+                    // Log the raw response for debugging
+                    Logger.Log($"Raw Response Body: {apiResponse.ResponseBody}");
+
+                    // Extract the JSON part of the response by searching for the first occurrence of '{' and last occurrence of '}'
+                    int jsonStartIndex = apiResponse.ResponseBody.IndexOf('{');
+                    int jsonEndIndex = apiResponse.ResponseBody.LastIndexOf('}');
+
+                    if (jsonStartIndex >= 0 && jsonEndIndex >= 0 && jsonEndIndex > jsonStartIndex)
+                    {
+                        // Extract the substring that contains the JSON
+                        string jsonString = apiResponse.ResponseBody.Substring(jsonStartIndex, jsonEndIndex - jsonStartIndex + 1);
+
+                        // Parse the extracted JSON string
+                        JObject responseJson = JObject.Parse(jsonString);
+
+                        // Check if there's an error with code "DATABASE_ERROR"
+                        var errorCode = responseJson["error"]?["code"]?.ToString();
+                        var errorMessage = responseJson["error"]?["message"]?.ToString();
+                        var errorDetails = responseJson["error"]?["details"]?.ToObject<JArray>();
+
+                        if (errorCode == "DATABASE_ERROR" && errorDetails != null)
+                        {
+                            // Loop through error details to check for "LINE_ALREADY_EXISTS" or similar error codes
+                            foreach (var detail in errorDetails)
+                            {
+                                var detailMessage = detail["message"]?.ToString();
+
+                                if (detailMessage != null && detailMessage.Contains("ALREADY_EXISTS"))
+                                {
+                                    // Handle the specific duplicate line case
+                                    UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+                                    Logger.Log($"Error _ALREADY_EXISTS found for Multipart Request. Skipping to next API due to duplicate API call. Error Message: {detailMessage}");
+                                    multipartErrorSkip = true;
+                                    //break; // Skip further iteration as error is found
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Log that no valid JSON was found in the response
+                        Logger.Log("No valid JSON found in the response body.");
+                    }
+                }
+                catch (JsonReaderException ex)
+                {
+                    // If JSON parsing fails, handle it here
+                    Logger.Log($"Failed to parse response body for error handling. Error: {ex.Message}");
+                }
             }
             else
             {
@@ -564,7 +617,7 @@ namespace PL_PlatnedTestMatic.Pages
                 UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse?.StatusCode.ToString() ?? "N/A", apiResponse?.ResponseBody, "Error");
             }
 
-            if (!errorFound && apiResponse.ResponseBody.ToString() != "")
+            if (!errorFound && apiResponse.ResponseBody.ToString() != "" && multipartErrorSkip != true)
             {
                 Logger.Log("Processing CSV for new data...");
                 JObject responseJson = new Newtonsoft.Json.Linq.JObject();
@@ -635,6 +688,7 @@ namespace PL_PlatnedTestMatic.Pages
 
 
             }
+            multipartErrorSkip = false;
 
         }
 
@@ -971,6 +1025,8 @@ namespace PL_PlatnedTestMatic.Pages
                 btnRerun.IsEnabled = false;
                 btnStop.IsEnabled = true;
                 btnStart.IsEnabled = false;
+                progExec.ShowPaused = false;
+                progExec.IsIndeterminate = true;
 
                 await RunTestIterationsAsync(jsonFile, csvFile);
             }

@@ -4,6 +4,6 @@
   <ClientId>Plat_APT_Service</ClientId>
   <ClientSecret>JawpIl0UXtCABshpP8TlWHFL9ghtzGue</ClientSecret>
   <Scope>openid microprofile-jwt</Scope>
-  <LoggingEnabled>true</LoggingEnabled>
+  <LoggingEnabled>false</LoggingEnabled>
   <licenseKey>TEETGDP7MB6C5PB0OBY0</licenseKey>
 </Configuration>
