@@ -37,7 +37,8 @@ namespace PL_PlatnedTestMatic.Pages
         protected string clientSecret = "";
         protected string scope = "";
         protected string accessToken = "";
-        //protected Boolean appLoggingEnabled = false;
+        protected Boolean appLoggingEnabled = false;
+        protected string licenseKey = "";
 
         public PageConfig()
         {
@@ -63,18 +64,24 @@ namespace PL_PlatnedTestMatic.Pages
                 accessToken = token;
                 Logger.Log("Authenticated successfully!");
                 btnAuthenticate.IsEnabled = false;
-                //chkEnableLogging.Enabled = true;
 
                 Logger.Log("Saving configuration started...");
-                SaveConfigData(accessTokenUrl, clientId, clientSecret, scope);
+                SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, licenseKey);
                 Logger.Log("Saving configuration completed!");
 
-                //MessageBox.Show("Authenticated successfully!");
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Success!", "Authenticated successfully!", InfoBarSeverity.Success);
+                }
             }
             catch (Exception ex)
             {
                 Logger.Log($"Authentication failed: {ex.Message}", "Error");
-                //MessageBox.Show($"Authentication failed! Refer to application logs for more info.");
+
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Error!", "Authentication failed! Refer to application logs for more info!", InfoBarSeverity.Error);
+                }
             }
         }
 
@@ -120,6 +127,11 @@ namespace PL_PlatnedTestMatic.Pages
             btnAuthenticate.IsEnabled = true;
             btnResetAuth.IsEnabled = false;
             Logger.Log("Basic Data has been reset.");
+
+            if (App.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.ShowInfoBar("Success!", "Basic Data has been reset.", InfoBarSeverity.Informational);
+            }
         }
 
         public void SaveConfigData(string accessTokenUrl, string clientId, string clientSecret, string scope, Boolean appLoggingEnabled = false, string licenseKey = "")
@@ -159,7 +171,8 @@ namespace PL_PlatnedTestMatic.Pages
                     txtClientId.Text = configXml.Root.Element("ClientId")?.Value ?? string.Empty;
                     txtClientSecret.Password = configXml.Root.Element("ClientSecret")?.Value ?? string.Empty;
                     txtScope.Text = configXml.Root.Element("Scope")?.Value ?? string.Empty;
-                    
+                    appLoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+                    licenseKey = (configXml.Root.Element("licenseKey")?.Value ?? String.Empty);
 
                     if (txtAccessTokenUrl.Text == string.Empty && txtClientId.Text == string.Empty && txtClientSecret.Password == string.Empty && txtScope.Text == string.Empty)
                     {
