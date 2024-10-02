@@ -20,12 +20,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="ACP Releases\**" />
+    <Compile Remove="IFS_Cloud_Exports\**" />
     <Compile Remove="PL-PlatnedTestMatic-Legacy\**" />
     <EmbeddedResource Remove="ACP Releases\**" />
+    <EmbeddedResource Remove="IFS_Cloud_Exports\**" />
     <EmbeddedResource Remove="PL-PlatnedTestMatic-Legacy\**" />
     <None Remove="ACP Releases\**" />
+    <None Remove="IFS_Cloud_Exports\**" />
     <None Remove="PL-PlatnedTestMatic-Legacy\**" />
     <Page Remove="ACP Releases\**" />
+    <Page Remove="IFS_Cloud_Exports\**" />
     <Page Remove="PL-PlatnedTestMatic-Legacy\**" />
   </ItemGroup>
   <ItemGroup>
@@ -455,5 +459,9 @@
 
     <ItemGroup>
       <PRIResource Remove="ACP Releases\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PRIResource Remove="IFS_Cloud_Exports\**" />
     </ItemGroup>
 </Project>

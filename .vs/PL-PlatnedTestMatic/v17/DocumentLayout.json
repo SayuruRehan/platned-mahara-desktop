@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pagelicense.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pagelicense.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -26,11 +22,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "baseApiExecution.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Classes\\baseApiExecution.cs",
               "RelativeDocumentMoniker": "Classes\\baseApiExecution.cs",
@@ -43,19 +39,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Package.appxmanifest",
-              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Package.appxmanifest",
-              "RelativeDocumentMoniker": "Package.appxmanifest",
-              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Package.appxmanifest",
-              "RelativeToolTip": "Package.appxmanifest",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001793|",
-              "WhenOpened": "2024-10-02T08:25:26.156Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "PageLicense.xaml",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageLicense.xaml",
               "RelativeDocumentMoniker": "Pages\\PageLicense.xaml",
@@ -67,7 +51,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "PageLicense.xaml.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageLicense.xaml.cs",
               "RelativeDocumentMoniker": "Pages\\PageLicense.xaml.cs",
