@@ -24,7 +24,7 @@
         FontSize="24" TextWrapping="WrapWholeWords"
         CharacterSpacing="200" Foreground="CornflowerBlue" Margin="50" HorizontalAlignment="Center" />
             <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="txtLicenseCode" Header="" PlaceholderText="License Code" ToolTipService.ToolTip="20 characters long License Code" Width="200" MaxWidth="200" MaxLength="20" CharacterCasing="Upper" />
+                <TextBox x:Name="txtLicenseCode" Header="" PlaceholderText="License Code" ToolTipService.ToolTip="20 characters long License Code" Width="220" MaxWidth="220" MaxLength="20" CharacterCasing="Upper" />
                 <Button x:Name="btnValidate" Style="{StaticResource AccentButtonStyle}" Content="Validate" Background="{StaticResource StartButtonBrush}" Margin="10,0,0,0" Width="120" MinWidth="120" Click="btnValidate_Click"/>
             </StackPanel>
         </StackPanel>

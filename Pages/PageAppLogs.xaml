@@ -63,7 +63,7 @@
                                 BorderThickness="0" ToolTipService.ToolTip="Font color"
                                 Background="Transparent"
                                 RelativePanel.AlignRightWithPanel="True">
-                     <SymbolIcon Symbol="FontColor"/>
+                        <SymbolIcon Symbol="FontColor"/>
                         <DropDownButton.Flyout>
                             <Flyout Placement="Bottom">
                                 <VariableSizedWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="3">
@@ -124,7 +124,7 @@
                         </DropDownButton.Flyout>
                     </DropDownButton>
 
-                    <RichEditBox x:Name="editor" Height="500" AutomationProperties.Name="Custom editor"
+                    <RichEditBox x:Name="editor" Height="460" AutomationProperties.Name="Custom editor"
                         RelativePanel.Below="openFileButton"
                         RelativePanel.AlignLeftWithPanel="True"
                         RelativePanel.AlignRightWithPanel="True"

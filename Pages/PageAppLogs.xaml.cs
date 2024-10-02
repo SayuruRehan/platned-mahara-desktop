@@ -21,6 +21,8 @@ using Windows.UI;
 using ClosedXML.Excel;
 using PL_PlatnedTestMatic.Classes;
 using System.Xml.Linq;
+using Windows.UI.Core;
+using Microsoft.UI.Dispatching;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,11 +42,17 @@ namespace PL_PlatnedTestMatic.Pages
         protected string clientSecret = "";
         protected string scope = "";
         protected string licenseKey = "";
+        private string logFilePath;
+        private FileSystemWatcher fileWatcher;
+        private long lastFileSize = 0;
+        private DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
+
 
         public PageAppLogs()
         {
             this.InitializeComponent();
             LoadConfigData();
+            InitializeLogFileWatcher();
         }
 
         private async void OpenButton_Click(object sender, RoutedEventArgs e)
@@ -266,6 +274,56 @@ namespace PL_PlatnedTestMatic.Pages
                 Logger.Log("No saved basic data configurations found!");
             }
         }
+
+        private void InitializeLogFileWatcher()
+        {
+            // Define the path where the log file is stored
+            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+
+            if (!Directory.Exists(tempFolderPath))
+            {
+                Directory.CreateDirectory(tempFolderPath);
+            }
+
+            logFilePath = Path.Combine(tempFolderPath, "pl-application_log.log");
+
+            if (File.Exists(logFilePath))
+            {
+                // Setup file watcher
+                fileWatcher = new FileSystemWatcher
+                {
+                    Path = tempFolderPath,
+                    Filter = "pl-application_log.log",
+                };
+
+                // Load initial content
+                LoadInitialLogContent();
+            }
+        }
+
+        private void LoadInitialLogContent()
+        {
+            if (File.Exists(logFilePath))
+            {
+                string[] lines = File.ReadAllLines(logFilePath);
+                AppendTextToEditor(string.Join(Environment.NewLine, lines));
+            }
+        }
+
+        private void AppendTextToEditor(string text)
+        {
+            if (editor != null)
+            {
+                editor.Document.GetText(TextGetOptions.None, out string existingText);
+                editor.Document.SetText(TextSetOptions.None, existingText + Environment.NewLine + text);
+            }
+            else
+            {
+                Logger.Log("Error: editor is not initialized.");
+            }
+        }
+
+
 
     }
 }
