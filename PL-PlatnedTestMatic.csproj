@@ -19,9 +19,13 @@
 	<ApplicationIcon>Assets\PlatnedLogo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="ACP Releases\**" />
     <Compile Remove="PL-PlatnedTestMatic-Legacy\**" />
+    <EmbeddedResource Remove="ACP Releases\**" />
     <EmbeddedResource Remove="PL-PlatnedTestMatic-Legacy\**" />
+    <None Remove="ACP Releases\**" />
     <None Remove="PL-PlatnedTestMatic-Legacy\**" />
+    <Page Remove="ACP Releases\**" />
     <Page Remove="PL-PlatnedTestMatic-Legacy\**" />
   </ItemGroup>
   <ItemGroup>
@@ -447,5 +451,9 @@
 
     <ItemGroup>
       <PRIResource Remove="PL-PlatnedTestMatic-Legacy\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PRIResource Remove="ACP Releases\**" />
     </ItemGroup>
 </Project>
