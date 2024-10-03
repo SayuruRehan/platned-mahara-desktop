@@ -52,7 +52,7 @@ namespace PL_PlatnedTestMatic.Pages
         {
             this.InitializeComponent();
             LoadConfigData();
-            InitializeLogFileWatcher();
+            //InitializeLogFileWatcher();
         }
 
         private async void OpenButton_Click(object sender, RoutedEventArgs e)

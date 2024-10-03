@@ -153,7 +153,7 @@ namespace PL_PlatnedTestMatic.Classes
             }
         }
 
-        public async Task<ApiResponse> SendMultipartRequest(string valUrl, string valHeader, string valRequestBody, string valToken, string valMethod, string valRec = "SendMultipartRequest")
+        public async Task<ApiResponse> SendMultipartRequest(string valUrl, string valHeader, string valRequestBody, string valToken, string valMethod, string valRec = "SendMultipartRequest", string entitySet = "", string entitySetParam = "", string entitySetArray = "")
         {
             try
             {
@@ -163,7 +163,7 @@ namespace PL_PlatnedTestMatic.Classes
                 requestBody = valRequestBody;
                 token = valToken;
 
-                ApiResponse apiResponse = await SendMultipartRequest(url, method, headers, requestBody, token);
+                ApiResponse apiResponse = await SendMultipartRequest(url, method, headers, requestBody, token, entitySet, entitySetParam, entitySetArray);
                 return apiResponse;
             }
             catch (Exception ex)
@@ -998,7 +998,7 @@ namespace PL_PlatnedTestMatic.Classes
         int retryThrice = 0;
         string propertyNameTemp = "";
 
-        private async Task<ApiResponse> SendMultipartRequest(string url, string method, string headers, string requestBody, string receivedToken)
+        private async Task<ApiResponse> SendMultipartRequest(string url, string method, string headers, string requestBody, string receivedToken, string entitySet, string entitySetParam, string entitySetArray)
         {
             token = receivedToken;
 
@@ -1035,8 +1035,8 @@ namespace PL_PlatnedTestMatic.Classes
 
             // Extract the value of 'OrderNo'
             JObject jsonObject = JObject.Parse(requestBody);            
-            string orderNo = jsonObject["OrderNo"]?.ToString();
-            Logger.Log($"Building request body for the Order No: {orderNo}");
+            string? entitySetParamValue = jsonObject[$"{entitySetParam}"]?.ToString();
+            Logger.Log($"Building request body for the {entitySetParam}: {entitySetParamValue}");
 
             // Get all property names and Join them as a single string separated by commas
             JObject json = JObject.Parse(requestBody);
@@ -1074,7 +1074,7 @@ namespace PL_PlatnedTestMatic.Classes
             multipartBody.AppendLine("Content-Transfer-Encoding:binary");
             multipartBody.AppendLine("Content-Id: 2");
             multipartBody.AppendLine();
-            multipartBody.AppendLine($"POST CustomerOrderSet(OrderNo='{orderNo}')/OrderLinesArray?select-fields={propertyNamesString} HTTP/1.1"); // Use your full endpoint here
+            multipartBody.AppendLine($"POST {entitySet}({entitySetParam}='{entitySetParamValue}')/{entitySetArray}?select-fields={propertyNamesString} HTTP/1.1"); // Use your full endpoint here
             multipartBody.AppendLine("Accept:application/json;odata.metadata=full;IEEE754Compatible=true");
             multipartBody.AppendLine("Content-Type: application/json;IEEE754Compatible=true");
             multipartBody.AppendLine("X-IFS-Accept-Warnings: true");
@@ -1268,7 +1268,7 @@ namespace PL_PlatnedTestMatic.Classes
                                     Logger.Log($"Corrected Request Body: {correctedRequestBody}");
 
                                     Logger.Log($"Retrying the request with the corrected property '{propertyName}'...");
-                                    return await SendMultipartRequest(url, method, headers, correctedRequestBody, token);
+                                    return await SendMultipartRequest(url, method, headers, correctedRequestBody, token, entitySet, entitySetParam, entitySetArray);
                                 }
                                 else
                                 {
@@ -1365,7 +1365,7 @@ namespace PL_PlatnedTestMatic.Classes
                                     Logger.Log($"Corrected Request Body: {parsedRequestBody}");
 
                                     Logger.Log($"Retrying the request with the corrected property '{propertyName}'...");
-                                    return await SendMultipartRequest(url, method, headers, parsedRequestBody, token);
+                                    return await SendMultipartRequest(url, method, headers, parsedRequestBody, token, entitySet, entitySetParam, entitySetArray);
                                 }
                                 else
                                 {
@@ -1446,7 +1446,7 @@ namespace PL_PlatnedTestMatic.Classes
 
                                         Logger.Log($"Retrying the request without the problematic property '{propertyName}'...");
 
-                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token);
+                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token, entitySet, entitySetParam, entitySetArray);
                                     }
                                     else
                                     {
@@ -1515,7 +1515,7 @@ namespace PL_PlatnedTestMatic.Classes
 
                                         Logger.Log($"Retrying the request without the problematic property '{propertyName}'...");
 
-                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token);
+                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token, entitySet, entitySetParam, entitySetArray);
                                     }
                                     else
                                     {
@@ -1599,7 +1599,7 @@ namespace PL_PlatnedTestMatic.Classes
 
                                         Logger.Log($"Retrying the request with corrected boolean properties...");
 
-                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token);
+                                        return await SendMultipartRequest(url, method, headers, correctedRequestBody, token, entitySet, entitySetParam, entitySetArray);
                                     }
                                     else
                                     {

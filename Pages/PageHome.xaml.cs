@@ -34,6 +34,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -61,7 +62,9 @@ namespace PL_PlatnedTestMatic.Pages
         bool errorFound = false;
         private CancellationTokenSource cancellationTokenSource;
         private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
-
+        private string entitySet = "";
+        private string entitySetParam = "";
+        private string entitySetArray = "";
 
         public PageHome()
         {
@@ -521,9 +524,13 @@ namespace PL_PlatnedTestMatic.Pages
                     }
                     if (apiResponse.ResponseBody.Contains("REQUEST_ERROR") && apiResponse.ResponseBody.Contains("UNEXPECTED_CONTENT_TYPE") && apiResponse.ResponseBody.Contains("multipart/mixed"))
                     {
+
+                        string jsonContent = File.ReadAllText(jsonFilePath);
+                        ParseJson(jsonContent);
+
                         requestBody = BuildRequestBody(csvParameters);
                         Logger.Log("POST - Request body for SendMultipartRequest: " + requestBody);
-                        apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest");
+                        apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest", entitySet, entitySetParam, entitySetArray);
                         break;
                     }
 
@@ -603,6 +610,18 @@ namespace PL_PlatnedTestMatic.Pages
                         // Log that no valid JSON was found in the response
                         Logger.Log("No valid JSON found in the response body.");
                     }
+                    if(apiResponse.StatusCode.ToString() == "401")
+                    {
+                        errorFound = true;
+                        testingStausFailed = true;
+                        progExec.ShowError = true;
+                        UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Authorization Required!", "Aborted");
+                    }
+                    else
+                    {
+                        UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+                    }
+                    
                 }
                 catch (JsonReaderException ex)
                 {
@@ -840,7 +859,6 @@ namespace PL_PlatnedTestMatic.Pages
             dataGrid.ItemsSource = GridItems;
         }
 
-
         private void WriteDataTableToCsv(DataTable dataTable, string filePath)
         {
             Logger.Log("Starting to write data to CSV...");
@@ -1039,6 +1057,110 @@ namespace PL_PlatnedTestMatic.Pages
             }
 
         }
+
+        public void ParseJson(string jsonContent)
+        {
+            try
+            {
+                // Parse the JSON content
+                JObject jsonObject = JObject.Parse(jsonContent);
+
+                // Check if 'item' array exists
+                JArray items = (JArray)jsonObject["item"];
+                if (items == null || items.Count == 0)
+                {
+                    Logger.Log("Error: 'item' array not found or is empty.");
+                    return;
+                }
+
+                // Get the first item in the array (you can loop if necessary for multiple items)
+                JObject firstItem = (JObject)items[0];
+
+                // Check if 'request' exists in the first item
+                JObject requestObject = firstItem["request"] as JObject;
+                if (requestObject == null)
+                {
+                    Logger.Log("Error: 'request' object not found in the first item.");
+                    return;
+                }
+
+                // Check if 'body' exists in the 'request' object
+                JObject bodyObject = requestObject["body"] as JObject;
+                if (bodyObject == null)
+                {
+                    Logger.Log("Error: 'body' object not found in the 'request'. Exiting.");
+                    return; // Exit if body is null
+                }
+
+                // Check if 'raw' exists in the 'body' object
+                string rawContent = bodyObject["raw"]?.ToString();
+                if (string.IsNullOrEmpty(rawContent))
+                {
+                    Logger.Log("Error: 'raw' content is null or empty.");
+                    return;
+                }
+
+                // Output the extracted raw content
+                Logger.Log($"Extracted Raw Content: {rawContent}");
+
+                // You can call your method to parse the raw content here
+                ParseRawContent(rawContent);
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"An error occurred while parsing JSON: {ex.Message}");
+            }
+        }
+
+        public void ParseRawContent(string rawContent)
+        {
+            // 1. Extract EntitySet (the word ending with 'Set')
+            string entitySetPattern = @"POST\s(\w+Set)\(";
+            Match entitySetMatch = Regex.Match(rawContent, entitySetPattern);
+            if (entitySetMatch.Success)
+            {
+                entitySet = entitySetMatch.Groups[1].Value;
+                Logger.Log($"EntitySet: {entitySet}");
+            }
+
+            // 2. Extract the parameter name inside CustomerOrderSet()
+            string entitySetParamsPattern = @"\(([^)]+)\)";  // Matches the content inside parentheses
+            Match entitySetParamsMatch = Regex.Match(rawContent, entitySetParamsPattern);
+
+            if (entitySetParamsMatch.Success)
+            {
+                entitySetParam = entitySetParamsMatch.Groups[1].Value;
+
+                // Extract the specific parameter name (e.g., OrderNo) inside the parentheses
+                string paramNamePattern = @"(\w+)=['""]([^'""]+)['""]";  // Pattern to match the parameter name and value
+                Match paramNameMatch = Regex.Match(entitySetParam, paramNamePattern);
+
+                if (paramNameMatch.Success)
+                {
+                    entitySetParam = paramNameMatch.Groups[1].Value;  // The parameter name, e.g., "OrderNo"
+                    Logger.Log($"Parameter Name: {entitySetParam}");
+                }
+                else
+                {
+                    Logger.Log("Parameter name not found.");
+                }
+            }
+            else
+            {
+                Logger.Log("No parameters found inside parentheses.");
+            }
+
+            // 3. Extract the word after ')' and before '?' (e.g., OrderLinesArray)
+            string afterSetPattern = @"\)\s*/\s*(\w+)\?";
+            Match afterSetMatch = Regex.Match(rawContent, afterSetPattern);
+            if (afterSetMatch.Success)
+            {
+                entitySetArray = afterSetMatch.Groups[1].Value;
+                Logger.Log($"EntitySet Array: {entitySetArray}");
+            }
+        }
+
+
 
     }
 
