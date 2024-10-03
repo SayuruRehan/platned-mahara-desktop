@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:package.appxmanifest||{4D47164B-07B6-4A52-A855-728D6A2E2AA3}"
+      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\classes\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:classes\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pagehome.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pagehome.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pagelicense.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pagelicense.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pageapplogs.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pageapplogs.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\classes\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:classes\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pageapplogs.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -21,18 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pagelicense.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pagelicense.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\classes\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:classes\\baselogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\pages\\pagelicense.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:pages\\pagelicense.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|c:\\users\\nimeshekanayakeplatn\\source\\repos\\apt-desktop\\classes\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FD5556AF-2295-44C2-B24C-93AAD7000602}|PL-PlatnedTestMatic.csproj|solutionrelative:classes\\baseapiexecution.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,17 +38,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
               "Title": "baseApiExecution.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Classes\\baseApiExecution.cs",
               "RelativeDocumentMoniker": "Classes\\baseApiExecution.cs",
               "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Classes\\baseApiExecution.cs",
               "RelativeToolTip": "Classes\\baseApiExecution.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAcwOMCAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKUAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-09-22T07:06:32.856Z",
               "IsPinned": true,
@@ -60,32 +56,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Package.appxmanifest",
-              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Package.appxmanifest",
-              "RelativeDocumentMoniker": "Package.appxmanifest",
-              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Package.appxmanifest",
-              "RelativeToolTip": "Package.appxmanifest",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001793|",
-              "WhenOpened": "2024-10-02T12:48:13.768Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-10-02T12:48:11.967Z",
-              "EditorCaption": ""
+              "Title": "PageHome.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageHome.xaml.cs",
+              "RelativeDocumentMoniker": "Pages\\PageHome.xaml.cs",
+              "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageHome.xaml.cs",
+              "RelativeToolTip": "Pages\\PageHome.xaml.cs",
+              "ViewState": "AgIAAOsBAAAAAAAAAAAqwAwCAABIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-03T04:23:45.131Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 4,
               "Title": "baseLogger.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Classes\\baseLogger.cs",
               "RelativeDocumentMoniker": "Classes\\baseLogger.cs",
@@ -93,12 +76,11 @@
               "RelativeToolTip": "Classes\\baseLogger.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAA0AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-02T11:47:37.441Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T11:47:37.441Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "PageLicense.xaml.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageLicense.xaml.cs",
               "RelativeDocumentMoniker": "Pages\\PageLicense.xaml.cs",
@@ -106,12 +88,11 @@
               "RelativeToolTip": "Pages\\PageLicense.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-02T11:40:04.658Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T11:40:04.658Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "PageLicense.xaml",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageLicense.xaml",
               "RelativeDocumentMoniker": "Pages\\PageLicense.xaml",
@@ -119,12 +100,11 @@
               "RelativeToolTip": "Pages\\PageLicense.xaml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAACpAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-10-02T11:39:03.403Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T11:39:03.403Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "PageAppLogs.xaml",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageAppLogs.xaml",
               "RelativeDocumentMoniker": "Pages\\PageAppLogs.xaml",
@@ -132,21 +112,19 @@
               "RelativeToolTip": "Pages\\PageAppLogs.xaml",
               "ViewState": "AgIAAHUAAAAAAAAAAAAAAIgAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-10-02T11:34:45.96Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T11:34:45.96Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "PageAppLogs.xaml.cs",
               "DocumentMoniker": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageAppLogs.xaml.cs",
               "RelativeDocumentMoniker": "Pages\\PageAppLogs.xaml.cs",
               "ToolTip": "C:\\Users\\NimeshEkanayakePlatn\\source\\repos\\apt-desktop\\Pages\\PageAppLogs.xaml.cs",
               "RelativeToolTip": "Pages\\PageAppLogs.xaml.cs",
-              "ViewState": "AgIAACQBAAAAAAAAAAAAADgBAAALAAAAAAAAAA==",
+              "ViewState": "AgIAABsAAAAAAAAAAAAAADYAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-02T11:34:43.779Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-02T11:34:43.779Z"
             }
           ]
         }

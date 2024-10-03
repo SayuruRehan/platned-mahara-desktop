@@ -18,32 +18,32 @@
     <DeployOptionalPackages>false</DeployOptionalPackages>
     <WindowsSdkPath>C:\Program Files %28x86%29\Windows Kits\10\</WindowsSdkPath>
     <LayoutDir>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\AppX</LayoutDir>
-    <RegisteredManifestChecksum>F6E5E6B689B02F63C066AD3597B40B830DADCDB2DA7805F15A11FD92F8149E27</RegisteredManifestChecksum>
-    <RegisteredPackageMoniker>Platned.Apt_1.1.1.0_x64__7ptqxwfackp3y</RegisteredPackageMoniker>
+    <RegisteredManifestChecksum>73B0F611497979B1D26F5E26E06813D7DBAE276B206F6336469D11659C319AB8</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>Platned.Apt_1.1.2.0_x64__7ptqxwfackp3y</RegisteredPackageMoniker>
     <RegisteredUserModeAppID>Platned.Apt_7ptqxwfackp3y!App</RegisteredUserModeAppID>
     <RegisteredPackageID>Platned.Apt</RegisteredPackageID>
     <RegisteredPackagePublisher>CN=Platned Pvt Ltd</RegisteredPackagePublisher>
-    <RegisteredVersion>1.1.1.0</RegisteredVersion>
+    <RegisteredVersion>1.1.2.0</RegisteredVersion>
   </PropertyGroup>
   <ItemGroup>
     <AppXManifest Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-10-02T12:28:59.634</Modified>
+      <Modified>2024-10-03T07:18:29.144</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-10-02T11:55:46.059</Modified>
+      <Modified>2024-10-03T05:48:34.803</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.runtimeconfig.json">
       <PackagePath>PL-PlatnedTestMatic.runtimeconfig.json</PackagePath>
-      <Modified>2024-10-02T11:55:45.327</Modified>
+      <Modified>2024-10-03T05:48:33.924</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.dll">
       <PackagePath>PL-PlatnedTestMatic.dll</PackagePath>
-      <Modified>2024-10-02T12:28:58.849</Modified>
+      <Modified>2024-10-03T07:18:28.718</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\Logos\BadgeLogo.scale-100.png">
       <PackagePath>Assets\Logos\BadgeLogo.scale-100.png</PackagePath>
@@ -299,7 +299,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\apphost.exe">
       <PackagePath>PL-PlatnedTestMatic.exe</PackagePath>
-      <Modified>2024-10-02T12:28:59.026</Modified>
+      <Modified>2024-10-03T07:18:28.788</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\.nuget\packages\microsoft.web.webview2\1.0.2651.64\runtimes\win-x86\native\WebView2Loader.dll">
       <PackagePath>runtimes\win-x86\native\WebView2Loader.dll</PackagePath>
@@ -2151,11 +2151,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.xml">
       <PackagePath>PL-PlatnedTestMatic.xml</PackagePath>
-      <Modified>2024-10-02T12:28:58.800</Modified>
+      <Modified>2024-10-03T07:18:28.670</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\PL-PlatnedTestMatic.deps.json">
       <PackagePath>PL-PlatnedTestMatic.deps.json</PackagePath>
-      <Modified>2024-10-02T11:55:45.232</Modified>
+      <Modified>2024-10-03T05:48:33.821</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\NimeshEkanayakePlatn\.nuget\packages\uno.winui\5.2.132/lib/net7.0-windows10.0.19041.0/Uno.UI.Toolkit.pri">
       <PackagePath>Uno.UI.Toolkit.pri</PackagePath>

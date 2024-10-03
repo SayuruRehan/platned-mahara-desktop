@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
-  <AccessTokenUrl></AccessTokenUrl>
-  <ClientId></ClientId>
-  <ClientSecret></ClientSecret>
-  <Scope></Scope>
-  <LoggingEnabled>true</LoggingEnabled>
+  <AccessTokenUrl>https://cloud.platnedcloud.com/auth/realms/platprd/protocol/openid-connect/token</AccessTokenUrl>
+  <ClientId>Plat_APT_Service</ClientId>
+  <ClientSecret>JawpIl0UXtCABshpP8TlWHFL9ghtzGue</ClientSecret>
+  <Scope>openid microprofile-jwt</Scope>
+  <LoggingEnabled>false</LoggingEnabled>
   <licenseKey>TEETGDP7MB6C5PB0OBY0</licenseKey>
 </Configuration>

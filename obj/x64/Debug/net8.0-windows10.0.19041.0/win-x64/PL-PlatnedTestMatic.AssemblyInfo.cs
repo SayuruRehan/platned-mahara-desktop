@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PL-PlatnedTestMatic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e02881fbe05822df37352f860c51098fa622b924")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac63cd69ac29c089a50cfe0ab283753248e5549d")]
 [assembly: System.Reflection.AssemblyProductAttribute("PL-PlatnedTestMatic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PL-PlatnedTestMatic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
