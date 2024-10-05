@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <authors>PL-PlatnedTestMatic</authors>
     <description>Package Description</description>
-    <repository type="git" commit="e96c40159c3d3bea9afda3f12041228e36e98b86" />
+    <repository type="git" commit="9d0781349a3ed1eac7b414f4f7a8cf76d9ff391b" />
     <dependencies>
       <group targetFramework="net8.0-windows10.0.19041">
         <dependency id="ClosedXML" version="0.102.3" exclude="Build,Analyzers" />

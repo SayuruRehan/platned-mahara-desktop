@@ -482,6 +482,21 @@ namespace PL_PlatnedTestMatic.Pages
         {
             string method = apiCall["request"]["method"].ToString();
             string url = apiCall["request"]["url"]["raw"].ToString();
+
+            string bodyRawJson = "";
+            if (method == "POST")
+            {
+                try
+                {
+                    bodyRawJson = apiCall["request"]["body"]["raw"].ToString();
+                }
+                catch (Exception e)
+                {
+                    Logger.Log($"Exception occurred. Possible low priority exception: {e}");
+                }
+                
+            }
+
             string headers = "";
             string requestBody = "";
             System.Boolean multipartErrorSkip = false;
@@ -513,6 +528,19 @@ namespace PL_PlatnedTestMatic.Pages
                 case "POST":
                     requestBody = BuildRequestBody(csvParameters);
                     Logger.Log("POST - Request body: " + requestBody);
+
+                    var tempRequestBody = "";
+
+                    if (bodyRawJson != "")
+                    {
+                        tempRequestBody = FilterRequestBody(bodyRawJson, requestBody);
+                        Logger.Log("POST - Filtered Request body: " + requestBody);
+                    }
+                    if(tempRequestBody != "IGNORE")
+                    {
+                        requestBody = tempRequestBody;
+                    }
+
                     apiResponse = await api.Post(url, headers, requestBody, token);
 
                     if (apiResponse.ResponseBody.Contains("DATABASE_ERROR") && (apiResponse.ResponseBody.Contains("ACCESS_FAILURE") || apiResponse.ResponseBody.Contains("CASE not found")))
@@ -524,10 +552,16 @@ namespace PL_PlatnedTestMatic.Pages
                     }
                     if (apiResponse.ResponseBody.Contains("REQUEST_ERROR") && apiResponse.ResponseBody.Contains("UNEXPECTED_CONTENT_TYPE") && apiResponse.ResponseBody.Contains("multipart/mixed"))
                     {
-
-                        string jsonContent = File.ReadAllText(jsonFilePath);
-                        ParseJson(jsonContent);
-
+                        if(bodyRawJson != "")
+                        {
+                            ParseRawContent(bodyRawJson);
+                        }
+                        else
+                        {
+                            string jsonContent = File.ReadAllText(jsonFilePath);
+                            ParseJson(jsonContent);
+                        }
+                        
                         requestBody = BuildRequestBody(csvParameters);
                         Logger.Log("POST - Request body for SendMultipartRequest: " + requestBody);
                         apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest", entitySet, entitySetParam, entitySetArray);
@@ -558,7 +592,8 @@ namespace PL_PlatnedTestMatic.Pages
             {
                 UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
             }
-            else if (apiResponse != null && errorFound != true && apiResponse.ResponseBody.Contains("DB_OBJECT_EXIST")){
+            else if (apiResponse != null && errorFound != true && apiResponse.ResponseBody.Contains("DB_OBJECT_EXIST"))
+            {
                 UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
                 multipartErrorSkip = true;
 
@@ -610,7 +645,7 @@ namespace PL_PlatnedTestMatic.Pages
                         // Log that no valid JSON was found in the response
                         Logger.Log("No valid JSON found in the response body.");
                     }
-                    if(apiResponse.StatusCode.ToString() == "401")
+                    if (apiResponse.StatusCode.ToString() == "401")
                     {
                         errorFound = true;
                         testingStausFailed = true;
@@ -621,7 +656,7 @@ namespace PL_PlatnedTestMatic.Pages
                     {
                         UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
                     }
-                    
+
                 }
                 catch (JsonReaderException ex)
                 {
@@ -1058,7 +1093,7 @@ namespace PL_PlatnedTestMatic.Pages
 
         }
 
-        public void ParseJson(string jsonContent)
+        private void ParseJson(string jsonContent)
         {
             try
             {
@@ -1112,7 +1147,7 @@ namespace PL_PlatnedTestMatic.Pages
             }
         }
 
-        public void ParseRawContent(string rawContent)
+        private void ParseRawContent(string rawContent)
         {
             // 1. Extract EntitySet (the word ending with 'Set')
             string entitySetPattern = @"POST\s(\w+Set)\(";
@@ -1160,7 +1195,36 @@ namespace PL_PlatnedTestMatic.Pages
             }
         }
 
+        public string FilterRequestBody(string bodyRawJson, string requestBodyIn)
+        {
+            try
+            {
+                // Parse bodyRawJson to extract all property names
+                JObject bodyRawJObject = JObject.Parse(bodyRawJson);
+                var propertiesToRetain = bodyRawJObject.Properties().Select(p => p.Name).ToList();
 
+                // Parse the request body raw JSON into a JObject for manipulation
+                JObject requestBody = JObject.Parse(requestBodyIn);
+
+                // Iterate through all properties in the request body and remove the unwanted ones
+                foreach (var property in requestBody.Properties().ToList())
+                {
+                    if (!propertiesToRetain.Contains(property.Name))
+                    {
+                        property.Remove(); // Remove the property if it's not in the list of properties to retain
+                    }
+                }
+
+                // Serialize the filtered requestBody back to JSON
+                string filteredJson = JsonConvert.SerializeObject(requestBody, Formatting.Indented);
+
+                return filteredJson;
+            }catch (Exception e)
+            {
+                return "IGNORE";
+            }
+            
+        }
 
     }
 
