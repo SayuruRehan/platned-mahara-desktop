@@ -234,15 +234,33 @@ namespace PL_PlatnedTestMatic
             infoBar.Severity = severity;
             infoBar.IsOpen = true;
 
+            PlayNotificationSound();
+
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(5);
             timer.Tick += (sender, args) =>
             {
-                infoBar.IsOpen = false;  
-                timer.Stop(); 
+                infoBar.IsOpen = false;
+                timer.Stop();
             };
 
             timer.Start();
+
+        }
+
+        private async void PlayNotificationSound()
+        {
+            ElementSoundPlayer.State = ElementSoundPlayerState.On;
+            ElementSoundPlayer.Play(ElementSoundKind.Show);
+
+            var timerSound = new DispatcherTimer();
+            timerSound.Interval = TimeSpan.FromSeconds(1);
+            timerSound.Tick += (sender, args) =>
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                timerSound.Stop();
+            };
+            timerSound.Start();
         }
     }
 }
