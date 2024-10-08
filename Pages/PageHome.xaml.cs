@@ -340,7 +340,7 @@ namespace PL_PlatnedTestMatic.Pages
                 string[] headers = reader.ReadLine().Split(',');
                 foreach (string header in headers)
                 {
-                    csvData.Columns.Add(header);
+                        csvData.Columns.Add(header);
                 }
                 Logger.Log("CSV headers loaded.");
 
@@ -536,7 +536,7 @@ namespace PL_PlatnedTestMatic.Pages
                         tempRequestBody = FilterRequestBody(bodyRawJson, requestBody);
                         Logger.Log("POST - Filtered Request body: " + requestBody);
                     }
-                    if(tempRequestBody != "IGNORE")
+                    if(tempRequestBody != "IGNORE" && bodyRawJson != "")
                     {
                         requestBody = tempRequestBody;
                     }
@@ -654,7 +654,17 @@ namespace PL_PlatnedTestMatic.Pages
                     }
                     else
                     {
-                        UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+                        if (apiResponse.ResponseBody.Contains("error"))
+                        {
+                            errorFound = true;
+                            testingStausFailed = true;
+                            UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse?.StatusCode.ToString() ?? "N/A", apiResponse?.ResponseBody, "Error");
+                        }
+                        else
+                        {
+                            UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
+                        }
+                        
                     }
 
                 }
@@ -670,6 +680,8 @@ namespace PL_PlatnedTestMatic.Pages
                 testingStausFailed = true;
                 UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse?.StatusCode.ToString() ?? "N/A", apiResponse?.ResponseBody, "Error");
             }
+
+            WriteDataTableToCsvWithStatus(csvData, csvFilePath, iterationNumber, errorFound, apiResponse.ResponseBody);
 
             if (!errorFound && apiResponse.ResponseBody.ToString() != "" && multipartErrorSkip != true)
             {
@@ -829,6 +841,12 @@ namespace PL_PlatnedTestMatic.Pages
 
             foreach (var param in parameters)
             {
+                if (param.Key == "TestStatus" || param.Key == "TestStatusDescription")
+                {
+                    Logger.Log($"Skipped '{param.Key}' column");
+                    continue;
+                }
+
                 if (param.Value != null && param.Value != "")
                 {
                     string paramValue = param.Value.ToString();
@@ -1224,6 +1242,99 @@ namespace PL_PlatnedTestMatic.Pages
                 return "IGNORE";
             }
             
+        }
+
+
+        private void WriteDataTableToCsvWithStatus(DataTable dataTable, string filePath, int iterationNumber, bool errorFound, string apiResponseBody)
+        {
+            Logger.Log("Starting to write data to CSV with status columns...");
+
+            // Add the "Status" and "Status Description" columns if they don't exist
+            if (!dataTable.Columns.Contains("TestStatus"))
+            {
+                dataTable.Columns.Add("TestStatus", typeof(string));
+            }
+
+            if (!dataTable.Columns.Contains("TestStatusDescription"))
+            {
+                dataTable.Columns.Add("TestStatusDescription", typeof(string));
+            }
+
+            // Get the specific row based on the iteration number
+            if (iterationNumber > 0 && iterationNumber <= dataTable.Rows.Count)
+            {
+                DataRow row = dataTable.Rows[iterationNumber - 1];
+
+                // Update the "Status" and "Status Description" columns based on the error condition
+                if (errorFound)
+                {
+                    row["TestStatus"] = "Error";
+                    // Replace commas with underscores and escape quotes
+                    string sanitizedMessage = apiResponseBody.Replace(",", "_").Replace("\"", "\"\"");
+                    // Enclose the error message in double quotes to escape any special characters
+                    row["TestStatusDescription"] = $"\"{sanitizedMessage}\"";
+                    Logger.Log($"Error message added to 'TestStatusDescription': {row["TestStatusDescription"]}");
+                }
+                else
+                {
+                    row["TestStatus"] = "OK";
+                    row["TestStatusDescription"] = "Successfully Completed";
+                }
+            }
+            else
+            {
+                Logger.Log($"Invalid iteration number: {iterationNumber}");
+                return; // Exit if the iteration number is invalid
+            }
+
+            // Write the DataTable to the CSV file
+            using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+            {
+                try
+                {
+                    Logger.Log("Writing column headers...");
+                    // Write the column headers
+                    string[] columnNames = dataTable.Columns.Cast<DataColumn>()
+                                            .Select(column => column.ColumnName)
+                                            .ToArray();
+                    writer.WriteLine(string.Join(",", columnNames));
+                    Logger.Log($"Column headers written: {string.Join(", ", columnNames)}");
+
+                    // Write the data rows
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        string[] fields = row.ItemArray.Select(field =>
+                        {
+                            if (field is decimal decimalValue)
+                            {
+                                return decimalValue.ToString("F2");
+                            }
+                            else if (field is double doubleValue)
+                            {
+                                return doubleValue.ToString("F2");
+                            }
+                            else if (field is int || field is long)
+                            {
+                                return field.ToString();
+                            }
+                            else
+                            {
+                                return field.ToString();
+                            }
+                        }).ToArray();
+
+                        writer.WriteLine(string.Join(",", fields));
+                        Logger.Log($"Written row to CSV: {string.Join(", ", fields)}");
+                    }
+
+                    Logger.Log("CSV writing with status completed successfully.");
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Error writing to CSV: {ex.Message}");
+                    throw;
+                }
+            }
         }
 
     }
