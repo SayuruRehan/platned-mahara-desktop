@@ -65,6 +65,11 @@
     <None Remove="Assets\Logos\SmallTile.scale-150.png" />
     <None Remove="Assets\Logos\SmallTile.scale-200.png" />
     <None Remove="Assets\Logos\SmallTile.scale-400.png" />
+    <None Remove="Assets\Logos\SplashScreen.scale-100.png" />
+    <None Remove="Assets\Logos\SplashScreen.scale-125.png" />
+    <None Remove="Assets\Logos\SplashScreen.scale-150.png" />
+    <None Remove="Assets\Logos\SplashScreen.scale-200.png" />
+    <None Remove="Assets\Logos\SplashScreen.scale-400.png" />
     <None Remove="Assets\Logos\Square150x150Logo.scale-100.png" />
     <None Remove="Assets\Logos\Square150x150Logo.scale-125.png" />
     <None Remove="Assets\Logos\Square150x150Logo.scale-150.png" />
@@ -77,19 +82,28 @@
     <None Remove="Assets\Logos\Square44x44Logo.scale-400.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-16.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-16_altform-lightunplated.png" />
+    <None Remove="Assets\Logos\Square44x44Logo.targetsize-16_altform-unplated.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-24.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-24_altform-lightunplated.png" />
+    <None Remove="Assets\Logos\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-256.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-256_altform-lightunplated.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-256_altform-unplated.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-32.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-32_altform-unplated.png" />
     <None Remove="Assets\Logos\Square44x44Logo.targetsize-48.png" />
+    <None Remove="Assets\Logos\Square44x44Logo.targetsize-48_altform-lightunplated.png" />
+    <None Remove="Assets\Logos\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <None Remove="Assets\Logos\StoreLogo.scale-100.png" />
     <None Remove="Assets\Logos\StoreLogo.scale-125.png" />
     <None Remove="Assets\Logos\StoreLogo.scale-150.png" />
     <None Remove="Assets\Logos\StoreLogo.scale-200.png" />
     <None Remove="Assets\Logos\StoreLogo.scale-400.png" />
+    <None Remove="Assets\Logos\Wide310x150Logo.scale-100.png" />
+    <None Remove="Assets\Logos\Wide310x150Logo.scale-125.png" />
+    <None Remove="Assets\Logos\Wide310x150Logo.scale-150.png" />
+    <None Remove="Assets\Logos\Wide310x150Logo.scale-200.png" />
+    <None Remove="Assets\Logos\Wide310x150Logo.scale-400.png" />
     <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
     <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
     <None Remove="Assets\Square44x44Logo.altform-lightunplated_targetsize-256.png" />
@@ -295,6 +309,12 @@
     <Content Update="Assets\PlatnedLogo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="Assets\PlatnedLogo_Lower.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\PlatnedLogo_Upper.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\ResourceDictionary.xaml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -383,6 +403,81 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\Logos\BadgeLogo.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\BadgeLogo.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\BadgeLogo.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\BadgeLogo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\BadgeLogo.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\LargeTile.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\LargeTile.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\LargeTile.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\LargeTile.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\LargeTile.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SmallTile.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SmallTile.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SmallTile.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SmallTile.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SmallTile.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SplashScreen.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SplashScreen.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SplashScreen.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SplashScreen.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\SplashScreen.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square150x150Logo.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square150x150Logo.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square150x150Logo.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square150x150Logo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square150x150Logo.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Update="Assets\Logos\Square44x44Logo.altform-lightunplated_targetsize-16.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -413,6 +508,66 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Update="Assets\Logos\Square44x44Logo.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.targetsize-16.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.targetsize-24.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.targetsize-256.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.targetsize-32.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Square44x44Logo.targetsize-48.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\StoreLogo.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\StoreLogo.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\StoreLogo.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\StoreLogo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\StoreLogo.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Wide310x150Logo.scale-100.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Wide310x150Logo.scale-125.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Wide310x150Logo.scale-150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Wide310x150Logo.scale-200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Logos\Wide310x150Logo.scale-400.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <!--
