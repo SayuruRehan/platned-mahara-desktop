@@ -2,16 +2,19 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <_LastSelectedProfileId>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Properties\PublishProfiles\win-x86.pubxml</_LastSelectedProfileId>
-    <AppIconSource>Assets\PlatnedLogo.png</AppIconSource>
-    <BadgeLogoSource>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Assets\PlatnedLogo.png</BadgeLogoSource>
-    <PackageLogoSource>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Assets\PlatnedLogo.png</PackageLogoSource>
-    <MediumTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Assets\PlatnedLogo.png</MediumTileSource>
-    <SmallTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Assets\PlatnedLogo.png</SmallTileSource>
-    <LargeTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\Migrating\PL-PlatnedTestMatic\Assets\PlatnedLogo.png</LargeTileSource>
+    <AppIconSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</AppIconSource>
+    <BadgeLogoSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</BadgeLogoSource>
+    <PackageLogoSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</PackageLogoSource>
+    <MediumTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</MediumTileSource>
+    <SmallTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</SmallTileSource>
+    <LargeTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</LargeTileSource>
     <UapAppxPackageBuildMode>SideloadOnly</UapAppxPackageBuildMode>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x64</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+    <Source>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</Source>
+    <WideTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</WideTileSource>
+    <SplashScreenSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</SplashScreenSource>
   </PropertyGroup>
   <ItemGroup>
     <None Update="App.xaml">
