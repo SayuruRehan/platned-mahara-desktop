@@ -11,7 +11,7 @@
                 <ResourceDictionary Source="assets/resourcedictionary.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <x:String x:Key="AppTitleName">Platned TestMatic</x:String>
+            <x:String x:Key="AppTitleName">Platned Mahara</x:String>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
