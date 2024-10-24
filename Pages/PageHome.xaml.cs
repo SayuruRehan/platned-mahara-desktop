@@ -529,6 +529,17 @@ namespace PL_PlatnedTestMatic.Pages
                     requestBody = BuildRequestBody(csvParameters);
                     Logger.Log("POST - Request body: " + requestBody);
 
+                    Logger.Log("POST - Constructing URL: " + url);
+                    try
+                    {
+                        url = UrlReconstructor.ReconstructUrl(url, requestBody);
+                        Logger.Log("POST - Constructed URL: " + url);
+                    }
+                    catch(Exception e)
+                    {
+                        Logger.Log("No parameters found in the URL. Skipping URL Construction.");
+                    }
+                    
                     var tempRequestBody = "";
 
                     if (bodyRawJson != "")
