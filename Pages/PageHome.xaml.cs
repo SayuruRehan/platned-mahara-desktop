@@ -522,6 +522,18 @@ namespace PL_PlatnedTestMatic.Pages
                 case "GET":
                     requestBody = BuildRequestBody(csvParameters);
                     Logger.Log("GET - Request body: " + requestBody);
+
+                    Logger.Log("GET - Constructing URL: " + url);
+                    try
+                    {
+                        url = UrlReconstructor.ReconstructUrl(url, requestBody);
+                        Logger.Log("GET - Constructed URL: " + url);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("No parameters found in the URL. Skipping URL Construction.");
+                    }
+
                     apiResponse = await api.Get(url, headers, requestBody, token);
                     break;
 
@@ -584,11 +596,35 @@ namespace PL_PlatnedTestMatic.Pages
                 case "PATCH":
                     requestBody = BuildRequestBody(csvParameters);
                     Logger.Log("PATCH - Request body: " + requestBody);
+
+                    Logger.Log("PATCH - Constructing URL: " + url);
+                    try
+                    {
+                        url = UrlReconstructor.ReconstructUrl(url, requestBody);
+                        Logger.Log("PATCH - Constructed URL: " + url);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("No parameters found in the URL. Skipping URL Construction.");
+                    }
+
                     apiResponse = await api.Patch(url, headers, requestBody, token);
                     break;
 
                 case "DELETE":
                     Logger.Log("DELETE - Request body: " + requestBody);
+
+                    Logger.Log("DELETE - Constructing URL: " + url);
+                    try
+                    {
+                        url = UrlReconstructor.ReconstructUrl(url, requestBody);
+                        Logger.Log("DELETE - Constructed URL: " + url);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Log("No parameters found in the URL. Skipping URL Construction.");
+                    }
+
                     apiResponse = await api.Delete(url, headers, token);
                     break;
 
