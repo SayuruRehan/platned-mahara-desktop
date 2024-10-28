@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PL_PlatnedTestMatic.Classes
+namespace PlatnedMahara.Classes
 {
     public class BaseClass
     {

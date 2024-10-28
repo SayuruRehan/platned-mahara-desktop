@@ -19,13 +19,12 @@ using Microsoft.UI.Text;
 using Microsoft.UI;
 using Windows.UI;
 using ClosedXML.Excel;
-using PL_PlatnedTestMatic.Classes;
 using System.Xml.Linq;
 using Windows.Media.Protection.PlayReady;
 using ABI.System;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Irony.Parsing;
-using static PL_PlatnedTestMatic.Classes.ApiExecution;
+using static PlatnedMahara.Classes.ApiExecution;
 using System.Text.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -35,12 +34,13 @@ using System.Data;
 using System.Text;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
+using PlatnedMahara.Classes;
 
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic.Pages
+namespace PlatnedMahara.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.

@@ -20,7 +20,6 @@ using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
 using System.Collections.ObjectModel;
-using PL_PlatnedTestMatic.Classes;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading;
@@ -35,12 +34,13 @@ using DocumentFormat.OpenXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
+using PlatnedMahara.Classes;
 
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic.Pages
+namespace PlatnedMahara.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
