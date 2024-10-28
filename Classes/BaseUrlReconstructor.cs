@@ -83,9 +83,18 @@ namespace PL_PlatnedTestMatic.Classes
                             // Replace the content inside the quotes with the new value
                             urlParams[paramKey] = (originalValue.Substring(0, firstQuoteIndex + 1) + newValue + "'", urlParams[paramKey].PreserveQuotes, false);
                         }
+
                     }
                     else
                     {
+                        urlParams[paramKey] = (newValue, urlParams[paramKey].PreserveQuotes, false);
+                    }
+
+                    // Check if the original value is in datetime format
+                    if (urlParams[paramKey].Value != null && DateTime.TryParse(urlParams[paramKey].Value, out DateTime originalDate))
+                    {
+                        // If it's a valid DateTime, format it to the desired string format
+                        newValue = DateTime.Parse(newValue).ToString("yyyy-MM-ddTHH:mm:ssZ");
                         urlParams[paramKey] = (newValue, urlParams[paramKey].PreserveQuotes, false);
                     }
                 }
