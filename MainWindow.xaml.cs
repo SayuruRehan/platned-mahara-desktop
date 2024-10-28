@@ -11,17 +11,17 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PL_PlatnedTestMatic.Pages;
+using PlatnedMahara.Pages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
-using static PL_PlatnedTestMatic.Pages.PageHome;
+using static PlatnedMahara.Pages.PageHome;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic
+namespace PlatnedMahara
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.

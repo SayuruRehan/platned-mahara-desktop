@@ -1,8 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using PL_PlatnedTestMatic.Classes;
-using PL_PlatnedTestMatic.Pages;
+using PlatnedMahara.Pages;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
 
-namespace PL_PlatnedTestMatic.Classes
+namespace PlatnedMahara.Classes
 {
 
 

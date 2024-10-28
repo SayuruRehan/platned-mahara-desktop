@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace PL_PlatnedTestMatic.Classes
+namespace PlatnedMahara.Classes
 {
     public class UrlReconstructor
     {

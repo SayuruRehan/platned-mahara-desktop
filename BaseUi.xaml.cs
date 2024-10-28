@@ -13,12 +13,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using static PL_PlatnedTestMatic.Pages.PageHome;
+using static PlatnedMahara.Pages.PageHome;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic
+namespace PlatnedMahara
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
