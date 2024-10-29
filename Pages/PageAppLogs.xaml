@@ -16,7 +16,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="1000" />
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Column="1">
