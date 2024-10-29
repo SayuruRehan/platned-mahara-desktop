@@ -20,9 +20,9 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="500" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -129,23 +129,29 @@
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Grid.ColumnSpan="5" VerticalAlignment="Top" Margin="0,15,0,0" >
 
-                    <Grid Grid.ColumnSpan="5">
-                        <controls:DataGrid x:Name="dataGrid" 
+                    <ScrollView Height="500" Width="Auto" ContentOrientation="None"
+                        ZoomMode="Disabled" IsTabStop="True"
+                        VerticalAlignment="Top" HorizontalAlignment="Left"
+                        HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+
+                        <Grid Grid.ColumnSpan="5">
+                            <controls:DataGrid x:Name="dataGrid" 
                               AutoGenerateColumns="False"
                               ItemsSource="{x:Bind GridItems, Mode=OneWay}" Grid.ColumnSpan="5">
-                            <controls:DataGrid.Columns>
-                                <controls:DataGridTextColumn Header="Item" Binding="{Binding TreeNodesItemName[0].Name}" Width="90" MaxWidth="90"/>
-                                <controls:DataGridTextColumn Header="API Calls" Binding="{Binding TreeNodesApi[0].Name}" Width="90" MaxWidth="90" />
-                                <controls:DataGridTextColumn Header="Description" Binding="{Binding TreeNodesDesc[0].Name}" Width="350" MaxWidth="500" />
-                                <controls:DataGridTextColumn Header="Status Code" Binding="{Binding TreeNodesStatC[0].Name}" Width="120" MaxWidth="120" />
-                                <controls:DataGridTextColumn Header="Result" Binding="{Binding TreeNodesRes[0].Name}" Width="100" MaxWidth="100" />
-                            </controls:DataGrid.Columns>
-                        </controls:DataGrid>
-                    </Grid>
-
+                                <controls:DataGrid.Columns>
+                                    <controls:DataGridTextColumn Header="Item" Binding="{Binding TreeNodesItemName[0].Name}" Width="90" MaxWidth="90"/>
+                                    <controls:DataGridTextColumn Header="API Calls" Binding="{Binding TreeNodesApi[0].Name}" Width="90" MaxWidth="90" />
+                                    <controls:DataGridTextColumn Header="Description" Binding="{Binding TreeNodesDesc[0].Name}" Width="350" MaxWidth="500" />
+                                    <controls:DataGridTextColumn Header="Status Code" Binding="{Binding TreeNodesStatC[0].Name}" Width="120" MaxWidth="120" />
+                                    <controls:DataGridTextColumn Header="Result" Binding="{Binding TreeNodesRes[0].Name}" Width="100" MaxWidth="100" />
+                                </controls:DataGrid.Columns>
+                            </controls:DataGrid>
+                        </Grid>
+                    </ScrollView>
 
                 </StackPanel>
-                
+
             </Grid>
         </Grid>
 
