@@ -263,7 +263,7 @@ namespace PlatnedMahara.Pages
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            if (!GlobalData.IsLoggedIn)
+            if (GlobalData.IsLoggedIn)
             {
                 if (LoadConfigData())
                 {
