@@ -132,7 +132,7 @@ namespace PlatnedMahara.Pages
                             Query = $"$filter={filter}"
                         };
 
-                        token = await GetAccessTokenPlatndPass(accessTokenUrlPl, clientIdPl, clientSecretPl, scopePl);
+                        token = await AuthPlatnedPass.GetAccessTokenPlatndPass(accessTokenUrlPl, clientIdPl, clientSecretPl, scopePl);
 
 
                         string method = "GET";
@@ -276,37 +276,7 @@ namespace PlatnedMahara.Pages
             }
         }
 
-        private async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
-        {
-            Logger.Log("Encoding the client ID and secret started...");
-            var clientCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
-            Logger.Log("Encoding the client ID and secret completed.");
-
-            Logger.Log("Creating the request message started...");
-            var request = new HttpRequestMessage(HttpMethod.Post, accessTokenUrl);
-            Logger.Log($"Created request: {request}");
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", clientCredentials);
-            Logger.Log("Creating the request message completed.");
-
-            Logger.Log("Preparing the content (form-urlencoded) started...");
-            var content = new StringContent($"grant_type=client_credentials&scope={scope}", Encoding.UTF8, "application/x-www-form-urlencoded");
-            Logger.Log($"Created content: {content}");
-            request.Content = content;
-            Logger.Log("Preparing the content (form-urlencoded) completed.");
-
-            Logger.Log("Send the request started...");
-            var response = await client.SendAsync(request);
-            Logger.Log($"Received response: {response}");
-            response.EnsureSuccessStatusCode();
-            Logger.Log("Send the request completed.");
-
-            Logger.Log("Parsing the response and extracting the access token started...");
-            var jsonResponse = await response.Content.ReadAsStringAsync();
-            dynamic tokenResponse = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonResponse);
-            Logger.Log("Parsing the response and extracting the access token completed.");
-
-            return tokenResponse.access_token;
-        }
+        
 
 
 

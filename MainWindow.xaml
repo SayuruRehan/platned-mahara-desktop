@@ -9,7 +9,7 @@
     mc:Ignorable="d"    
     Title="PL-PlatnedTestMatic">
 
-    <Grid Margin="10,0,10,0">
+    <Grid Margin="10,0,10,0" x:Name="MainWindowXamlRoot" >
         <!-- Refer from BaseUi - Start -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -57,6 +57,10 @@
             <MenuBarItem Title="Help">
                 <!--<MenuFlyoutItem Text="About"/>-->
                 <MenuFlyoutItem x:Name="mnuItmSubHelpLicense" Text="License"/>
+            </MenuBarItem>
+            <MenuBarItem Title="Profile">
+                <MenuFlyoutItem x:Name="mnuItmSubProfileLogin" Text="Login"/>
+                <MenuFlyoutItem x:Name="mnuItmSubProfileLogout" Text="Logout"/>
             </MenuBarItem>
         </MenuBar>
         <!-- Refer from BaseUi - End -->

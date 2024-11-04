@@ -25,7 +25,12 @@ namespace PlatnedMahara.Classes
 
         // Do not change unless instance changes -- END
 
-        //for later
+        private static bool _isLoggedIn = false;
+        public static bool IsLoggedIn
+        {
+            get => _isLoggedIn;
+            set => _isLoggedIn = value;
+        }
         public static string? UserId { get; set; }
         public static string? UserName { get; set; }
         public static string? CompanyId { get; set; }

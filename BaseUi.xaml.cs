@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PlatnedMahara.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -47,7 +48,18 @@ namespace PlatnedMahara
             mnuItmExit.Click += baseUi.mnuItmExit_Click;
             mnuItmSubConfAuth.Click += baseUi.mnuItmSubConfAuth_Click;
             mnuItmSubConfLogs.Click += baseUi.mnuItmSubConfLogs_Click;
-            mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;*/
+            mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
+            mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+            
+            if (GlobalData.IsLoggedIn)
+            {
+                mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+            }
+            else {
+                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+            }*/
             // Refer from BaseUi - End
         }
 
@@ -117,8 +129,42 @@ namespace PlatnedMahara
             }
         }
 
+        public void mnuItmSubProfileLogout_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalData.IsLoggedIn = false;
+            GlobalData.UserId = "";
+            GlobalData.UserName = "";
+            GlobalData.CompanyId = "";
 
-        
+            // Close the current main window instance
+            if (App.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.Close();
+            }
+
+            // Recreate a new main window instance and set it as the current window
+            MainWindow mainWindowNew = new MainWindow();
+            mainWindowNew.Activate();
+        }
+
+        public void mnuItmSubProfileLogin_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalData.IsLoggedIn = false;
+            GlobalData.UserId = "";
+            GlobalData.UserName = "";
+            GlobalData.CompanyId = "";
+
+            // Close the current main window instance
+            if (App.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.Close();
+            }
+
+            // Recreate a new main window instance and set it as the current window
+            MainWindow mainWindowNew = new MainWindow();
+            mainWindowNew.Activate();
+        }
+
 
     }
 }

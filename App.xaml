@@ -11,7 +11,9 @@
                 <ResourceDictionary Source="assets/resourcedictionary.xaml" />
                 <!-- Other merged dictionaries here -->
             </ResourceDictionary.MergedDictionaries>
-            <x:String x:Key="AppTitleName">Platned Mahara</x:String>
+            <x:String x:Key="AppTitleName">Platned Mahara (DEV)</x:String>
+            <!--<x:String x:Key="AppTitleName">Platned Mahara (TEST)</x:String>-->
+            <!--<x:String x:Key="AppTitleName">Platned Mahara</x:String>-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>
