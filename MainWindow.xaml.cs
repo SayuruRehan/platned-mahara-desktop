@@ -11,6 +11,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PlatnedMahara.Classes;
 using PlatnedMahara.Pages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -38,7 +39,12 @@ namespace PlatnedMahara
 
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            //Remove later - after login screen implemented
+            GlobalData.UserId = "NIMESH.EKANAYAKE";
+            GlobalData.UserName = "Nimesh Ekanayake";
+            GlobalData.CompanyId = "PLTPVT";
 
             // Refer from BaseUi - Start
             hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
