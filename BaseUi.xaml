@@ -52,6 +52,10 @@
                 <!--<MenuFlyoutItem Text="About"/>-->
                 <MenuFlyoutItem x:Name="mnuItmSubHelpLicense" Text="License"/>
             </MenuBarItem>
+            <MenuBarItem Title="Profile">
+                <MenuFlyoutItem x:Name="mnuItmSubProfileLogin" Text="Login"/>
+                <MenuFlyoutItem x:Name="mnuItmSubProfileLogout" Text="Logout"/>
+            </MenuBarItem>
         </MenuBar>
         <!-- Refer from BaseUi - End -->
 

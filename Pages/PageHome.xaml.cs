@@ -263,26 +263,35 @@ namespace PlatnedMahara.Pages
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-
-            if (LoadConfigData())
+            if (!GlobalData.IsLoggedIn)
             {
-                progExec.ShowPaused = false;
-                progExec.ShowError = false;
-                progExec.IsIndeterminate = true;
-                progExec.Visibility = Visibility.Visible;
-                btnStart.IsEnabled = false;
-                btnRerun.IsEnabled = false;
-                btnStop.IsEnabled = true;
+                if (LoadConfigData())
+                {
+                    progExec.ShowPaused = false;
+                    progExec.ShowError = false;
+                    progExec.IsIndeterminate = true;
+                    progExec.Visibility = Visibility.Visible;
+                    btnStart.IsEnabled = false;
+                    btnRerun.IsEnabled = false;
+                    btnStop.IsEnabled = true;
 
-                await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                    await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    }
+                }
             }
             else
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    mainWindow.ShowInfoBar("Error!", "Login required to proceed. Please login/ register with Platned Pass!", InfoBarSeverity.Error);
                 }
-            }
+            }            
 
         }
 
