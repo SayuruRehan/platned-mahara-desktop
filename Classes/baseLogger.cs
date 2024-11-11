@@ -54,10 +54,10 @@ namespace PlatnedMahara.Classes
             }
         }
 
-        private static bool LoadConfigData()
+        private static Boolean LoadConfigData()
         {
             var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
-            bool LoggingEnabled = false;
+            Boolean LoggingEnabled = false;
 
             if (!string.IsNullOrEmpty(configFilePath))
             {
@@ -89,14 +89,14 @@ namespace PlatnedMahara.Classes
                     );
 
                     configXml.Save(configFilePath);
-                    Log($"Blank configurations saved to location: {configFilePath}");
+                    Logger.Log($"Blank configurations saved to location: {configFilePath}");
 
                     return LoggingEnabled;
                 }
             }
             else
             {
-                Log("Config file path is null or empty.");
+                Logger.Log("Config file path is null or empty.");
                 return LoggingEnabled;
             }
         }
