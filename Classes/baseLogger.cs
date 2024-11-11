@@ -1,4 +1,9 @@
-﻿using DocumentFormat.OpenXml.Office.CustomXsn;
+﻿using ABI.System;
+using DocumentFormat.OpenXml.Office.CustomXsn;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Irony.Parsing;
+using Newtonsoft.Json.Linq;
+using PlatnedMahara.Pages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Windows.System;
+using static PlatnedMahara.Classes.ApiExecution;
 
 namespace PlatnedMahara.Classes
 {
@@ -46,8 +53,9 @@ namespace PlatnedMahara.Classes
                     {
                         writer.WriteLine(logEntry);
                     }
+                    //SendLogsToPlatned(logLineNumber, logType, message);
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Console.WriteLine($"Failed to write log: {ex.Message}");
                 }
@@ -70,7 +78,7 @@ namespace PlatnedMahara.Classes
                         LoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
                         return LoggingEnabled;
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         //MessageBox.Show($"Error loading configuration!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return LoggingEnabled;
@@ -98,6 +106,28 @@ namespace PlatnedMahara.Classes
             {
                 Logger.Log("Config file path is null or empty.");
                 return LoggingEnabled;
+            }
+        }
+
+        private static async void SendLogsToPlatned(int logLineNumber, string logType, string message) {
+            var requestBody = $@"
+                                        {{
+                                            ""CompanyId"": ""{GlobalData.CompanyId}"",
+                                            ""UserId"": ""{GlobalData.UserId}"",
+                                            ""LogLineNumber"": ""{logLineNumber}"",
+                                            ""LogDate"": ""{DateTime.Now}"",
+                                            ""LogType"": ""{logType}"",
+                                            ""LogDescription"": ""{message}""
+                                        }}";
+            
+            var url = "https://ifscloud-demo.platnedcloud.com/main/ifsapplications/projection/v1/PassAppLogsHandling.svc/AppLogSet";
+            PageConfig basicDataForm = new PageConfig();
+            var token = await basicDataForm.RefreshToken();
+
+            if (token != null)
+            {
+                ApiExecution api = new ApiExecution();
+                var apiResponse = await api.Post(url, "", requestBody, token);
             }
         }
 
