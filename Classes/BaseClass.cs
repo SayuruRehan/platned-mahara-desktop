@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace PlatnedMahara.Classes
 {
-    public class BaseClass
+    public enum ReturnType
     {
+        DataTable = 1,
+        DataRow = 2,
+        DataSet = 3
     }
 }
