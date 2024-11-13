@@ -15,7 +15,7 @@
     <Source>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</Source>
     <WideTileSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</WideTileSource>
     <SplashScreenSource>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\Assets\PlatnedLogo.png</SplashScreenSource>
-    <ActiveDebugProfile>PL-PlatnedTestMatic (Package)</ActiveDebugProfile>
+    <ActiveDebugProfile>PlatnedMahara (Package)</ActiveDebugProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
