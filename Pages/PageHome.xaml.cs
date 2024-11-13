@@ -60,8 +60,8 @@ namespace PlatnedMahara.Pages
         string jsonFilePath;
         string csvFilePath;
         bool errorFound = false;
-        private CancellationTokenSource cancellationTokenSource;
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        private CancellationTokenSource cancellationTokenSource; 
+        private readonly string configFilePath = GlobalData.configFilePath;
         private string entitySet = "";
         private string entitySetParam = "";
         private string entitySetArray = "";

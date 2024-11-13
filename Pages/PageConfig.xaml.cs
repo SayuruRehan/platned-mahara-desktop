@@ -31,7 +31,8 @@ namespace PlatnedMahara.Pages
     public sealed partial class PageConfig : Page
     {
         private static readonly HttpClient client = new HttpClient();
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        //private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        private readonly string configFilePath = GlobalData.configFilePath;
         protected string accessTokenUrl = "";
         protected string clientId = "";
         protected string clientSecret = "";

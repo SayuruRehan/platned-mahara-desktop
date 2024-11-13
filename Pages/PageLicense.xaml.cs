@@ -50,8 +50,8 @@ namespace PlatnedMahara.Pages
 
 
 
-        protected Boolean appLoggingEnabled = false;
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        protected Boolean appLoggingEnabled = false; 
+        private readonly string configFilePath = GlobalData.configFilePath;
         protected string accessTokenUrl = "";
         protected string clientId = "";
         protected string clientSecret = "";

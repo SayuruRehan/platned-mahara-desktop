@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
+using Windows.Storage;
+using System.IO;
 
 namespace PlatnedMahara.Classes
 {
@@ -17,6 +19,10 @@ namespace PlatnedMahara.Classes
         public static readonly string ClientSecretPl = "JawpIl0UXtCABshpP8TlWHFL9ghtzGue";
         public static readonly string ScopePl = "openid microprofile-jwt";*/
 
+        // Get the app's local storage folder
+        private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+        public static readonly string configFilePath = Path.Combine(localFolder.Path, "pl-application_config.xml");
+        //public static readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
         public static readonly string BaseUrlPl = "https://ifscloud-demo.platnedcloud.com";
         public static readonly string AccessTokenUrlPl = $"{BaseUrlPl}/auth/realms/platdmo/protocol/openid-connect/token";
         public static readonly string ClientIdPl = "PlatnedPass_Service";
