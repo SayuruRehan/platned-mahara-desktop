@@ -1,9 +1,9 @@
 {
   "profiles": {
-    "PL-PlatnedTestMatic (Package)": {
+    "PlatnedMahara (Package)": {
       "commandName": "MsixPackage"
     },
-    "PL-PlatnedTestMatic (Unpackaged)": {
+    "PlatnedMahara (Unpackaged)": {
       "commandName": "Project"
     }
   }
