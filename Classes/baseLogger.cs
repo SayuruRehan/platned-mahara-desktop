@@ -17,7 +17,7 @@ namespace PlatnedMahara.Classes
         static Logger()
         {
             // Determine the application-specific temporary folder
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PlatnedMahara");
 
             if (!Directory.Exists(tempFolderPath))
             {
@@ -56,7 +56,7 @@ namespace PlatnedMahara.Classes
 
         private static bool LoadConfigData()
         {
-            var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+            var configFilePath = GlobalData.configFilePath;
             bool LoggingEnabled = false;
 
             if (!string.IsNullOrEmpty(configFilePath))
