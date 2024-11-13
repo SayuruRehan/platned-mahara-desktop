@@ -20,7 +20,6 @@ using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
 using System.Collections.ObjectModel;
-using PlatnedMahara.Classes;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading;
@@ -35,6 +34,7 @@ using DocumentFormat.OpenXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
+using PlatnedMahara.Classes;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -263,26 +263,35 @@ namespace PlatnedMahara.Pages
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-
-            if (LoadConfigData())
+            if (GlobalData.IsLoggedIn)
             {
-                progExec.ShowPaused = false;
-                progExec.ShowError = false;
-                progExec.IsIndeterminate = true;
-                progExec.Visibility = Visibility.Visible;
-                btnStart.IsEnabled = false;
-                btnRerun.IsEnabled = false;
-                btnStop.IsEnabled = true;
+                if (LoadConfigData())
+                {
+                    progExec.ShowPaused = false;
+                    progExec.ShowError = false;
+                    progExec.IsIndeterminate = true;
+                    progExec.Visibility = Visibility.Visible;
+                    btnStart.IsEnabled = false;
+                    btnRerun.IsEnabled = false;
+                    btnStop.IsEnabled = true;
 
-                await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                    await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    }
+                }
             }
             else
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    mainWindow.ShowInfoBar("Error!", "Login required to proceed. Please login/ register with Platned Pass!", InfoBarSeverity.Error);
                 }
-            }
+            }            
 
         }
 
