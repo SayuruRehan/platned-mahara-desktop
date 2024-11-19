@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PlatnedMahara.Classes;
+using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -331,7 +332,7 @@ namespace PlatnedMahara
         private async Task HandleLoginDialogResultAsync(ContentDialogResult result, PageLogin loginPage)
         {
             if (result == ContentDialogResult.Primary)
-            {
+            {                
                 // Access Username and Password from PageLogin
                 string username = loginPage.UserId;
                 string password = loginPage.Password;

@@ -167,6 +167,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\Logos\BadgeLogo.scale-100.png">
@@ -623,9 +624,5 @@
 
     <ItemGroup>
       <PRIResource Remove="IFS_Cloud_Exports\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Classes\Db\" />
     </ItemGroup>
 </Project>
