@@ -131,8 +131,8 @@ namespace PlatnedMahara.Pages
                 {
                     try
                     {
-                        string sourceFilePath = file.Path;
-                        string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+                        string sourceFilePath = file.Path; 
+                        string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
                         {
@@ -196,7 +196,7 @@ namespace PlatnedMahara.Pages
                     try
                     {
                         string sourceFilePath = file.Path;
-                        string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+                        string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
                         {
@@ -336,7 +336,7 @@ namespace PlatnedMahara.Pages
 
         private async Task InitializeAsync()
         {
-            tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            tempFolderPath = GlobalData.tempFolderPath;
 
             string jsonContent = File.ReadAllText(jsonFilePath);
             JObject jsonObject = JObject.Parse(jsonContent);

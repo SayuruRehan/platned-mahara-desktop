@@ -17,7 +17,7 @@ namespace PlatnedMahara.Classes
         static Logger()
         {
             // Determine the application-specific temporary folder
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PlatnedMahara");
+            string tempFolderPath = GlobalData.tempFolderPath;
 
             if (!Directory.Exists(tempFolderPath))
             {
