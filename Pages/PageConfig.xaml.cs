@@ -18,12 +18,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using PL_PlatnedTestMatic.Classes;
+using PlatnedMahara.Classes;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic.Pages
+namespace PlatnedMahara.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -31,7 +31,8 @@ namespace PL_PlatnedTestMatic.Pages
     public sealed partial class PageConfig : Page
     {
         private static readonly HttpClient client = new HttpClient();
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        //private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        private readonly string configFilePath = GlobalData.configFilePath;
         protected string accessTokenUrl = "";
         protected string clientId = "";
         protected string clientSecret = "";

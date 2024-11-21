@@ -19,15 +19,15 @@ using Microsoft.UI.Text;
 using Microsoft.UI;
 using Windows.UI;
 using ClosedXML.Excel;
-using PL_PlatnedTestMatic.Classes;
 using System.Xml.Linq;
 using Windows.UI.Core;
 using Microsoft.UI.Dispatching;
+using PlatnedMahara.Classes;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic.Pages
+namespace PlatnedMahara.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -36,7 +36,7 @@ namespace PL_PlatnedTestMatic.Pages
     {
         private Color currentColor = Colors.AntiqueWhite;
         protected Boolean appLoggingEnabled = false;
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        private readonly string configFilePath = GlobalData.configFilePath;
         protected string accessTokenUrl = "";
         protected string clientId = "";
         protected string clientSecret = "";
@@ -278,7 +278,7 @@ namespace PL_PlatnedTestMatic.Pages
         private void InitializeLogFileWatcher()
         {
             // Define the path where the log file is stored
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            string tempFolderPath = GlobalData.tempFolderPath;
 
             if (!Directory.Exists(tempFolderPath))
             {

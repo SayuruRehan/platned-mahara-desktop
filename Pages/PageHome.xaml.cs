@@ -20,7 +20,6 @@ using Windows.Storage.Pickers;
 using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
 using System.Collections.ObjectModel;
-using PL_PlatnedTestMatic.Classes;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading;
@@ -35,12 +34,13 @@ using DocumentFormat.OpenXml;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
+using PlatnedMahara.Classes;
 
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic.Pages
+namespace PlatnedMahara.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -60,8 +60,8 @@ namespace PL_PlatnedTestMatic.Pages
         string jsonFilePath;
         string csvFilePath;
         bool errorFound = false;
-        private CancellationTokenSource cancellationTokenSource;
-        private readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
+        private CancellationTokenSource cancellationTokenSource; 
+        private readonly string configFilePath = GlobalData.configFilePath;
         private string entitySet = "";
         private string entitySetParam = "";
         private string entitySetArray = "";
@@ -131,8 +131,8 @@ namespace PL_PlatnedTestMatic.Pages
                 {
                     try
                     {
-                        string sourceFilePath = file.Path;
-                        string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+                        string sourceFilePath = file.Path; 
+                        string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
                         {
@@ -196,7 +196,7 @@ namespace PL_PlatnedTestMatic.Pages
                     try
                     {
                         string sourceFilePath = file.Path;
-                        string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+                        string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
                         {
@@ -263,26 +263,35 @@ namespace PL_PlatnedTestMatic.Pages
 
         private async void btnStart_Click(object sender, RoutedEventArgs e)
         {
-
-            if (LoadConfigData())
+            if (GlobalData.IsLoggedIn)
             {
-                progExec.ShowPaused = false;
-                progExec.ShowError = false;
-                progExec.IsIndeterminate = true;
-                progExec.Visibility = Visibility.Visible;
-                btnStart.IsEnabled = false;
-                btnRerun.IsEnabled = false;
-                btnStop.IsEnabled = true;
+                if (LoadConfigData())
+                {
+                    progExec.ShowPaused = false;
+                    progExec.ShowError = false;
+                    progExec.IsIndeterminate = true;
+                    progExec.Visibility = Visibility.Visible;
+                    btnStart.IsEnabled = false;
+                    btnRerun.IsEnabled = false;
+                    btnStop.IsEnabled = true;
 
-                await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                    await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    }
+                }
             }
             else
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Error!", "License Key required to proceed. Please register with Platned Pass!", InfoBarSeverity.Error);
+                    mainWindow.ShowInfoBar("Error!", "Login required to proceed. Please login/ register with Platned Pass!", InfoBarSeverity.Error);
                 }
-            }
+            }            
 
         }
 
@@ -327,7 +336,7 @@ namespace PL_PlatnedTestMatic.Pages
 
         private async Task InitializeAsync()
         {
-            tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            tempFolderPath = GlobalData.tempFolderPath;
 
             string jsonContent = File.ReadAllText(jsonFilePath);
             JObject jsonObject = JObject.Parse(jsonContent);

@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
-    <RootNamespace>PL_PlatnedTestMatic</RootNamespace>
+    <RootNamespace>PlatnedMahara</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifiers Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -124,6 +124,7 @@
     <None Remove="Assets\Square44x44Logo.targetsize-32.png" />
     <None Remove="Assets\Square44x44Logo.targetsize-48.png" />
     <None Remove="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
+    <None Remove="Pages\PageLogin.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -166,6 +167,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\Logos\BadgeLogo.scale-100.png">
@@ -508,6 +510,9 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\PageLogin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Content Update="Assets\Logos\Square44x44Logo.scale-100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -600,6 +605,7 @@
     <AppxBundle>Auto</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <DelaySign>True</DelaySign>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">

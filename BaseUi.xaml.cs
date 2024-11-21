@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PlatnedMahara.Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,12 +14,12 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using static PL_PlatnedTestMatic.Pages.PageHome;
+using static PlatnedMahara.Pages.PageHome;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic
+namespace PlatnedMahara
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
@@ -47,7 +48,18 @@ namespace PL_PlatnedTestMatic
             mnuItmExit.Click += baseUi.mnuItmExit_Click;
             mnuItmSubConfAuth.Click += baseUi.mnuItmSubConfAuth_Click;
             mnuItmSubConfLogs.Click += baseUi.mnuItmSubConfLogs_Click;
-            mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;*/
+            mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
+            mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+            
+            if (GlobalData.IsLoggedIn)
+            {
+                mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+            }
+            else {
+                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+            }*/
             // Refer from BaseUi - End
         }
 
@@ -117,8 +129,42 @@ namespace PL_PlatnedTestMatic
             }
         }
 
+        public void mnuItmSubProfileLogout_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalData.IsLoggedIn = false;
+            GlobalData.UserId = "";
+            GlobalData.UserName = "";
+            GlobalData.CompanyId = "";
 
-        
+            // Close the current main window instance
+            if (App.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.Close();
+            }
+
+            // Recreate a new main window instance and set it as the current window
+            MainWindow mainWindowNew = new MainWindow();
+            mainWindowNew.Activate();
+        }
+
+        public void mnuItmSubProfileLogin_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalData.IsLoggedIn = false;
+            GlobalData.UserId = "";
+            GlobalData.UserName = "";
+            GlobalData.CompanyId = "";
+
+            // Close the current main window instance
+            if (App.MainWindow is MainWindow mainWindow)
+            {
+                mainWindow.Close();
+            }
+
+            // Recreate a new main window instance and set it as the current window
+            MainWindow mainWindowNew = new MainWindow();
+            mainWindowNew.Activate();
+        }
+
 
     }
 }

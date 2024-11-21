@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace PL_PlatnedTestMatic.Classes
+namespace PlatnedMahara.Classes
 {
     public static class Logger
     {
@@ -17,7 +17,7 @@ namespace PL_PlatnedTestMatic.Classes
         static Logger()
         {
             // Determine the application-specific temporary folder
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            string tempFolderPath = GlobalData.tempFolderPath;
 
             if (!Directory.Exists(tempFolderPath))
             {
@@ -54,10 +54,10 @@ namespace PL_PlatnedTestMatic.Classes
             }
         }
 
-        private static Boolean LoadConfigData()
+        private static bool LoadConfigData()
         {
-            var configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
-            Boolean LoggingEnabled = false;
+            var configFilePath = GlobalData.configFilePath;
+            bool LoggingEnabled = false;
 
             if (!string.IsNullOrEmpty(configFilePath))
             {
@@ -89,14 +89,14 @@ namespace PL_PlatnedTestMatic.Classes
                     );
 
                     configXml.Save(configFilePath);
-                    Logger.Log($"Blank configurations saved to location: {configFilePath}");
+                    Log($"Blank configurations saved to location: {configFilePath}");
 
                     return LoggingEnabled;
                 }
             }
             else
             {
-                Logger.Log("Config file path is null or empty.");
+                Log("Config file path is null or empty.");
                 return LoggingEnabled;
             }
         }

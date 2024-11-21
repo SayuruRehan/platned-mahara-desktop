@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -11,17 +12,19 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using PL_PlatnedTestMatic.Pages;
+using PlatnedMahara.Classes;
+using PlatnedMahara.DataAccess.Methods;
+using PlatnedMahara.Pages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
-using static PL_PlatnedTestMatic.Pages.PageHome;
+using static PlatnedMahara.Pages.PageHome;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace PL_PlatnedTestMatic
+namespace PlatnedMahara
 {
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
@@ -34,11 +37,15 @@ namespace PL_PlatnedTestMatic
         // Refer from BaseUi - End
 
         public static MainWindow Instance { get; private set; }
+        public XamlRoot XamlRoot { get; private set; }
+
         private TabView tabView;
 
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
+
+            this.Activated += MainWindow_Activated;
 
             // Refer from BaseUi - Start
             hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -52,6 +59,18 @@ namespace PL_PlatnedTestMatic
             mnuItmSubConfAuth.Click += baseUi.mnuItmSubConfAuth_Click;
             mnuItmSubConfLogs.Click += baseUi.mnuItmSubConfLogs_Click;
             mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
+            mnuItmSubProfileLogin.Click += baseUi.mnuItmSubProfileLogin_Click;
+            mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+
+            if (GlobalData.IsLoggedIn)
+            {
+                mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+            }
+            else {
+                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+            }
             // Refer from BaseUi - End
 
             Instance = this;
@@ -169,7 +188,7 @@ namespace PL_PlatnedTestMatic
 
         private void TabView_AddButtonClick(TabView sender, object args)
         {
-            sender.TabItems.Add(CreateNewTab(sender.TabItems.Count+1));
+            sender.TabItems.Add(CreateNewTab(sender.TabItems.Count + 1));
         }
 
         private void TabView_TabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
@@ -211,7 +230,7 @@ namespace PL_PlatnedTestMatic
                     frame.Navigate(typeof(PageLicense));
                     break;
                 default:
-                    frame.Navigate(typeof(PageHome)); 
+                    frame.Navigate(typeof(PageHome));
                     break;
             }
 
@@ -262,5 +281,111 @@ namespace PL_PlatnedTestMatic
             };
             timerSound.Start();
         }
+
+        private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs e)
+        {
+            if (!GlobalData.IsLoggedIn)
+            {
+                AuthLogin();
+            }
+            // Unsubscribe from the Activated event to avoid calling it again
+            this.Activated -= MainWindow_Activated;
+        }
+
+        private async void AuthLogin()
+        {
+            var result = ContentDialogResult.None;
+            var loginPage = new PageLogin(); // Create PageLogin instance once
+
+            // Ensure MainWindowXamlRoot is loaded
+            if (MainWindowXamlRoot.XamlRoot == null)
+            {
+                MainWindowXamlRoot.Loaded += async (s, e) =>
+                {
+                    result = await ShowLoginDialog(loginPage);
+                    await HandleLoginDialogResultAsync(result, loginPage);
+                };
+            }
+            else
+            {
+                result = await ShowLoginDialog(loginPage);
+                await HandleLoginDialogResultAsync(result, loginPage);
+            }
+        }
+
+        private async Task<ContentDialogResult> ShowLoginDialog(PageLogin loginPage)
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Login",
+                SecondaryButtonText = "Password Reset",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = loginPage // Set the same PageLogin instance as the content
+            };
+
+            return await dialog.ShowAsync(); // Return the result of the dialog
+        }
+
+        private async Task HandleLoginDialogResultAsync(ContentDialogResult result, PageLogin loginPage)
+        {
+            if (result == ContentDialogResult.Primary)
+            {                
+                // Access Username and Password from PageLogin
+                string username = loginPage.UserId;
+                string password = loginPage.Password;
+
+                bool authResponse = await AuthPlatnedPass.validateLogin(username, password);
+                if (authResponse)
+                {
+                    GlobalData.IsLoggedIn = true;
+
+                    mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                    mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                    }
+                }
+                else
+                {
+                    GlobalData.IsLoggedIn = false;
+
+                    mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                    mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                    }
+
+                    var resultNew = ContentDialogResult.None;
+                    resultNew = await ShowLoginDialog(loginPage);
+                    await HandleLoginDialogResultAsync(resultNew, loginPage);
+
+                }
+
+            }
+            else if (result == ContentDialogResult.Secondary)
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Success!", "Password Reset Request - Test", InfoBarSeverity.Success);
+                }
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog - Test", InfoBarSeverity.Informational);
+                }
+            }
+        }
+
+
+
     }
 }

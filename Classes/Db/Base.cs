@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PlatnedMahara.Classes
+namespace PlatnedMahara.Classes.Db
 {
-    public class BaseClass
+    public enum ReturnType
     {
+        DataTable = 1,
+        DataRow = 2,
+        DataSet = 3
     }
 }
