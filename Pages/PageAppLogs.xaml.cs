@@ -278,7 +278,7 @@ namespace PlatnedMahara.Pages
         private void InitializeLogFileWatcher()
         {
             // Define the path where the log file is stored
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PL-TestMatic");
+            string tempFolderPath = GlobalData.tempFolderPath;
 
             if (!Directory.Exists(tempFolderPath))
             {

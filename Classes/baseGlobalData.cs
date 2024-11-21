@@ -22,6 +22,7 @@ namespace PlatnedMahara.Classes
         // Get the app's local storage folder
         private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         public static readonly string configFilePath = Path.Combine(localFolder.Path, "pl-application_config.xml");
+        public static readonly string tempFolderPath = Path.Combine(Path.GetTempPath(), "PlatnedMahara");
         //public static readonly string configFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pl-application_config.xml");
         public static readonly string BaseUrlPl = "https://ifscloud-demo.platnedcloud.com";
         public static readonly string AccessTokenUrlPl = $"{BaseUrlPl}/auth/realms/platdmo/protocol/openid-connect/token";
