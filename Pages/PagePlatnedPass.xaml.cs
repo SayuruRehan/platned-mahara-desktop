@@ -33,7 +33,6 @@ namespace PlatnedMahara.Pages
         {
             // Get the sample number
             string sampleNum = (sender.Name).Substring(8);
-            Debug.Print("num: " + sampleNum + "\n");
 
             /*if (args.IsSettingsSelected)
             {
@@ -43,7 +42,7 @@ namespace PlatnedMahara.Pages
             {*/
                 var selectedItem = (Microsoft.UI.Xaml.Controls.NavigationViewItem)args.SelectedItem;
                 string selectedItemTag = ((string)selectedItem.Tag);
-                sender.Header = "Sample Page " + selectedItemTag.Substring(selectedItemTag.Length - 1);
+                sender.Header = selectedItem.Content;
                 string pageName = "PlatnedMahara.Pages.PlatnedPassPages." + selectedItemTag;
                 Type pageType = Type.GetType(pageName);
                 contentFramePlatnedPass.Navigate(pageType);
