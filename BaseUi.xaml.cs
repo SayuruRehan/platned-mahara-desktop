@@ -165,6 +165,14 @@ namespace PlatnedMahara
             mainWindowNew.Activate();
         }
 
-
+        internal void mnuItmPlatnedPass_Click(object sender, RoutedEventArgs e)
+        {
+            // Access the current instance of MainWindow
+            if (MainWindow.Instance != null)
+            {
+                // Call the method to add a new tab for PageConfig
+                MainWindow.Instance.AddNewTabForMainWindow(103);
+            }
+        }
     }
 }
