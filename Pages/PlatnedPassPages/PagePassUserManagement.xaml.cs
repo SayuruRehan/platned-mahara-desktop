@@ -5,6 +5,8 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PlatnedMahara.Classes;
+using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,6 +14,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -32,7 +35,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItems;
-            
+
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
@@ -77,6 +80,81 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 };
 
                 GridItems.Add(item);
+            }
+        }
+
+        private async void btnNewUser_Click(object sender, RoutedEventArgs e)
+        {
+            var result = ContentDialogResult.None;
+            var dialogUser = new DialogUser(); // Create DialogUser instance once
+
+            // Ensure PagePassUserManagementXamlRoot is loaded
+            if (PagePassUserManagementXamlRoot.XamlRoot == null)
+            {
+                PagePassUserManagementXamlRoot.Loaded += async (s, e) =>
+                {
+                    result = await ShowAddUserDialog(dialogUser);
+                    await HandleAddUserDialogResultAsync(result, dialogUser);
+                };
+            }
+            else
+            {
+                result = await ShowAddUserDialog(dialogUser);
+                await HandleAddUserDialogResultAsync(result, dialogUser);
+            }
+        }
+
+        private async Task<ContentDialogResult> ShowAddUserDialog(DialogUser dialogUser)
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                XamlRoot = PagePassUserManagementXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Process",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = dialogUser // Set the same DialogUser instance as the content
+            };
+
+            return await dialog.ShowAsync(); // Return the result of the dialog
+        }
+
+        private async Task HandleAddUserDialogResultAsync(ContentDialogResult result, DialogUser dialogUser)
+        {
+            if (result == ContentDialogResult.Primary)
+            {
+                // Access field data from DialogUser
+                string userId = dialogUser.UserId;
+                string userName = dialogUser.UserName;
+
+                bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
+                if (authResponse)
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {userId}", InfoBarSeverity.Success);
+                    }
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                    }
+
+                    var resultNew = ContentDialogResult.None;
+                    resultNew = await ShowAddUserDialog(dialogUser);
+                    await HandleAddUserDialogResultAsync(resultNew, dialogUser);
+
+                }
+
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                }
             }
         }
 
