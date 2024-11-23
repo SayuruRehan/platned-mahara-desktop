@@ -61,6 +61,7 @@ namespace PlatnedMahara
             mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
             mnuItmSubProfileLogin.Click += baseUi.mnuItmSubProfileLogin_Click;
             mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+            mnuItmPlatnedPass.Click += baseUi.mnuItmPlatnedPass_Click;
 
             if (GlobalData.IsLoggedIn)
             {
@@ -229,6 +230,10 @@ namespace PlatnedMahara
                     newItem.Header = "Help Window | Application License";
                     frame.Navigate(typeof(PageLicense));
                     break;
+                case 103:
+                    newItem.Header = "Administration | Platned Pass";
+                    frame.Navigate(typeof(PagePlatnedPass));
+                    break;
                 default:
                     frame.Navigate(typeof(PageHome));
                     break;
@@ -373,14 +378,14 @@ namespace PlatnedMahara
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Success!", "Password Reset Request - Test", InfoBarSeverity.Success);
+                    mainWindow.ShowInfoBar("Success!", "Password Reset Request.", InfoBarSeverity.Success);
                 }
             }
             else
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog - Test", InfoBarSeverity.Informational);
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                 }
             }
         }
