@@ -5,11 +5,60 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PlatnedMahara.Pages.PlatnedPassPages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <StackPanel Orientation="Vertical">
+        <Button Content="New Company" Click="btnNewCompany_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Margin="0,15,15,0" />
 
-    </Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="15,15,15,15" x:Name="PagePassCompanyXamlRoot" >
+            <ScrollView Height="Auto" Width="1700" ContentOrientation="None"
+                ZoomMode="Disabled" IsTabStop="True"
+                VerticalAlignment="Top" HorizontalAlignment="Left"
+                HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
+                VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+
+                <Grid Grid.ColumnSpan="5">
+                    <controls:DataGrid x:Name="dataGrid" 
+                      AutoGenerateColumns="False"
+                      ItemsSource="{x:Bind GridItems, Mode=OneWay}" Grid.ColumnSpan="5">
+                        <controls:DataGrid.Columns>
+                            <controls:DataGridTemplateColumn Header="" Width="90">
+                                <controls:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Width="40" Click="EditButton_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon Glyph="" FontSize="16" Margin="0,0,5,0"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <TextBlock Width="5"/>
+                                            <Button Width="40" Click="DeleteButton_Click">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <FontIcon Glyph="" FontSize="16" Margin="0,0,5,0"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </controls:DataGridTemplateColumn.CellTemplate>
+                            </controls:DataGridTemplateColumn>
+
+                            <controls:DataGridTextColumn Header="User ID" Binding="{Binding TreeNodesUserId[0].Name}" Width="200" MaxWidth="300" MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="User's Name" Binding="{Binding TreeNodesUserName[0].Name}" Width="300" MaxWidth="400"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="License Key" Binding="{Binding TreeNodesLicenseKey[0].Name}" Width="250" MaxWidth="250"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Valid From" Binding="{Binding TreeNodesValidFrom[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Valid To" Binding="{Binding TreeNodesValidTo[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="User Status" Binding="{Binding TreeNodesUserStatus[0].Name}" Width="100" MaxWidth="100" MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Created Date" Binding="{Binding TreeNodesCreatedDate[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Created By" Binding="{Binding TreeNodesCreatedBy[0].Name}" Width="200" MaxWidth="300"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Modified Date" Binding="{Binding TreeNodesModifiedDate[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Modified By" Binding="{Binding TreeNodesModifiedBy[0].Name}" Width="200" MaxWidth="300"  MinWidth="100"/>
+                        </controls:DataGrid.Columns>
+                    </controls:DataGrid>
+                </Grid>
+            </ScrollView>
+
+        </StackPanel>
+    </StackPanel>
 </Page>
