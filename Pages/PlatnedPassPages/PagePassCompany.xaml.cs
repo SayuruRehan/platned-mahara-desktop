@@ -133,15 +133,15 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             if (result == ContentDialogResult.Primary)
             {
                 // Access field data from dialogCompany
-                string userId = dialogCompany.UserId;
-                string userName = dialogCompany.UserName;
+                string companyId = dialogCompany.CompanyId;
+                string companyName = dialogCompany.CompanyName;
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
+                bool authResponse = await AuthPlatnedPass.validateLogin(companyId, companyName);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {userId}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyId}", InfoBarSeverity.Success);
                     }
                 }
                 else
