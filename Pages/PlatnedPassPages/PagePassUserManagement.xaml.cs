@@ -221,18 +221,18 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             TreeNodesUserRole = new ObservableCollection<TreeNode>();
 
             TreeNodesCompanyId.Add(new TreeNode(companyId));
-            TreeNodesCompanyId.Add(new TreeNode(userId));
-            TreeNodesCompanyId.Add(new TreeNode(userName));
-            TreeNodesCompanyId.Add(new TreeNode(userEmail));
-            TreeNodesCompanyId.Add(new TreeNode(licenseKey));
-            TreeNodesCompanyId.Add(new TreeNode(validFrom));
-            TreeNodesCompanyId.Add(new TreeNode(validTo));
-            TreeNodesCompanyId.Add(new TreeNode(rowState));
-            TreeNodesCompanyId.Add(new TreeNode(createdDate));
-            TreeNodesCompanyId.Add(new TreeNode(createdBy));
-            TreeNodesCompanyId.Add(new TreeNode(modifiedDate));
-            TreeNodesCompanyId.Add(new TreeNode(modifiedBy));
-            TreeNodesCompanyId.Add(new TreeNode(userRole));
+            TreeNodesUserId.Add(new TreeNode(userId));
+            TreeNodesUserName.Add(new TreeNode(userName));
+            TreeNodesUserEmail.Add(new TreeNode(userEmail));
+            TreeNodesLicenseKey.Add(new TreeNode(licenseKey));
+            TreeNodesValidFrom.Add(new TreeNode(validFrom));
+            TreeNodesValidTo.Add(new TreeNode(validTo));
+            TreeNodesRowState.Add(new TreeNode(rowState));
+            TreeNodesCreatedDate.Add(new TreeNode(createdDate));
+            TreeNodesCreatedBy.Add(new TreeNode(createdBy));
+            TreeNodesModifiedDate.Add(new TreeNode(modifiedDate));
+            TreeNodesModifiedBy.Add(new TreeNode(modifiedBy));
+            TreeNodesUserRole.Add(new TreeNode(userRole));
         }
     }
 }

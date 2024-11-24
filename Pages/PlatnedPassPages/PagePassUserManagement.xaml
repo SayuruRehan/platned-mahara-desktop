@@ -51,7 +51,7 @@
                             <controls:DataGridTextColumn Header="License Key" Binding="{Binding TreeNodesLicenseKey[0].Name}" Width="250" MaxWidth="250"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Valid From" Binding="{Binding TreeNodesValidFrom[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Valid To" Binding="{Binding TreeNodesValidTo[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
-                            <controls:DataGridTextColumn Header="User Status" Binding="{Binding TreeNodesRowState[0].Name}" Width="100" MaxWidth="100" MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Status" Binding="{Binding TreeNodesRowState[0].Name}" Width="100" MaxWidth="100" MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Created Date" Binding="{Binding TreeNodesCreatedDate[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Created By" Binding="{Binding TreeNodesCreatedBy[0].Name}" Width="200" MaxWidth="300"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Modified Date" Binding="{Binding TreeNodesModifiedDate[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
