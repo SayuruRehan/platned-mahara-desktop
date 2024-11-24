@@ -297,7 +297,7 @@ namespace PlatnedMahara
             this.Activated -= MainWindow_Activated;
         }
 
-        private async void AuthLogin()
+        public async void AuthLogin()
         {
             var result = ContentDialogResult.None;
             var loginPage = new PageLogin(); // Create PageLogin instance once
