@@ -28,7 +28,10 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
             this.InitializeComponent();
         }
 
-        public string UserId => txtUserId.Text;
-        public string UserName => txtUserName.Text;
+        public string CompanyId => txtCompanyId.Text;
+        public string CompanyName => txtCompanyName.Text;
+        public string CompanyAddress => txtCompanyAddress.Text;
+        public string LicenseLimit => txtLicenseLimit.Text;
+        public string CompanyType => cmbCompanyType.SelectedItem.ToString();
     }
 }

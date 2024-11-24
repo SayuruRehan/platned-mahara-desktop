@@ -1,4 +1,5 @@
 using CommunityToolkit.WinUI.UI.Controls;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,15 +27,15 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PagePassCompany : Page
+    public sealed partial class PagePassCompany : Microsoft.UI.Xaml.Controls.Page
     {
-        public ObservableCollection<GridItem> GridItems { get; set; }
+        public ObservableCollection<GridItemCompany> GridItemsCompany { get; set; }
 
         public PagePassCompany()
         {
             this.InitializeComponent();
             LoadData();
-            dataGrid.ItemsSource = GridItems;
+            dataGrid.ItemsSource = GridItemsCompany;
 
         }
 
@@ -66,22 +67,30 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         private void LoadData()
         {
-            GridItems = new ObservableCollection<GridItem>();
+            GridItemsCompany = new ObservableCollection<GridItemCompany>();
             for (int gi = 1; gi <= 1; gi++)
             {
-                var item = new GridItem($"Item {gi}")
+                // Pass values needed to display in grid
+                var item = new GridItemCompany($"CompanyID", "CompanyName", "CompanyAddress", "LicenseLimit", "LiceseConsumed", "CompanyType", "RowState", "CreDate", "CreBy", "ModDate", "ModBy")
                 {
                     // Initialize with default values
-                    TreeNodesItemName = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesApi = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesDesc = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesStatC = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesRes = new ObservableCollection<TreeNode> { new TreeNode("") }
+                    TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCompanyName = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCompanyAddress = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesLicenseLimit = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesLiceseConsumed = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCompanyType = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode("") }
                 };
 
-                GridItems.Add(item);
+                GridItemsCompany.Add(item);
             }
         }
+
 
         private async void btnNewCompany_Click(object sender, RoutedEventArgs e)
         {
@@ -124,15 +133,15 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             if (result == ContentDialogResult.Primary)
             {
                 // Access field data from dialogCompany
-                string userId = dialogCompany.UserId;
-                string userName = dialogCompany.UserName;
+                string companyId = dialogCompany.CompanyId;
+                string companyName = dialogCompany.CompanyName;
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
+                bool authResponse = await AuthPlatnedPass.validateLogin(companyId, companyName);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {userId}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyId}", InfoBarSeverity.Success);
                     }
                 }
                 else
@@ -158,6 +167,64 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
-
     }
+
+    /// <summary>
+    /// Other Classes
+    /// </summary>
+
+    public class TreeNodeCompany
+    {
+        public string Name { get; set; }
+        public ObservableCollection<TreeNodeCompany> Children { get; set; }
+
+        public TreeNodeCompany(string name)
+        {
+            Name = name;
+            Children = new ObservableCollection<TreeNodeCompany>();
+        }
+    }
+
+    public class GridItemCompany
+    {
+        public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCompanyName { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCompanyAddress { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesLicenseLimit { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesLiceseConsumed { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCompanyType { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesRowState { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCreatedDate { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCreatedBy { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesModifiedDate { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesModifiedBy { get; set; }
+
+        public GridItemCompany(string companyId, string companyName, string companyAddress, string licenseLimit, string licenseConsumed, string companyType, string rowState, string createdDate, string createdBy, string modifiedDate, string modifiedBy)
+        {
+            TreeNodesCompanyId = new ObservableCollection<TreeNode>();
+            TreeNodesCompanyName = new ObservableCollection<TreeNode>();
+            TreeNodesCompanyAddress = new ObservableCollection<TreeNode>();
+            TreeNodesLicenseLimit = new ObservableCollection<TreeNode>();
+            TreeNodesLiceseConsumed = new ObservableCollection<TreeNode>();
+            TreeNodesCompanyType = new ObservableCollection<TreeNode>();
+            TreeNodesRowState = new ObservableCollection<TreeNode>();
+            TreeNodesCreatedDate = new ObservableCollection<TreeNode>();
+            TreeNodesCreatedBy = new ObservableCollection<TreeNode>();
+            TreeNodesModifiedDate = new ObservableCollection<TreeNode>();
+            TreeNodesModifiedBy = new ObservableCollection<TreeNode>();
+
+            TreeNodesCompanyId.Add(new TreeNode(companyId));
+            TreeNodesCompanyName.Add(new TreeNode(companyName));
+            TreeNodesCompanyAddress.Add(new TreeNode(companyAddress));
+            TreeNodesLicenseLimit.Add(new TreeNode(licenseLimit));
+            TreeNodesLiceseConsumed.Add(new TreeNode(licenseConsumed));
+            TreeNodesCompanyType.Add(new TreeNode(companyType));
+            TreeNodesRowState.Add(new TreeNode(rowState));
+            TreeNodesCreatedDate.Add(new TreeNode(createdDate));
+            TreeNodesCreatedBy.Add(new TreeNode(createdBy));
+            TreeNodesModifiedDate.Add(new TreeNode(modifiedDate));
+            TreeNodesModifiedBy.Add(new TreeNode(modifiedBy));
+        }
+    }
+
 }
