@@ -1,3 +1,5 @@
+using CommunityToolkit.WinUI.UI.Controls;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,15 +28,15 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PagePassUserManagement : Page
+    public sealed partial class PagePassUserManagement : Microsoft.UI.Xaml.Controls.Page
     {
-        public ObservableCollection<GridItem> GridItems { get; set; }
+        public ObservableCollection<GridItemUser> GridItemsUser { get; set; }
 
         public PagePassUserManagement()
         {
             this.InitializeComponent();
             LoadData();
-            dataGrid.ItemsSource = GridItems;
+            dataGrid.ItemsSource = GridItemsUser;
 
         }
 
@@ -66,20 +68,29 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         private void LoadData()
         {
-            GridItems = new ObservableCollection<GridItem>();
+            GridItemsUser = new ObservableCollection<GridItemUser>();
             for (int gi = 1; gi <= 1; gi++)
             {
-                var item = new GridItem($"Item {gi}")
+                // Pass values needed to display in grid
+                var item = new GridItemUser($"Company ID {gi}","UserId","UserName","UserEmail","LicKey","ValidFrom","ValidTo","RowState","CreDate","CreBy","ModDate","ModBy","UserRole")
                 {
                     // Initialize with default values
-                    TreeNodesItemName = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesApi = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesDesc = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesStatC = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesRes = new ObservableCollection<TreeNode> { new TreeNode("") }
+                    TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesUserName = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesUserEmail = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesLicenseKey = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesValidFrom = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesValidTo = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesUserRole = new ObservableCollection<TreeNode> { new TreeNode("") }
                 };
 
-                GridItems.Add(item);
+                GridItemsUser.Add(item);
             }
         }
 
@@ -159,5 +170,69 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         }
 
 
+    }
+
+    /// <summary>
+    /// Other Classes
+    /// </summary>
+
+    public class TreeNodeUser
+    {
+        public string Name { get; set; }
+        public ObservableCollection<TreeNodeUser> Children { get; set; }
+
+        public TreeNodeUser(string name)
+        {
+            Name = name;
+            Children = new ObservableCollection<TreeNodeUser>();
+        }
+    }
+
+    public class GridItemUser
+    {
+        public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesUserId { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesUserName { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesUserEmail { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesLicenseKey { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesValidFrom { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesValidTo { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesRowState { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCreatedDate { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCreatedBy { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesModifiedDate { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesModifiedBy { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesUserRole { get; set; }
+
+        public GridItemUser(string companyId, string userId, string userName, string userEmail, string licenseKey, string validFrom, string validTo, string rowState, string createdDate, string createdBy, string modifiedDate, string modifiedBy, string userRole)
+        {
+            TreeNodesCompanyId = new ObservableCollection<TreeNode>();
+            TreeNodesUserId = new ObservableCollection<TreeNode>();
+            TreeNodesUserName = new ObservableCollection<TreeNode>();
+            TreeNodesUserEmail = new ObservableCollection<TreeNode>();
+            TreeNodesLicenseKey = new ObservableCollection<TreeNode>();
+            TreeNodesValidFrom = new ObservableCollection<TreeNode>();
+            TreeNodesValidTo = new ObservableCollection<TreeNode>();
+            TreeNodesRowState = new ObservableCollection<TreeNode>();
+            TreeNodesCreatedDate = new ObservableCollection<TreeNode>();
+            TreeNodesCreatedBy = new ObservableCollection<TreeNode>();
+            TreeNodesModifiedDate = new ObservableCollection<TreeNode>();
+            TreeNodesModifiedBy = new ObservableCollection<TreeNode>();
+            TreeNodesUserRole = new ObservableCollection<TreeNode>();
+
+            TreeNodesCompanyId.Add(new TreeNode(companyId));
+            TreeNodesCompanyId.Add(new TreeNode(userId));
+            TreeNodesCompanyId.Add(new TreeNode(userName));
+            TreeNodesCompanyId.Add(new TreeNode(userEmail));
+            TreeNodesCompanyId.Add(new TreeNode(licenseKey));
+            TreeNodesCompanyId.Add(new TreeNode(validFrom));
+            TreeNodesCompanyId.Add(new TreeNode(validTo));
+            TreeNodesCompanyId.Add(new TreeNode(rowState));
+            TreeNodesCompanyId.Add(new TreeNode(createdDate));
+            TreeNodesCompanyId.Add(new TreeNode(createdBy));
+            TreeNodesCompanyId.Add(new TreeNode(modifiedDate));
+            TreeNodesCompanyId.Add(new TreeNode(modifiedBy));
+            TreeNodesCompanyId.Add(new TreeNode(userRole));
+        }
     }
 }
