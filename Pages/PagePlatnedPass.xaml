@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PlatnedMahara.Pages.PagePlatnedPass"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PlatnedMahara.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="CenteredHeaderTemplate">
+            <Grid VerticalAlignment="Center">
+                <TextBlock Text="{Binding}" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       FontFamily="Arial"
+                       TextWrapping="WrapWholeWords"
+                       CharacterSpacing="200" 
+                       Foreground="CornflowerBlue"
+                       Margin="0,0,0,40"/>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    
+    <NavigationView x:Name="nvSample1" Grid.Row="1" Height="1000"
+                    PaneDisplayMode="Left"
+                    IsTabStop="False"
+                    SelectionChanged="NavigationView_SelectionChanged8" 
+                    IsSettingsVisible="False"
+                    HeaderTemplate="{StaticResource CenteredHeaderTemplate}">
+        
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="PagePassHome"/>
+            <NavigationViewItem Content="Company" Icon="Calculator" ToolTipService.ToolTip="Company" SelectsOnInvoked="False">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Company Details" Icon="AllApps" ToolTipService.ToolTip="Company Details" Tag="PagePassCompany"/>
+                    <NavigationViewItem Content="Contact Details" Icon="ContactInfo" ToolTipService.ToolTip="Contact Details" Tag="PagePassCompanyContact"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+            <NavigationViewItem Content="User Management" Icon="People" ToolTipService.ToolTip="User Management" Tag="PagePassUserManagement"/>
+        </NavigationView.MenuItems>
+        <Frame x:Name="contentFramePlatnedPass" />
+    </NavigationView>
+</Page>

@@ -61,6 +61,7 @@ namespace PlatnedMahara
             mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
             mnuItmSubProfileLogin.Click += baseUi.mnuItmSubProfileLogin_Click;
             mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+            mnuItmPlatnedPass.Click += baseUi.mnuItmPlatnedPass_Click;
 
             if (GlobalData.IsLoggedIn)
             {
@@ -229,6 +230,10 @@ namespace PlatnedMahara
                     newItem.Header = "Help Window | Application License";
                     frame.Navigate(typeof(PageLicense));
                     break;
+                case 103:
+                    newItem.Header = "Administration | Platned Pass";
+                    frame.Navigate(typeof(PagePlatnedPass));
+                    break;
                 default:
                     frame.Navigate(typeof(PageHome));
                     break;
@@ -292,7 +297,7 @@ namespace PlatnedMahara
             this.Activated -= MainWindow_Activated;
         }
 
-        private async void AuthLogin()
+        public async void AuthLogin()
         {
             var result = ContentDialogResult.None;
             var loginPage = new PageLogin(); // Create PageLogin instance once
@@ -338,8 +343,8 @@ namespace PlatnedMahara
                 XamlRoot = MainWindowXamlRoot.XamlRoot,
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
                 PrimaryButtonText = "Validate",
-                SecondaryButtonText = "Cancel",
-                CloseButtonText = "Back To Login",
+                SecondaryButtonText = "Back To Login",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 Content = pageResetPassword
             };
@@ -355,8 +360,8 @@ namespace PlatnedMahara
                 XamlRoot = MainWindowXamlRoot.XamlRoot,
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
                 PrimaryButtonText = "Submit",
-                SecondaryButtonText = "Cancel",
-                CloseButtonText = "Back To Login",
+                SecondaryButtonText = "Back To Login",
+                CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 Content = pageSetNewPassword
             };
@@ -415,7 +420,7 @@ namespace PlatnedMahara
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog - Test", InfoBarSeverity.Informational);
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                 }
             }
         }
@@ -426,6 +431,11 @@ namespace PlatnedMahara
             //If user validates reset password page
             if(resultResetPassword == ContentDialogResult.Primary)
             {
+                //Set New Password Page Execution
+                var pageSetNewPassword = new PageSetNewPassword();
+                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
+
                 //Validation Process
 
                 //Notification Process
@@ -433,26 +443,20 @@ namespace PlatnedMahara
                 {
                     mainWindow.ShowInfoBar("Success!", "Password Reset request validated successfully.", InfoBarSeverity.Success);
                 }
-                //Set New Password Page Execution
-                var pageSetNewPassword = new PageSetNewPassword();
-                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
-                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
             }
-            //If user cancel reset password page
-            else if (resultResetPassword == ContentDialogResult.Secondary)
-            {
-                if (App.MainWindow is MainWindow mainWindow)
-                {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog - Test", InfoBarSeverity.Informational);
-                }
-            }
-            //If user clicked back to login in reset password page
-            else
+            else if(resultResetPassword == ContentDialogResult.Secondary)
             {
                 // Show the Login Dialog again
                 var loginPage = new PageLogin();
                 var loginResult = await ShowLoginDialog(loginPage);
                 await HandleLoginDialogResultAsync(loginResult, loginPage);
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                }
             }
         }
 
@@ -460,33 +464,32 @@ namespace PlatnedMahara
         private async Task HandleSetNewPasswordDialogResultAsync(ContentDialogResult resultSetNewPassword, PageSetNewPassword pageSetNewPassword)
         {
             //if user confirm set new password dialog
-            if(resultSetNewPassword == ContentDialogResult.Primary)
+            if (resultSetNewPassword == ContentDialogResult.Primary)
             {
                 //Validation process
-
                 //Notification process
                 if (App.MainWindow is MainWindow mainWindow)
                 {
                     mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
                 }
-                
+
             }
             //If user canceled the set new password dialog
-            else if(resultSetNewPassword == ContentDialogResult.Secondary)
-            {
-
-                if (App.MainWindow is MainWindow mainWindow)
-                {
-                    mainWindow.ShowInfoBar("Info", "User canceled new password set dialog!", InfoBarSeverity.Informational);
-                }
-            }
-            //If user clicked back to login set new password dialog
-            else
+            else if (resultSetNewPassword == ContentDialogResult.Secondary)
             {
                 // Show the Login Dialog again
                 var loginPage = new PageLogin();
                 var loginResult = await ShowLoginDialog(loginPage);
                 await HandleLoginDialogResultAsync(loginResult, loginPage);
+                
+            }
+            //If user clicked back to login set new password dialog
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User canceled new password set dialog!", InfoBarSeverity.Informational);
+                }
             }
         }
 

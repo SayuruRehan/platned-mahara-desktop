@@ -28,10 +28,8 @@
                 <MenuFlyoutSubItem Text="Configurations">
                     <MenuFlyoutItem x:Name="mnuItmSubConfAuth" Text="Authentication"/>
                     <MenuFlyoutItem x:Name="mnuItmSubConfLogs" Text="Application Logs"/>
-                    <!--<MenuFlyoutItem Text="Other Formats..."/>-->
                 </MenuFlyoutSubItem>
-                <!--<MenuFlyoutItem Text="Open..."/>
-                <MenuFlyoutItem Text="Save"/>-->
+                <MenuFlyoutItem x:Name="mnuItmPlatnedPass" Text="Platned Pass"/>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem x:Name="mnuItmExit" Text="Exit"/>
             </MenuBarItem>
