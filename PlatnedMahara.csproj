@@ -125,6 +125,8 @@
     <None Remove="Assets\Square44x44Logo.targetsize-48.png" />
     <None Remove="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <None Remove="Pages\PageLogin.xaml" />
+    <None Remove="Pages\PageResetPassword.xaml" />
+    <None Remove="Pages\PageSetNewPassword.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -511,6 +513,12 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\PageSetNewPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PageResetPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PageLogin.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -607,6 +615,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <DelaySign>True</DelaySign>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
