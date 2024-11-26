@@ -127,6 +127,7 @@
     <None Remove="Pages\PageLogin.xaml" />
     <None Remove="Pages\PagePlatnedPass.xaml" />
     <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml" />
+    <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml" />
     <None Remove="Pages\PlatnedPassPages\DialogPages\DialogUser.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassCompany.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassCompanyContact.xaml" />
@@ -518,6 +519,9 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -635,6 +639,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <DelaySign>True</DelaySign>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
