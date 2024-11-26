@@ -88,7 +88,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             var pageaddcompanycontact = new DialogCompanyContact();
             //var result = ContentDialogResult.None;
-            var resultDialogCompanyContent = await ShowAddCompanyContactDialog(pageaddcompanycontact);
+            var resultDialogCompanyContactContent = await ShowAddCompanyContactDialog(pageaddcompanycontact);
 
             // Ensure PagePassUserManagementXamlRoot is loaded
             if (PagePassCompanyContactXamlRoot.XamlRoot == null)
@@ -96,18 +96,18 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 PagePassCompanyContactXamlRoot.Loaded += async (s, e) =>
                 {
                     //result = await ShowAddCompanyDialog(dialogCompanyContent);
-                    await HandleAddCompanyDialogResultAsync(resultDialogCompanyContent, pageaddcompanycontact);
+                    await HandleAddCompanyContactDialogResultAsync(resultDialogCompanyContactContent, pageaddcompanycontact);
                 };
             }
             else
             {
                 //result = await ShowAddCompanyDialog(dialogCompanyContent);
-                await HandleAddCompanyDialogResultAsync(resultDialogCompanyContent, pageaddcompanycontact);
+                await HandleAddCompanyContactDialogResultAsync(resultDialogCompanyContactContent, pageaddcompanycontact);
             }
         }
 
 
-        private async Task<ContentDialogResult> ShowAddCompanyContactDialog(DialogCompanyContact dialogCompany)
+        private async Task<ContentDialogResult> ShowAddCompanyContactDialog(DialogCompanyContact dialogCompanyContact)
         {
             ContentDialog dialog = new ContentDialog
             {
@@ -116,13 +116,13 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 PrimaryButtonText = "Process",
                 CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
-                Content = dialogCompany // Set the same dialogCompany instance as the content
+                Content = dialogCompanyContact // Set the same dialogCompany instance as the content
             };
 
             return await dialog.ShowAsync(); // Return the result of the dialog
         }
 
-        private async Task HandleAddCompanyDialogResultAsync(ContentDialogResult result, DialogCompanyContact dialogCompanyContact)
+        private async Task HandleAddCompanyContactDialogResultAsync(ContentDialogResult result, DialogCompanyContact dialogCompanyContact)
         {
             if (result == ContentDialogResult.Primary)
             {
@@ -147,7 +147,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
                     var resultNew = ContentDialogResult.None;
                     resultNew = await ShowAddCompanyContactDialog(dialogCompanyContact);
-                    await HandleAddCompanyDialogResultAsync(resultNew, dialogCompanyContact);
+                    await HandleAddCompanyContactDialogResultAsync(resultNew, dialogCompanyContact);
 
                 }
 
