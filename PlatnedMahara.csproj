@@ -132,6 +132,8 @@
     <None Remove="Pages\PlatnedPassPages\PagePassCompanyContact.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassHome.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassUserManagement.xaml" />
+    <None Remove="Pages\PageResetPassword.xaml" />
+    <None Remove="Pages\PageSetNewPassword.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -539,6 +541,12 @@
     <Page Update="Pages\PagePlatnedPass.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Pages\PageSetNewPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PageResetPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PageLogin.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -635,6 +643,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <DelaySign>True</DelaySign>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
