@@ -23,14 +23,23 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
     /// </summary>
     public sealed partial class DialogUser : Page
     {
+        bool _isEdit = false;
+
         public DialogUser()
         {
+            this.InitializeComponent();
+        }
+
+        public DialogUser(bool isedit)
+        {
+            _isEdit = isedit;
             this.InitializeComponent();
         }
 
         public string UserCompanyId => txtCompanyId.Text;
         public string UserId => txtUserId.Text;
         public string UserName => txtUserName.Text;
+        public string UserEmail => txtUserEmail.Text;
         public DateTime ValidFrom => calValidFrom.Date.Value.DateTime;
         public string UserRole => cmbUserRole.SelectedItem.ToString();
 

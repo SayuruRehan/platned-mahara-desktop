@@ -342,6 +342,35 @@ namespace PlatnedMahara.DataAccess.Methods
 
         #region Users per Company Methods
         [Obsolete]
+        public List<Pass_Users_Company> GetPassUsers()
+        {
+            List<Pass_Users_Company> pass_Users_Companies = new List<Pass_Users_Company>();
+            objExecute = new Execute();
+            DataTable dt = (DataTable)objExecute.Executes("spGetPassUsers", ReturnType.DataTable, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
+            {
+                pass_Users_Companies.Add(new Pass_Users_Company
+                {
+                    CompanyID = dr["COMPANY_ID"].ToString(),
+                    UserID = dr["USER_ID"].ToString(),
+                    UserName = dr["USER_NAME"].ToString(),
+                    Password = dr["PASSWORD"].ToString(),
+                    UserEmail = dr["USER_EMAIL"].ToString(),
+                    LicenseKey = dr["LICENSE_KEY"].ToString(),
+                    ValidFrom = Convert.ToDateTime(dr["VALID_FROM"]),
+                    ValidTo = Convert.ToDateTime(dr["VALID_TO"]),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
+                    UserRole = dr["USER_ROLE"].ToString(),
+                    RowState = dr["ROWSTATE"].ToString(),
+                });
+            }
+            return pass_Users_Companies;
+        }
+
+        [Obsolete]
         public List<Pass_Users_Company> GetUsersperCompany(Pass_Users_Company objPass_Users_Company)
         {
             List<Pass_Users_Company> pass_Users_Companies = new List<Pass_Users_Company>();
@@ -365,8 +394,8 @@ namespace PlatnedMahara.DataAccess.Methods
                     ValidTo = Convert.ToDateTime(dr["VALID_TO"]),
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
-                    ModifiedBy = dr["MODIFIED_BY"].ToString(),
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     UserRole = dr["USER_ROLE"].ToString(),
                     RowState = dr["ROWSTATE"].ToString(),
                 });
@@ -399,8 +428,8 @@ namespace PlatnedMahara.DataAccess.Methods
                     ValidTo = Convert.ToDateTime(dr["VALID_TO"]),
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
-                    ModifiedBy = dr["MODIFIED_BY"].ToString(),
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     UserRole = dr["USER_ROLE"].ToString(),
                     RowState = dr["ROWSTATE"].ToString(),
                 };
