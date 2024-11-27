@@ -30,6 +30,9 @@
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml">
       <SubType>Designer</SubType>
     </Page>
