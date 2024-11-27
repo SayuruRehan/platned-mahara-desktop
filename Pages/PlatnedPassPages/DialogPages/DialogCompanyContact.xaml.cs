@@ -31,7 +31,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
         public string CompanyContactID => txtCompContactId.Text;
         public string CompanyContactUserID => txtCompanyContactUserID.Text;
         public string CompanyContactTitle => txtCompanyContactTitle.Text;
-        public string CompanyContactName => txtCompanyContactName.Text;
+        public string CompanyContactNumber => txtCompanyContactNumber.Text;
         public string CompanyContactEmail => txtCompanyContactEmail.Text;
     }
 }

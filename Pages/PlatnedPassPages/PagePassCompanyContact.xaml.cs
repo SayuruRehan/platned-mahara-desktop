@@ -69,13 +69,13 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             for (int gi = 1; gi <= 1; gi++)
             {
                 // Pass values needed to display in grid
-                var item = new GridItemCompanyContact($"CompanyID", "Userid", "CompanyContactTitle", "CompanyContactName", "companyContactEmail")
+                var item = new GridItemCompanyContact($"CompanyID", "Userid", "CompanyContactTitle", "CompanyContactNumber", "companyContactEmail")
                 {
                     // Initialize with default values
                     TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
                     TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode("") },
                     TreeNodesCompanyContactTitle = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyContactName = new ObservableCollection<TreeNode> { new TreeNode("") },
+                    TreeNodesCompanyContactNumber = new ObservableCollection<TreeNode> { new TreeNode("") },
                     TreeNodesCompanyContactEmail = new ObservableCollection<TreeNode> { new TreeNode("") }
                 };
 
@@ -128,7 +128,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             {
                 // Access field data from dialogCompany
                 string companyId = dialogCompanyContact.CompanyContactID;
-                string companyName = dialogCompanyContact.CompanyContactName;
+                string companyName = dialogCompanyContact.CompanyContactNumber;
 
                 bool authResponse = await AuthPlatnedPass.validateLogin(companyId, companyName);
                 if (authResponse)
@@ -181,21 +181,21 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyContactTitle { get; set; }
-        public ObservableCollection<TreeNode> TreeNodesCompanyContactName { get; set; }
+        public ObservableCollection<TreeNode> TreeNodesCompanyContactNumber { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyContactEmail { get; set; }
 
-        public GridItemCompanyContact(string companyId, string userid, string companyContactTitle, string companyContactName, string companyContactEmail)
+        public GridItemCompanyContact(string companyId, string userid, string companyContactTitle, string companyContactNumber, string companyContactEmail)
         {
             TreeNodesCompanyId = new ObservableCollection<TreeNode>();
             TreeNodesUserId = new ObservableCollection<TreeNode>();
             TreeNodesCompanyContactTitle = new ObservableCollection<TreeNode>();
-            TreeNodesCompanyContactName = new ObservableCollection<TreeNode>();
+            TreeNodesCompanyContactNumber = new ObservableCollection<TreeNode>();
             TreeNodesCompanyContactEmail = new ObservableCollection<TreeNode>();
 
             TreeNodesCompanyId.Add(new TreeNode(companyId));
             TreeNodesUserId.Add(new TreeNode(userid));
             TreeNodesCompanyContactTitle.Add(new TreeNode(companyContactTitle));
-            TreeNodesCompanyContactName.Add(new TreeNode(companyContactName));
+            TreeNodesCompanyContactNumber.Add(new TreeNode(companyContactNumber));
             TreeNodesCompanyContactEmail.Add(new TreeNode(companyContactEmail));
         }
     }

@@ -47,7 +47,7 @@
                             <controls:DataGridTextColumn Header="Company ID" Binding="{Binding TreeNodesCompanyId[0].Name}" Width="200" MaxWidth="300" MinWidth="100"/>
                             <controls:DataGridTextColumn Header="User ID" Binding="{Binding TreeNodesUserId[0].Name}" Width="300" MaxWidth="400"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Title" Binding="{Binding TreeNodesCompanyContactTitle[0].Name}" Width="250" MaxWidth="250"  MinWidth="100"/>
-                            <controls:DataGridTextColumn Header="Name" Binding="{Binding TreeNodesCompanyContactName[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
+                            <controls:DataGridTextColumn Header="Number" Binding="{Binding TreeNodesCompanyContactNumber[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
                             <controls:DataGridTextColumn Header="Email" Binding="{Binding TreeNodesCompanyContactEmail[0].Name}" Width="150" MaxWidth="200"  MinWidth="100"/>
                          </controls:DataGrid.Columns>
                     </controls:DataGrid>
