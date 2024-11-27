@@ -1,5 +1,6 @@
 ﻿using Irony.Parsing;
 using Microsoft.UI.Xaml.Controls;
+using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.Media.Protection.PlayReady;
+using static PlatnedMahara.Classes.ApiExecution;
 
 namespace PlatnedMahara.Classes
 {
@@ -17,6 +19,7 @@ namespace PlatnedMahara.Classes
     {
         private static string token = "";
         private static bool validLogin = false;
+        private static bool recordsaved = false;
         private static string accessTokenUrlPl = GlobalData.AccessTokenUrlPl;
         private static string clientIdPl = GlobalData.ClientIdPl;
         private static string clientSecretPl = GlobalData.ClientSecretPl;
@@ -25,7 +28,7 @@ namespace PlatnedMahara.Classes
         private static string companyId = GlobalData.CompanyId;
 
         private static readonly HttpClient client = new HttpClient();
-
+        MasterMethods masterMethods;
         public static async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
         {
             Logger.Log("Encoding the client ID and secret started...");
@@ -162,6 +165,88 @@ namespace PlatnedMahara.Classes
                 return validLogin;
             }
         }
+
+        #region Pass Company Methods
+        public bool CreateNewCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public List<Pass_Company> GetPass_Companies()
+        {
+            List<Pass_Company> pass_Companies = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Companies = new List<Pass_Company>();
+                pass_Companies = masterMethods.GetPassCompanies();
+                return pass_Companies;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Companies;
+            }
+        }
+        public Pass_Company GetPass_Companies(Pass_Company p)
+        {
+            Pass_Company pass_Company = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Company = new Pass_Company();
+                pass_Company = masterMethods.GetPassCompany(p);
+                return pass_Company;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Company;
+            }
+        } 
+        #endregion
     }
 
 }

@@ -8,6 +8,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using PlatnedMahara.Classes;
+using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
 using System;
 using System.Collections.Generic;
@@ -67,35 +68,42 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         private void LoadData()
         {
+            List<Pass_Company> pass_Companies = new List<Pass_Company>();
+            pass_Companies = new AuthPlatnedPass().GetPass_Companies();
             GridItemsCompany = new ObservableCollection<GridItemCompany>();
-            for (int gi = 1; gi <= 1; gi++)
-            {
-                // Pass values needed to display in grid
-                var item = new GridItemCompany($"CompanyID", "CompanyName", "CompanyAddress", "LicenseLimit", "LiceseConsumed", "CompanyType", "RowState", "CreDate", "CreBy", "ModDate", "ModBy")
-                {
-                    // Initialize with default values
-                    TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyName = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyAddress = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesLicenseLimit = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesLiceseConsumed = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyType = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode("") }
-                };
 
-                GridItemsCompany.Add(item);
-            }
+            if(pass_Companies != null && pass_Companies.Count > 0)
+            {
+                foreach (Pass_Company pc in pass_Companies)
+                {
+                    var item = new GridItemCompany($"CompanyID", "CompanyName", "CompanyAddress", "LicenseLimit", "LiceseConsumed", "CompanyType", "RowState", "CreDate", "CreBy", "ModDate", "ModBy")
+                    {
+                        // Initialize with default values
+                        TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode(pc.CompanyID) },
+                        TreeNodesCompanyName = new ObservableCollection<TreeNode> { new TreeNode(pc.CompanyName) },
+                        TreeNodesCompanyAddress = new ObservableCollection<TreeNode> { new TreeNode(pc.CompanyAddress) },
+                        TreeNodesLicenseLimit = new ObservableCollection<TreeNode> { new TreeNode(pc.LicenseLimit.ToString()) },
+                        TreeNodesLiceseConsumed = new ObservableCollection<TreeNode> { new TreeNode(pc.LicenseConsumed.ToString()) },
+                        TreeNodesCompanyType = new ObservableCollection<TreeNode> { new TreeNode(pc.CompanyType) },
+                        TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode(pc.RowState) },
+                        TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode(pc.CreatedDate.ToString()) },
+                        TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode(pc.CreatedBy) },
+                        TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode(pc.ModifiedDate.ToString()) },
+                        TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode(pc.ModifiedBy) }
+                    };
+
+                    GridItemsCompany.Add(item);
+                }
+            }            
         }
 
 
         private async void btnNewCompany_Click(object sender, RoutedEventArgs e)
         {
+            //MasterMethods obj = new MasterMethods();
+            //List<Pass_Company> lst = obj.GetPassCompanies();
             var result = ContentDialogResult.None;
-            var dialogCompany = new DialogCompany(); // Create dialogCompany instance once
+            var dialogCompany = new DialogCompany(false); // Create dialogCompany instance once
 
             // Ensure PagePassUserManagementXamlRoot is loaded
             if (PagePassCompanyXamlRoot.XamlRoot == null)
@@ -132,16 +140,26 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
+                Pass_Company pass_Company = new Pass_Company
+                {
+                    CompanyID = dialogCompany.CompanyId,
+                    CompanyName = dialogCompany.CompanyName,
+                    CompanyType = dialogCompany.CompanyType,
+                    CompanyAddress = dialogCompany.CompanyAddress,
+                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
+                    RowState = "ACTIVE",
+                    CreatedBy = "TestUser"
+                };
                 // Access field data from dialogCompany
-                string companyId = dialogCompany.CompanyId;
-                string companyName = dialogCompany.CompanyName;
-
-                bool authResponse = await AuthPlatnedPass.validateLogin(companyId, companyName);
+                //string companyId = dialogCompany.CompanyId;
+                //string companyName = dialogCompany.CompanyName;
+                //
+                bool authResponse = new AuthPlatnedPass().CreateNewCompany(pass_Company);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyId}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
                     }
                 }
                 else
@@ -154,7 +172,6 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     var resultNew = ContentDialogResult.None;
                     resultNew = await ShowAddCompanyDialog(dialogCompany);
                     await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
-
                 }
 
             }

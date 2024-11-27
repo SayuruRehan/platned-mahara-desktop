@@ -21,10 +21,19 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+
+    
     public sealed partial class DialogCompany : Page
     {
+        bool _isEdit = false;
         public DialogCompany()
         {
+            this.InitializeComponent();
+        }
+
+        public DialogCompany(bool isedit)
+        {
+            _isEdit = isedit;
             this.InitializeComponent();
         }
 
