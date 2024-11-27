@@ -54,6 +54,12 @@
     <Page Update="Pages\PagePlatnedPass.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Pages\PageSetNewPassword.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\PageResetPassword.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\PageLogin.xaml">
       <SubType>Designer</SubType>
     </Page>
