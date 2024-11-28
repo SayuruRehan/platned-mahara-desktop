@@ -253,7 +253,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     Password = Encrypt.EncryptPassword("defaultpass1234"),
                     LicenseKey = "ABC",
                     RowState = "Active",
-                    CreatedBy = "PlatnedPass"
+                    CreatedBy = GlobalData.UserId
                 };
 
                 // Access field data from DialogUser

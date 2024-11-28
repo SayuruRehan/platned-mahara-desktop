@@ -474,7 +474,7 @@ namespace PlatnedMahara.DataAccess.Methods
                 Execute.AddParameter("@USER_EMAIL",objPass_Users_Company.UserEmail),
                 Execute.AddParameter("@VALID_FROM",objPass_Users_Company.ValidFrom),
                 Execute.AddParameter("@VALID_TO",objPass_Users_Company.ValidTo),
-                Execute.AddParameter("@MODIFIED_BY","PassUser"),
+                Execute.AddParameter("@MODIFIED_BY",GlobalData.UserId),
                 Execute.AddParameter("@USER_ROLE",objPass_Users_Company.UserRole),
                 Execute.AddParameter("@ROWSTATE",objPass_Users_Company.RowState),
             };
