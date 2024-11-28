@@ -40,64 +40,168 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemUser selectedItem)
             {
-                // Perform the edit action
-                Debug.WriteLine($"Edit clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
+                // Load selected record data into DialogUser
+                var dialogUser = new DialogUser(true)
+                {
+                    UserCompanyId = selectedItem.TreeNodesCompanyId[0].Name,
+                    UserId = selectedItem.TreeNodesUserId[0].Name,
+                    UserName = selectedItem.TreeNodesUserName[0].Name,
+                    UserEmail = selectedItem.TreeNodesUserEmail[0].Name,
+                    UserRole = selectedItem.TreeNodesUserRole[0].Name,
+                    ValidFrom = DateTime.Parse(selectedItem.TreeNodesValidFrom[0].Name),
+                    ValidTo = DateTime.Parse(selectedItem.TreeNodesValidTo[0].Name),
+                    RowState = selectedItem.TreeNodesRowState[0].Name
+                };
+
+                var result = await ShowAddUserDialog(dialogUser);
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    // Update the record in the database
+                    Pass_Users_Company updatedUser = new Pass_Users_Company
+                    {
+                        CompanyID = dialogUser.UserCompanyId,
+                        UserID = dialogUser.UserId,
+                        UserName = dialogUser.UserName,
+                        UserEmail = dialogUser.UserEmail,
+                        ValidFrom = dialogUser.ValidFrom,
+                        ValidTo = dialogUser.ValidTo,
+                        UserRole = dialogUser.UserRole,
+                        RowState = dialogUser.RowState
+                    };
+
+                    bool isUpdated = new AuthPlatnedPass().EditUser(updatedUser);
+
+                    if (isUpdated)
+                    {
+                        // Update the GridItemsUser collection
+                        selectedItem.TreeNodesUserName[0].Name = dialogUser.UserName;
+                        selectedItem.TreeNodesUserEmail[0].Name = dialogUser.UserEmail;
+                        selectedItem.TreeNodesUserRole[0].Name = dialogUser.UserRole;
+                        selectedItem.TreeNodesValidFrom[0].Name = dialogUser.ValidFrom.ToString();
+                        selectedItem.TreeNodesValidTo[0].Name = dialogUser.ValidTo.ToString();
+                        selectedItem.TreeNodesRowState[0].Name = dialogUser.RowState;
+
+                        // Refresh DataGrid
+                        dataGrid.ItemsSource = null;
+                        dataGrid.ItemsSource = GridItemsUser;
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"User updated successfully.", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to update user.", InfoBarSeverity.Error);
+                        }
+                    }
+                }
+            }
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemUser selectedItem)
             {
-                // Perform the delete action
-                Debug.WriteLine($"Delete clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
+                // Confirm delete action
+                var dialog = new ContentDialog
+                {
+                    Title = "Delete Confirmation",
+                    Content = $"Are you sure you want to delete user {selectedItem.TreeNodesUserName[0].Name}?",
+                    PrimaryButtonText = "Yes",
+                    CloseButtonText = "No",
+                    DefaultButton = ContentDialogButton.Close,
+                    XamlRoot = PagePassUserManagementXamlRoot.XamlRoot
+                };
+
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    Pass_Users_Company pass_User = new Pass_Users_Company
+                    {
+                        CompanyID = selectedItem.TreeNodesCompanyId[0].Name,
+                        UserID = selectedItem.TreeNodesUserId[0].Name
+                    };
+
+                    // Call your delete method
+                    bool isDeleted = new AuthPlatnedPass().DeleteUser(pass_User);
+
+                    if (isDeleted)
+                    {
+                        // Remove the item from the ObservableCollection
+                        GridItemsUser.Remove(selectedItem);
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"User deleted successfully.", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to delete user.", InfoBarSeverity.Error);
+                        }
+                    }
+                }
+            }
         }
 
         private void LoadData()
         {
-            GridItemsUser = new ObservableCollection<GridItemUser>();
-            for (int gi = 1; gi <= 1; gi++)
-            {
-                // Pass values needed to display in grid
-                var item = new GridItemUser($"Company ID {gi}","UserId","UserName","UserEmail","LicKey","ValidFrom","ValidTo","RowState","CreDate","CreBy","ModDate","ModBy","UserRole")
-                {
-                    // Initialize with default values
-                    TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesUserName = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesUserEmail = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesLicenseKey = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesValidFrom = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesValidTo = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesUserRole = new ObservableCollection<TreeNode> { new TreeNode("") }
-                };
+            List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
+            pass_Users = new AuthPlatnedPass().GetPass_Users();
 
-                GridItemsUser.Add(item);
+            GridItemsUser = new ObservableCollection<GridItemUser>();
+            if (pass_Users != null && pass_Users.Count > 0)
+            {
+                foreach (Pass_Users_Company pu in pass_Users)
+                {
+                    // Pass values needed to display in grid
+                    var item = new GridItemUser($"Company ID", "UserId", "UserName", "UserEmail", "LicKey", "ValidFrom", "ValidTo", "RowState", "CreDate", "CreBy", "ModDate", "ModBy", "UserRole")
+                    {
+                        // Initialize with default values
+                        TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode(pu.CompanyID) },
+                        TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode(pu.UserID) },
+                        TreeNodesUserName = new ObservableCollection<TreeNode> { new TreeNode(pu.UserName) },
+                        TreeNodesUserEmail = new ObservableCollection<TreeNode> { new TreeNode(pu.UserEmail) },
+                        TreeNodesLicenseKey = new ObservableCollection<TreeNode> { new TreeNode(pu.LicenseKey) },
+                        TreeNodesValidFrom = new ObservableCollection<TreeNode> { new TreeNode(pu.ValidFrom.ToString()) },
+                        TreeNodesValidTo = new ObservableCollection<TreeNode> { new TreeNode(pu.ValidTo.ToString()) },
+                        TreeNodesRowState = new ObservableCollection<TreeNode> { new TreeNode(pu.RowState) },
+                        TreeNodesCreatedDate = new ObservableCollection<TreeNode> { new TreeNode(pu.CreatedDate.ToString()) },
+                        TreeNodesCreatedBy = new ObservableCollection<TreeNode> { new TreeNode(pu.CreatedBy) },
+                        TreeNodesModifiedDate = new ObservableCollection<TreeNode> { new TreeNode(pu.ModifiedDate.ToString()) },
+                        TreeNodesModifiedBy = new ObservableCollection<TreeNode> { new TreeNode(pu.ModifiedBy) },
+                        TreeNodesUserRole = new ObservableCollection<TreeNode> { new TreeNode(pu.UserRole) }
+                    };
+
+                    GridItemsUser.Add(item);
+                }
             }
         }
 
         private async void btnNewUser_Click(object sender, RoutedEventArgs e)
         {
             var result = ContentDialogResult.None;
-            var dialogUser = new DialogUser(); // Create DialogUser instance once
+            var dialogUser = new DialogUser(false); // Create DialogUser instance once
 
             // Ensure PagePassUserManagementXamlRoot is loaded
             if (PagePassUserManagementXamlRoot.XamlRoot == null)
@@ -112,6 +216,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             {
                 result = await ShowAddUserDialog(dialogUser);
                 await HandleAddUserDialogResultAsync(result, dialogUser);
+                LoadData();
+                dataGrid.ItemsSource = null; // Clear the existing binding
+                dataGrid.ItemsSource = GridItemsUser;
             }
         }
 
@@ -134,16 +241,32 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
-                // Access field data from DialogUser
-                string userId = dialogUser.UserId;
-                string userName = dialogUser.UserName;
+                Pass_Users_Company pass_User = new Pass_Users_Company
+                {
+                    CompanyID = dialogUser.UserCompanyId,
+                    UserID = dialogUser.UserId,
+                    UserName = dialogUser.UserName,
+                    UserEmail = dialogUser.UserEmail,
+                    ValidFrom = dialogUser.ValidFrom,
+                    ValidTo = DateTime.Now.AddDays(365),
+                    UserRole = dialogUser.UserRole,
+                    Password = "1234",
+                    LicenseKey = "ABC",
+                    RowState = "Active",
+                    CreatedBy = "PlatnedPass"
+                };
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
+                // Access field data from DialogUser
+                /*string userId = dialogUser.UserId;
+                string userName = dialogUser.UserName;*/
+
+                //bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
+                bool authResponse = new AuthPlatnedPass().CreateNewUser(pass_User);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {userId}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {pass_User.UserID}", InfoBarSeverity.Success);
                     }
                 }
                 else
