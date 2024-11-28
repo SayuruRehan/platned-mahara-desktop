@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,6 +16,8 @@ using Microsoft.UI.Xaml.Navigation;
 using PlatnedMahara.Classes;
 using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
+using PlatnedMahara.Pages.PlatnedPassPages;
+using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
@@ -377,36 +380,50 @@ namespace PlatnedMahara
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(username, password);
-                if (authResponse)
+                Pass_Users_Company pass_User_det = new Pass_Users_Company
                 {
-                    GlobalData.IsLoggedIn = true;
+                    UserID = loginPage.UserId
+                };
 
-                    mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
-                    mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+                List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
+                pass_Users = new AuthPlatnedPass().GetLoginUser(pass_User_det);
 
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
-                    }
-                }
-                else
+                if (pass_Users != null && pass_Users.Count > 0)
                 {
-                    GlobalData.IsLoggedIn = false;
-
-                    mnuItmSubProfileLogin.Visibility = Visibility.Visible;
-                    mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
-
-                    if (App.MainWindow is MainWindow mainWindow)
+                    foreach (Pass_Users_Company pu in pass_Users)
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                        if(Encrypt.VerifyPassword(password, pu.Password))
+                        {
+                            GlobalData.UserId = pu.UserID;
+                            GlobalData.CompanyId = pu.CompanyID;
+                            GlobalData.IsLoggedIn = true;
+
+                            mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                            mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                            }
+
+                        }
+                        else
+                        {
+                            GlobalData.IsLoggedIn = false;
+
+                            mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                            mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                                mainWindow.AuthLogin();
+                            }
+
+                        }
+
                     }
-
-                    var resultNew = ContentDialogResult.None;
-                    resultNew = await ShowLoginDialog(loginPage);
-                    await HandleLoginDialogResultAsync(resultNew, loginPage);
-
-                }
+                }                
 
             }
             else if (result == ContentDialogResult.Secondary)
