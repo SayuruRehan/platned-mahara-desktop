@@ -168,6 +168,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.1.240916" />
@@ -666,5 +667,9 @@
 
     <ItemGroup>
       <PRIResource Remove="IFS_Cloud_Exports\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Classes\Db\Scripts\" />
     </ItemGroup>
 </Project>

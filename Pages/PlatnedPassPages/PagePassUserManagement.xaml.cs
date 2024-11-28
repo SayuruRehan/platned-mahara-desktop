@@ -250,7 +250,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     ValidFrom = dialogUser.ValidFrom,
                     ValidTo = DateTime.Now.AddDays(365),
                     UserRole = dialogUser.UserRole,
-                    Password = "1234",
+                    Password = Encrypt.EncryptPassword("defaultpass1234"),
                     LicenseKey = "ABC",
                     RowState = "Active",
                     CreatedBy = "PlatnedPass"

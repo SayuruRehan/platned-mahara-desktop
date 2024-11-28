@@ -251,6 +251,24 @@ namespace PlatnedMahara.Classes
             }
         }
 
+        public List<Pass_Users_Company> GetLoginUser(Pass_Users_Company p)
+        {
+            List<Pass_Users_Company> pass_User = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_User = new List<Pass_Users_Company>();
+                pass_User = masterMethods.GetLoginUser(p);
+                return pass_User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_User;
+            }
+        }
+
         public Pass_Users_Company GetPass_User_Per_Company(Pass_Users_Company p)
         {
             Pass_Users_Company pass_User = null;
