@@ -667,4 +667,8 @@
     <ItemGroup>
       <PRIResource Remove="IFS_Cloud_Exports\**" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Classes\Db\Scripts\" />
+    </ItemGroup>
 </Project>
