@@ -471,12 +471,10 @@ namespace PlatnedMahara.DataAccess.Methods
                 Execute.AddParameter("@COMPANY_ID",objPass_Users_Company.CompanyID),
                 Execute.AddParameter("@USER_ID",objPass_Users_Company.UserID),
                 Execute.AddParameter("@USER_NAME",objPass_Users_Company.UserName),
-                Execute.AddParameter("@PASSWORD",objPass_Users_Company.Password),
                 Execute.AddParameter("@USER_EMAIL",objPass_Users_Company.UserEmail),
-                Execute.AddParameter("@LICENSE_KEY",objPass_Users_Company.LicenseKey),
                 Execute.AddParameter("@VALID_FROM",objPass_Users_Company.ValidFrom),
                 Execute.AddParameter("@VALID_TO",objPass_Users_Company.ValidTo),
-                Execute.AddParameter("@MODIFIED_BY",objPass_Users_Company.ModifiedBy),
+                Execute.AddParameter("@MODIFIED_BY","PassUser"),
                 Execute.AddParameter("@USER_ROLE",objPass_Users_Company.UserRole),
                 Execute.AddParameter("@ROWSTATE",objPass_Users_Company.RowState),
             };

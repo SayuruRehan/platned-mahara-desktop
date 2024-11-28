@@ -40,17 +40,75 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemUser selectedItem)
             {
-                // Perform the edit action
-                Debug.WriteLine($"Edit clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
+                // Load selected record data into DialogUser
+                var dialogUser = new DialogUser(true)
+                {
+                    UserCompanyId = selectedItem.TreeNodesCompanyId[0].Name,
+                    UserId = selectedItem.TreeNodesUserId[0].Name,
+                    UserName = selectedItem.TreeNodesUserName[0].Name,
+                    UserEmail = selectedItem.TreeNodesUserEmail[0].Name,
+                    UserRole = selectedItem.TreeNodesUserRole[0].Name,
+                    ValidFrom = DateTime.Parse(selectedItem.TreeNodesValidFrom[0].Name),
+                    ValidTo = DateTime.Parse(selectedItem.TreeNodesValidTo[0].Name),
+                    RowState = selectedItem.TreeNodesRowState[0].Name
+                };
+
+                var result = await ShowAddUserDialog(dialogUser);
+
+                if (result == ContentDialogResult.Primary)
+                {
+                    // Update the record in the database
+                    Pass_Users_Company updatedUser = new Pass_Users_Company
+                    {
+                        CompanyID = dialogUser.UserCompanyId,
+                        UserID = dialogUser.UserId,
+                        UserName = dialogUser.UserName,
+                        UserEmail = dialogUser.UserEmail,
+                        ValidFrom = dialogUser.ValidFrom,
+                        ValidTo = dialogUser.ValidTo,
+                        UserRole = dialogUser.UserRole,
+                        RowState = dialogUser.RowState
+                    };
+
+                    bool isUpdated = new AuthPlatnedPass().EditUser(updatedUser);
+
+                    if (isUpdated)
+                    {
+                        // Update the GridItemsUser collection
+                        selectedItem.TreeNodesUserName[0].Name = dialogUser.UserName;
+                        selectedItem.TreeNodesUserEmail[0].Name = dialogUser.UserEmail;
+                        selectedItem.TreeNodesUserRole[0].Name = dialogUser.UserRole;
+                        selectedItem.TreeNodesValidFrom[0].Name = dialogUser.ValidFrom.ToString();
+                        selectedItem.TreeNodesValidTo[0].Name = dialogUser.ValidTo.ToString();
+                        selectedItem.TreeNodesRowState[0].Name = dialogUser.RowState;
+
+                        // Refresh DataGrid
+                        dataGrid.ItemsSource = null;
+                        dataGrid.ItemsSource = GridItemsUser;
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"User updated successfully.", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to update user.", InfoBarSeverity.Error);
+                        }
+                    }
+                }
+            }
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)

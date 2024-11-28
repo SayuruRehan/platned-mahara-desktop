@@ -28,20 +28,91 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
         public DialogUser()
         {
             this.InitializeComponent();
+
+            if (_isEdit)
+            {
+                txtCompanyId.IsEnabled = false;
+                txtUserId.IsEnabled = false;
+                calValidTo.Visibility = Visibility.Visible;
+                cmbUserState.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtCompanyId.IsEnabled = true;
+                txtUserId.IsEnabled = true;
+                calValidTo.Visibility = Visibility.Collapsed;
+                cmbUserState.Visibility = Visibility.Collapsed;
+            }
         }
 
         public DialogUser(bool isedit)
         {
             _isEdit = isedit;
             this.InitializeComponent();
+
+            if (_isEdit)
+            {
+                txtCompanyId.IsEnabled = false;
+                txtUserId.IsEnabled = false;
+                calValidTo.Visibility = Visibility.Visible;
+                cmbUserState.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtCompanyId.IsEnabled = true;
+                txtUserId.IsEnabled = true;
+                calValidTo.Visibility = Visibility.Collapsed;
+                cmbUserState.Visibility = Visibility.Collapsed;
+            }
         }
 
-        public string UserCompanyId => txtCompanyId.Text;
-        public string UserId => txtUserId.Text;
-        public string UserName => txtUserName.Text;
-        public string UserEmail => txtUserEmail.Text;
-        public DateTime ValidFrom => calValidFrom.Date.Value.DateTime;
-        public string UserRole => cmbUserRole.SelectedItem.ToString();
+        public string UserCompanyId
+        {
+            get => txtCompanyId.Text;
+            set => txtCompanyId.Text = value;
+        }
+
+        public string UserId
+        {
+            get => txtUserId.Text;
+            set => txtUserId.Text = value;
+        }
+
+        public string UserName
+        {
+            get => txtUserName.Text;
+            set => txtUserName.Text = value;
+        }
+
+        public string UserEmail
+        {
+            get => txtUserEmail.Text;
+            set => txtUserEmail.Text = value;
+        }
+
+        public DateTime ValidFrom
+        {
+            get => calValidFrom.Date.Value.DateTime;
+            set => calValidFrom.Date = new DateTimeOffset(value);
+        }
+
+        public DateTime ValidTo
+        {
+            get => calValidTo.Date.Value.DateTime;
+            set => calValidTo.Date = new DateTimeOffset(value);
+        }
+
+        public string UserRole
+        {
+            get => cmbUserRole.SelectedItem.ToString();
+            set => cmbUserRole.SelectedItem = value;
+        }
+
+        public string RowState
+        {
+            get => cmbUserState.SelectedItem.ToString();
+            set => cmbUserState.SelectedItem = value;
+        }
 
     }
 }
