@@ -201,6 +201,23 @@ namespace PlatnedMahara.Classes
                 return validLogin;
             }
         }
+
+        public bool EditUserPassword(Pass_Users_Company pass_User)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditUserPassword(pass_User);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
         public bool DeleteUser(Pass_Users_Company pass_User)
         {
             try

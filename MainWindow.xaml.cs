@@ -481,7 +481,7 @@ namespace PlatnedMahara
                             }
 
                             //Set New Password Page Execution
-                            var pageSetNewPassword = new PageSetNewPassword();
+                            var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
                             var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
                             await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
                         }
@@ -525,11 +525,65 @@ namespace PlatnedMahara
             if (resultSetNewPassword == ContentDialogResult.Primary)
             {
                 //Validation process
-                //Notification process
-                if (App.MainWindow is MainWindow mainWindow)
+
+                if (pageSetNewPassword.newPassword == pageSetNewPassword.confirmPassword)
                 {
-                    mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
+                    string companyId = pageSetNewPassword.companyId;
+                    string userId = pageSetNewPassword.userId;
+                    string newPassword = Encrypt.EncryptPassword(pageSetNewPassword.newPassword);
+                    string userEmail = pageSetNewPassword.userEmail;
+
+                    Pass_Users_Company pass_User_reset = new Pass_Users_Company
+                    {
+                        CompanyID = companyId,
+                        UserID = userId,
+                        Password = newPassword,
+                        UserEmail = userEmail,
+                    };
+
+                    List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
+                    bool isUpdated = new AuthPlatnedPass().EditUserPassword(pass_User_reset);
+
+                    if (isUpdated)
+                    {
+                        //Notification process
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
+                        }
+
+                        // Show the Login Dialog again
+                        var loginPage = new PageLogin();
+                        var loginResult = await ShowLoginDialog(loginPage);
+                        await HandleLoginDialogResultAsync(loginResult, loginPage);
+
+
+                    }
+                    else
+                    {
+                        mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                        mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error!", $"Password reset unsuccessful!", InfoBarSeverity.Error);
+                            mainWindow.AuthLogin();
+                        }
+                    }
+
                 }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", "Password doesn't match.", InfoBarSeverity.Informational);
+                    }
+
+                    pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail);
+                    await ShowSetNewPasswordDialog(pageSetNewPassword);
+                }
+
+
 
             }
             //If user canceled the set new password dialog

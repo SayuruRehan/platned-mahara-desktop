@@ -484,6 +484,23 @@ namespace PlatnedMahara.DataAccess.Methods
         }
 
         [Obsolete]
+        public bool EditUserPassword(Pass_Users_Company objPass_Users_Company)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Users_Company.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Users_Company.UserID),
+                Execute.AddParameter("@PASSWORD",objPass_Users_Company.Password),
+                Execute.AddParameter("@USER_EMAIL",objPass_Users_Company.UserEmail),
+            };
+            objExecute.Executes("spEditUserPassword", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
         public bool DeleteUsersPerCompany(Pass_Users_Company objPass_Users_Company)
         {
             bool res = false;

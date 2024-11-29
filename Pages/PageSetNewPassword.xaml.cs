@@ -23,9 +23,35 @@ namespace PlatnedMahara.Pages
     /// </summary>
     public sealed partial class PageSetNewPassword : Page
     {
+        private string companyIdVar;
+        private string userIdVar;
+        private string userEmailVar;
+
         public PageSetNewPassword()
         {
             this.InitializeComponent();
         }
+
+        public PageSetNewPassword(string companyId, string userId, string userEmail)
+        {
+            this.InitializeComponent();
+
+            this.companyIdVar = companyId;
+            this.userIdVar = userId;
+            this.userEmailVar = userEmail;
+
+            txtResetCompanyId.Text = companyId;
+            txtResetUserId.Text = userId;
+            txtResetEmail.Text = userEmail;
+
+        }
+
+        public string companyId => this.companyIdVar;
+        public string userId => this.userIdVar;
+        public string userEmail => this.userEmailVar;
+        public string newPassword => txtNewPassword.Password;
+        public string confirmPassword => txtConfirmPassword.Password;
+
+        
     }
 }
