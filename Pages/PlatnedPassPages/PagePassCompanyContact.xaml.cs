@@ -134,7 +134,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 string companyCompanyContactNumber = dialogCompanyContact.CompanyContactNumber;
                 string companyCompanyContactEmail = dialogCompanyContact.CompanyContactEmail;
 
-                //null validation check
+                //null validation check of the company contact
                 if (companyContactId == "" || companyCompanyContactUserID == "" || companyCompanyContactTitle == "" || companyCompanyContactNumber == "" || companyCompanyContactEmail == "")
                 {
                     if (App.MainWindow is MainWindow mainWindow)
