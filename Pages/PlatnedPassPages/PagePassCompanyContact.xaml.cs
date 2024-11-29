@@ -122,35 +122,54 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             return await dialog.ShowAsync(); // Return the result of the dialog
         }
 
+
         private async Task HandleAddCompanyContactDialogResultAsync(ContentDialogResult result, DialogCompanyContact dialogCompanyContact)
         {
             if (result == ContentDialogResult.Primary)
             {
                 // Access field data from dialogCompany
-                string companyId = dialogCompanyContact.CompanyContactID;
-                string companyName = dialogCompanyContact.CompanyContactNumber;
+                string companyContactId = dialogCompanyContact.CompanyContactID;
+                string companyCompanyContactUserID = dialogCompanyContact.CompanyContactUserID;
+                string companyCompanyContactTitle = dialogCompanyContact.CompanyContactTitle;
+                string companyCompanyContactNumber = dialogCompanyContact.CompanyContactNumber;
+                string companyCompanyContactEmail = dialogCompanyContact.CompanyContactEmail;
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(companyId, companyName);
-                if (authResponse)
+                //null validation check
+                if (companyContactId == "" || companyCompanyContactUserID == "" || companyCompanyContactTitle == "" || companyCompanyContactNumber == "" || companyCompanyContactEmail == "")
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyId}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
+
                     }
+
+                   var CompanyContactdialogPage = new DialogCompanyContact();
+                    var resultNew = await ShowAddCompanyContactDialog(CompanyContactdialogPage);
+                   // await HandleAddCompanyContactDialogResultAsync(resultNew, CompanyContactdialogPage);
                 }
-                else
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
+                else {
+
+                    bool authResponse = await AuthPlatnedPass.validateLogin(companyContactId, companyCompanyContactNumber);
+                    if (authResponse)
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyContactId}", InfoBarSeverity.Success);
+                        }
                     }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                        }
 
-                    var resultNew = ContentDialogResult.None;
-                    resultNew = await ShowAddCompanyContactDialog(dialogCompanyContact);
-                    await HandleAddCompanyContactDialogResultAsync(resultNew, dialogCompanyContact);
+                        var dialogPage = new DialogCompanyContact();
+                        var resultNew = await ShowAddCompanyContactDialog(dialogPage);
+                        await HandleAddCompanyContactDialogResultAsync(resultNew, dialogPage);
 
+                    }
                 }
-
             }
             else
             {
