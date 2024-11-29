@@ -28,9 +28,7 @@ namespace PlatnedMahara.Classes
         private static string companyId = GlobalData.CompanyId;
 
         private static readonly HttpClient client = new HttpClient();
-        MasterMethods masterMethods;
-
-        MasterMethods masterMethods;
+        MasterMethods masterMethods;       
 
         public static async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
         {
@@ -168,25 +166,7 @@ namespace PlatnedMahara.Classes
                 return validLogin;
             }
         }
-
-
-        #region User Management
-
-        public bool CreateNewUser(Pass_Users_Company pass_User)
-        {
-            try
-            {
-                masterMethods = new MasterMethods();
-                recordsaved = masterMethods.SaveUsersPerCompany(pass_User);
-                return recordsaved;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log($"Error: {ex.Message}");
-                validLogin = false;
-                return validLogin;
-            }
-        }
+               
 
         #region Pass Company Methods
         public bool CreateNewCompany(Pass_Company pass_Company)
@@ -267,8 +247,25 @@ namespace PlatnedMahara.Classes
                 validLogin = false;
                 return pass_Company;
             }
-        } 
+        }
         #endregion
+
+        #region User Management
+        public bool CreateNewUser(Pass_Users_Company pass_User)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SaveUsersPerCompany(pass_User);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
         public bool EditUser(Pass_Users_Company pass_User)
         {
             try
