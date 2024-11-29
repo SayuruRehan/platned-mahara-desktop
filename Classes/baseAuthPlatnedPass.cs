@@ -29,6 +29,9 @@ namespace PlatnedMahara.Classes
 
         private static readonly HttpClient client = new HttpClient();
         MasterMethods masterMethods;
+
+        MasterMethods masterMethods;
+
         public static async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
         {
             Logger.Log("Encoding the client ID and secret started...");
@@ -166,6 +169,25 @@ namespace PlatnedMahara.Classes
             }
         }
 
+
+        #region User Management
+
+        public bool CreateNewUser(Pass_Users_Company pass_User)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SaveUsersPerCompany(pass_User);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
         #region Pass Company Methods
         public bool CreateNewCompany(Pass_Company pass_Company)
         {
@@ -246,6 +268,108 @@ namespace PlatnedMahara.Classes
                 return pass_Company;
             }
         } 
+        #endregion
+        public bool EditUser(Pass_Users_Company pass_User)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditUsersPerCompany(pass_User);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteUser(Pass_Users_Company pass_User)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeleteUsersPerCompany(pass_User);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public List<Pass_Users_Company> GetPass_Users()
+        {
+            List<Pass_Users_Company> pass_Users = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Users = new List<Pass_Users_Company>();
+                pass_Users = masterMethods.GetPassUsers();
+                return pass_Users;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Users;
+            }
+        }
+        public List<Pass_Users_Company> GetPass_Users(Pass_Users_Company p)
+        {
+            List<Pass_Users_Company> pass_User = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_User = new List<Pass_Users_Company>();
+                pass_User = masterMethods.GetUsersperCompany(p);
+                return pass_User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_User;
+            }
+        }
+
+        public List<Pass_Users_Company> GetLoginUser(Pass_Users_Company p)
+        {
+            List<Pass_Users_Company> pass_User = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_User = new List<Pass_Users_Company>();
+                pass_User = masterMethods.GetLoginUser(p);
+                return pass_User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_User;
+            }
+        }
+
+        public Pass_Users_Company GetPass_User_Per_Company(Pass_Users_Company p)
+        {
+            Pass_Users_Company pass_User = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_User = new Pass_Users_Company();
+                pass_User = masterMethods.GetUserPerCompany(p);
+                return pass_User;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_User;
+            }
+        }
+
         #endregion
     }
 

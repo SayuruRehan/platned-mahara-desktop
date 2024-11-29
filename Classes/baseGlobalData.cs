@@ -41,5 +41,9 @@ namespace PlatnedMahara.Classes
         public static string? UserId { get; set; }
         public static string? UserName { get; set; }
         public static string? CompanyId { get; set; }
+        public static string? UserRole { get; set; }
+        public static string? UserEmail { get; set; }
+        public static string? LicenseKey { get; set; }
+        public static string? UserStatus { get; set; }
     }
 }
