@@ -269,6 +269,11 @@ namespace PlatnedMahara.Classes
             }
         }
 
+        public List<Pass_Users_Company> GetPasswordResetUser(Pass_Users_Company p)
+        {
+            return GetLoginUser(p);
+        }
+
         public Pass_Users_Company GetPass_User_Per_Company(Pass_Users_Company p)
         {
             Pass_Users_Company pass_User = null;
