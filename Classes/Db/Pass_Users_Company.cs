@@ -18,8 +18,8 @@ namespace PlatnedMahara.Classes
         public DateTime ValidTo { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public string? ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
         public string UserRole { get; set; }
         public string RowState { get; set; }
     }

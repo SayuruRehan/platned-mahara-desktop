@@ -133,6 +133,8 @@
     <None Remove="Pages\PlatnedPassPages\PagePassCompanyContact.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassHome.xaml" />
     <None Remove="Pages\PlatnedPassPages\PagePassUserManagement.xaml" />
+    <None Remove="Pages\PageResetPassword.xaml" />
+    <None Remove="Pages\PageSetNewPassword.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -166,6 +168,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.1.240916" />
@@ -543,6 +546,12 @@
     <Page Update="Pages\PagePlatnedPass.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Update="Pages\PageSetNewPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PageResetPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PageLogin.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -658,5 +667,9 @@
 
     <ItemGroup>
       <PRIResource Remove="IFS_Cloud_Exports\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Classes\Db\Scripts\" />
     </ItemGroup>
 </Project>
