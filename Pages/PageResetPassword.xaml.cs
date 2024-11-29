@@ -27,5 +27,9 @@ namespace PlatnedMahara.Pages
         {
             this.InitializeComponent();
         }
+
+        public string ResetUserId => txtResetUserId.Text;
+        public string ResetCompanyId => txtResetCompanyId.Text;
+        public string ResetEmail => txtResetEmail.Text;
     }
 }
