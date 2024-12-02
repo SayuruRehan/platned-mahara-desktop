@@ -37,49 +37,148 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             dataGrid.ItemsSource = GridItemCompanyContact;
         }
 
-        private void EditButton_Click(object sender, RoutedEventArgs e)
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemCompanyContact selectedItem)
             {
-                // Perform the edit action
-                Debug.WriteLine($"Edit clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
+                var dialogCompanyContact = new DialogCompanyContact(true)
+                {
+                    CompanyContactID = selectedItem.TreeNodesCompanyId[0].Name,
+                    CompanyContactUserID = selectedItem.TreeNodesUserId[0].Name,
+                    CompanyContactEmail = selectedItem.TreeNodesCompanyContactEmail[0].Name,
+                    CompanyContactNumber = selectedItem.TreeNodesCompanyContactNumber[0].Name,
+                    CompanyContactTitle = selectedItem.TreeNodesCompanyContactTitle[0].Name
+                };
+
+                //result dialog Pass Company Contact
+                var resutlDialogPCC =  await ShowAddCompanyContactDialog(dialogCompanyContact);
+                if(resutlDialogPCC == ContentDialogResult.Primary)
+                {
+                    Pass_Company_Contact pass_Company_Contact = new Pass_Company_Contact();
+                    pass_Company_Contact.CompanyID = dialogCompanyContact.CompanyContactID;
+                    pass_Company_Contact.UserID = dialogCompanyContact.CompanyContactUserID;
+                    pass_Company_Contact.ContactEmail = dialogCompanyContact.CompanyContactEmail;
+                    pass_Company_Contact.ContactNumber = dialogCompanyContact.CompanyContactNumber;
+                    pass_Company_Contact.ContactTitle = dialogCompanyContact.CompanyContactTitle;
+
+                    bool isUpdated = new AuthPlatnedPass().EditPassCompanyContact(pass_Company_Contact);
+                    if(isUpdated)
+                    {
+                        selectedItem.TreeNodesCompanyId[0].Name = dialogCompanyContact.CompanyContactID;
+                        selectedItem.TreeNodesUserId[0].Name = dialogCompanyContact.CompanyContactUserID;
+                        selectedItem.TreeNodesCompanyContactEmail[0].Name = dialogCompanyContact.CompanyContactEmail;
+                        selectedItem.TreeNodesCompanyContactNumber[0].Name = dialogCompanyContact.CompanyContactNumber;
+                        selectedItem.TreeNodesCompanyContactTitle[0].Name = dialogCompanyContact.CompanyContactTitle;
+
+                        // Refresh DataGrid
+                        LoadData();
+                        dataGrid.ItemsSource = null;
+                        dataGrid.ItemsSource = GridItemCompanyContact;
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"Company Contact updated successfully.", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to update company contact.", InfoBarSeverity.Error);
+                        }
+                    }
+                    
+                }
+            }
+
+
         }
 
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemCompanyContact selectedItem)
             {
-                // Perform the delete action
-                Debug.WriteLine($"Delete clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
+                // Confirm delete action
+                var dialogCompanyContactDelete = new ContentDialog
+                {
+                    Title = "Delete Confirmation",
+                    Content = $"Are you sure you want to delete user {selectedItem.TreeNodesUserId[0].Name}?",
+                    PrimaryButtonText = "Yes",
+                    CloseButtonText = "No",
+                    DefaultButton = ContentDialogButton.Close,
+                    XamlRoot = PagePassCompanyContactXamlRoot.XamlRoot
+                };
+
+                var resultCompanyContactDel =  await dialogCompanyContactDelete.ShowAsync();
+
+                if (resultCompanyContactDel == ContentDialogResult.Primary)
+                {
+                    
+                    Pass_Company_Contact pass_Company_Contact = new Pass_Company_Contact
+                    {
+                        CompanyID = selectedItem.TreeNodesCompanyId[0].Name,
+                        UserID = selectedItem.TreeNodesUserId[0].Name,
+                        ContactEmail = selectedItem.TreeNodesCompanyContactEmail[0].Name,
+                        ContactNumber = selectedItem.TreeNodesCompanyContactNumber[0].Name,
+                        ContactTitle = selectedItem.TreeNodesCompanyContactTitle[0].Name,
+                    };
+
+                    // Call your delete method
+                    bool isDeleted = new AuthPlatnedPass().DeletePassCompanyContact(pass_Company_Contact);
+
+                    if (isDeleted)
+                    {
+                        // Remove the item from the ObservableCollection
+                        GridItemCompanyContact.Remove(selectedItem);
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"Company Contact deleted successfully.", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to delete company contact.", InfoBarSeverity.Error);
+                        }
+                    }
+                }
+            }
         }
 
         private void LoadData()
         {
+            List<Pass_Company_Contact> pass_Company_Contacts = new List<Pass_Company_Contact>();
+            pass_Company_Contacts = new AuthPlatnedPass().GetPass_Company_Contacts();
             GridItemCompanyContact = new ObservableCollection<GridItemCompanyContact>();
-            for (int gi = 1; gi <= 1; gi++)
+            if (pass_Company_Contacts != null && pass_Company_Contacts.Count > 0)
             {
-                // Pass values needed to display in grid
-                var item = new GridItemCompanyContact($"CompanyID", "Userid", "CompanyContactTitle", "CompanyContactNumber", "companyContactEmail")
+                foreach( Pass_Company_Contact pcc in pass_Company_Contacts )
                 {
-                    // Initialize with default values
-                    TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyContactTitle = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyContactNumber = new ObservableCollection<TreeNode> { new TreeNode("") },
-                    TreeNodesCompanyContactEmail = new ObservableCollection<TreeNode> { new TreeNode("") }
-                };
+                    // Pass values needed to display in grid
+                    var item = new GridItemCompanyContact($"CompanyID", "Userid", "CompanyContactTitle", "CompanyContactNumber", "companyContactEmail")
+                    {
+                        // Initialize with default values
+                        TreeNodesCompanyId = new ObservableCollection<TreeNode> { new TreeNode(pcc.CompanyID) },
+                        TreeNodesUserId = new ObservableCollection<TreeNode> { new TreeNode(pcc.UserID) },
+                        TreeNodesCompanyContactTitle = new ObservableCollection<TreeNode> { new TreeNode(pcc.ContactTitle) },
+                        TreeNodesCompanyContactNumber = new ObservableCollection<TreeNode> { new TreeNode(pcc.ContactNumber) },
+                        TreeNodesCompanyContactEmail = new ObservableCollection<TreeNode> { new TreeNode(pcc.ContactEmail) }
+                    };
 
-                GridItemCompanyContact.Add(item);
+                    GridItemCompanyContact.Add(item);
+                }
             }
         }
 
@@ -103,6 +202,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             {
                 //result = await ShowAddCompanyDialog(dialogCompanyContent);
                 await HandleAddCompanyContactDialogResultAsync(resultDialogCompanyContactContent, pageaddcompanycontact);
+                LoadData();
+                dataGrid.ItemsSource = null; // Clear the existing binding
+                dataGrid.ItemsSource = GridItemCompanyContact;
             }
         }
 
@@ -148,25 +250,33 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                    // await HandleAddCompanyContactDialogResultAsync(resultNew, CompanyContactdialogPage);
                 }
                 else {
+                Pass_Company_Contact pass_Company_Contact = new Pass_Company_Contact
+                {
+                    CompanyID = dialogCompanyContact.CompanyContactID,
+                    UserID = dialogCompanyContact.CompanyContactUserID,
+                    ContactEmail = dialogCompanyContact.CompanyContactEmail,
+                    ContactNumber = dialogCompanyContact.CompanyContactNumber,
+                    ContactTitle = dialogCompanyContact.CompanyContactTitle
+                };
 
-                    bool authResponse = await AuthPlatnedPass.validateLogin(companyContactId, companyCompanyContactNumber);
-                    if (authResponse)
+                bool authResponse = new AuthPlatnedPass().CreateNewPassCompanyContact(pass_Company_Contact);
+                if (authResponse)
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
                     {
-                        if (App.MainWindow is MainWindow mainWindow)
-                        {
-                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {companyContactId}", InfoBarSeverity.Success);
-                        }
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company_Contact.CompanyID}", InfoBarSeverity.Success);
                     }
-                    else
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
                     {
-                        if (App.MainWindow is MainWindow mainWindow)
-                        {
-                            mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
-                        }
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                    }
 
-                        var dialogPage = new DialogCompanyContact();
-                        var resultNew = await ShowAddCompanyContactDialog(dialogPage);
-                        await HandleAddCompanyContactDialogResultAsync(resultNew, dialogPage);
+                    var dialogPCC = new DialogCompanyContact();
+                    var resultPCC = await ShowAddCompanyContactDialog(dialogPCC);
+                    await HandleAddCompanyContactDialogResultAsync(resultPCC, dialogPCC);
 
                     }
                 }

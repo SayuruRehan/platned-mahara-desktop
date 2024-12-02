@@ -1,4 +1,5 @@
-﻿using Irony.Parsing;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Irony.Parsing;
 using Microsoft.UI.Xaml.Controls;
 using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
@@ -250,6 +251,9 @@ namespace PlatnedMahara.Classes
                 return pass_Users;
             }
         }
+
+
+
         public List<Pass_Users_Company> GetPass_Users(Pass_Users_Company p)
         {
             List<Pass_Users_Company> pass_User = null;
@@ -310,7 +314,82 @@ namespace PlatnedMahara.Classes
         }
 
         #endregion
+
+
+        #region Mahara-58 ( Company Contact CRUD Funtions )
+
+        //Get pass company contact list
+        public List<Pass_Company_Contact> GetPass_Company_Contacts()
+        {
+            List<Pass_Company_Contact> pass_Company_Contacts = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Company_Contacts = new List<Pass_Company_Contact>();
+                pass_Company_Contacts = masterMethods.GetPassCompanyContacts();
+                return pass_Company_Contacts;
+
+            }
+            catch (Exception e) 
+            {
+                Logger.Log($"Error: {e.Message}");
+                validLogin = false;
+                return pass_Company_Contacts;
+            }
+        }
+
+        public bool CreateNewPassCompanyContact(Pass_Company_Contact pass_Company_Contact)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassCompanyContact(pass_Company_Contact);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
+        public bool DeletePassCompanyContact(Pass_Company_Contact pass_Company_Contact)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassCompanyContact(pass_Company_Contact);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
+        public bool EditPassCompanyContact(Pass_Company_Contact pass_Company_Contact)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassCompanyContact(pass_Company_Contact);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
+        #endregion
+
     }
+
 
 }
 
