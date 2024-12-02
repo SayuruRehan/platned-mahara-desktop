@@ -210,6 +210,7 @@ namespace PlatnedMahara.DataAccess.Methods
                 Execute.AddParameter("@COMPANY_CONTACT_EMAIL",objPass_Company_Contact.ContactEmail),
             };
             objExecute.Executes("spEditPassCompanyContact", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
             return res;
         }
 

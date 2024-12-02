@@ -23,15 +23,67 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
     /// </summary>
     public sealed partial class DialogCompanyContact : Page
     {
+        bool _isEdit = false;
         public DialogCompanyContact()
         {
             this.InitializeComponent();
+
+            if (_isEdit)
+            {
+                txtCompContactId.IsEnabled = false;
+                txtCompanyContactUserID.IsEnabled = false;
+            }
+            else
+            {
+                txtCompContactId.IsEnabled = true;
+                txtCompanyContactUserID.IsEnabled = true;
+            }
         }
 
-        public string CompanyContactID => txtCompContactId.Text;
-        public string CompanyContactUserID => txtCompanyContactUserID.Text;
-        public string CompanyContactTitle => txtCompanyContactTitle.Text;
-        public string CompanyContactNumber => txtCompanyContactNumber.Text;
-        public string CompanyContactEmail => txtCompanyContactEmail.Text;
+        public DialogCompanyContact(bool isedit)
+        {
+            _isEdit = isedit;
+            this.InitializeComponent();
+
+            if (_isEdit)
+            {
+                txtCompContactId.IsEnabled = false;
+                txtCompanyContactUserID.IsEnabled = false;
+            }
+            else
+            {
+                txtCompContactId.IsEnabled = true;
+                txtCompanyContactUserID.IsEnabled = true;
+            }
+
+        }
+
+
+
+        public string CompanyContactID
+        {
+            get => txtCompContactId.Text;
+            set => txtCompContactId.Text = value;
+        }
+        public string CompanyContactUserID
+        {
+            get => txtCompanyContactUserID.Text;
+            set => txtCompanyContactUserID.Text = value;
+        }
+        public string CompanyContactTitle
+        {
+            get => txtCompanyContactTitle.Text;
+            set => txtCompanyContactTitle.Text = value;
+        }
+        public string CompanyContactNumber
+        {
+            get => txtCompanyContactNumber.Text;
+            set => txtCompanyContactNumber.Text = value;
+        }
+        public string CompanyContactEmail
+        {
+            get => txtCompanyContactEmail.Text;
+            set => txtCompanyContactEmail.Text = value;
+        }
     }
 }
