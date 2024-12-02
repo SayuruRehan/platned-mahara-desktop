@@ -229,25 +229,25 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
-                // Access field data from dialogCompany
-                string companyContactId = dialogCompanyContact.CompanyContactID;
-                string companyCompanyContactUserID = dialogCompanyContact.CompanyContactUserID;
-                string companyCompanyContactTitle = dialogCompanyContact.CompanyContactTitle;
-                string companyCompanyContactNumber = dialogCompanyContact.CompanyContactNumber;
-                string companyCompanyContactEmail = dialogCompanyContact.CompanyContactEmail;
 
                 //null validation check of the company contact
-                if (companyContactId == "" || companyCompanyContactUserID == "" || companyCompanyContactTitle == "" || companyCompanyContactNumber == "" || companyCompanyContactEmail == "")
+                if (dialogCompanyContact.CompanyContactID == "" || dialogCompanyContact.CompanyContactUserID == "" || dialogCompanyContact.CompanyContactTitle == "" || dialogCompanyContact.CompanyContactNumber == "" || dialogCompanyContact.CompanyContactEmail == "")
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
 
                     }
-
-                   var CompanyContactdialogPage = new DialogCompanyContact();
+                    var CompanyContactdialogPage = new DialogCompanyContact(false)
+                    {
+                        CompanyContactID = dialogCompanyContact.CompanyContactID,
+                        CompanyContactUserID = dialogCompanyContact.CompanyContactUserID,
+                        CompanyContactEmail = dialogCompanyContact.CompanyContactEmail,
+                        CompanyContactNumber = dialogCompanyContact.CompanyContactNumber,
+                        CompanyContactTitle = dialogCompanyContact.CompanyContactTitle
+                    };
                     var resultNew = await ShowAddCompanyContactDialog(CompanyContactdialogPage);
-                   // await HandleAddCompanyContactDialogResultAsync(resultNew, CompanyContactdialogPage);
+                    await HandleAddCompanyContactDialogResultAsync(resultNew, CompanyContactdialogPage);
                 }
                 else {
                 Pass_Company_Contact pass_Company_Contact = new Pass_Company_Contact
