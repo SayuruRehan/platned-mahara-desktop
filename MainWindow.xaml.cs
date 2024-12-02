@@ -23,6 +23,10 @@ using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using static PlatnedMahara.Pages.PageHome;
+using Windows.Graphics;
+using WinRT.Interop;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,12 +42,28 @@ namespace PlatnedMahara
         IntPtr hWnd = IntPtr.Zero;
         private SUBCLASSPROC SubClassDelegate;
         // Refer from BaseUi - End
+        private bool centered;
+
 
         public static MainWindow Instance { get; private set; }
         public XamlRoot XamlRoot { get; private set; }
 
         private TabView tabView;
 
+        private static void Center(Window window)
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(window);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+
+            if (AppWindow.GetFromWindowId(windowId) is AppWindow appWindow &&
+                DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Nearest) is DisplayArea displayArea)
+            {
+                PointInt32 CenteredPosition = appWindow.Position;
+                CenteredPosition.X = (displayArea.WorkArea.Width - appWindow.Size.Width) / 2;
+                CenteredPosition.Y = (displayArea.WorkArea.Height - appWindow.Size.Height) / 2;
+                appWindow.Move(CenteredPosition);
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -295,6 +315,11 @@ namespace PlatnedMahara
             if (!GlobalData.IsLoggedIn)
             {
                 AuthLogin();
+            }
+            if (this.centered is false)
+            {
+                Center(this);
+                centered = true;
             }
             // Unsubscribe from the Activated event to avoid calling it again
             this.Activated -= MainWindow_Activated;

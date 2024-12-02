@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,11 +14,12 @@ namespace PlatnedMahara.DataAccess.Connection
         [Obsolete]
         public static SqlConnection OpenConnectiion()
         {
+            string connectionString = ConfigurationManager.ConnectionStrings["PlatnedMaharaDbProd"]?.ConnectionString;
             //string conS = @"Server=PL-MYOB-001;Database=PG1305NZ;Integrated Security=True;user=sa;pwd=sa123SA;Encrypt=False;";
             //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;Integrated Security=True;user=platnedpassuser;pwd=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
             //SqlConnection con = new SqlConnection(ConfigurationSettings.AppSettings.Get("ConnStr").ToString());
-            string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
-            SqlConnection con = new SqlConnection(conS);
+            //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
+            SqlConnection con = new SqlConnection(connectionString);
             if (con.State == ConnectionState.Closed)
             {
                 con.Open();
@@ -30,9 +32,9 @@ namespace PlatnedMahara.DataAccess.Connection
         [Obsolete]
         public static SqlConnection GetConnection()
         {
-            //string conS = @"Server=PL-MYOB-001;Database=PG1305NZ;Integrated Security=True;user=sa;pwd=sa123SA;Encrypt=False;";
-            string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
-            SqlConnection con = new SqlConnection(conS);
+            string connectionString = ConfigurationManager.ConnectionStrings["PlatnedMaharaDbDev"]?.ConnectionString;
+            //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
+            SqlConnection con = new SqlConnection(connectionString);
             return con;
         }
     }

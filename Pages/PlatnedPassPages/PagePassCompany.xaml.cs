@@ -13,6 +13,7 @@ using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -37,33 +38,6 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItemsCompany;
-
-        }
-
-        private void EditButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Retrieve the DataContext of the clicked row
-            var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
-
-            if (rowData != null)
-            {
-                // Perform the edit action
-                Debug.WriteLine($"Edit clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
-        }
-
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Retrieve the DataContext of the clicked row
-            var button = sender as Button;
-            /*var rowData = button.DataContext as YourRowDataType; // Replace YourRowDataType with your actual data type
-
-            if (rowData != null)
-            {
-                // Perform the delete action
-                Debug.WriteLine($"Delete clicked for User ID: {rowData.TreeNodesUserId[0].Name}");
-            }*/
         }
 
         private void LoadData()
@@ -72,7 +46,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             pass_Companies = new AuthPlatnedPass().GetPass_Companies();
             GridItemsCompany = new ObservableCollection<GridItemCompany>();
 
-            if(pass_Companies != null && pass_Companies.Count > 0)
+            if (pass_Companies != null && pass_Companies.Count > 0)
             {
                 foreach (Pass_Company pc in pass_Companies)
                 {
@@ -94,14 +68,89 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
                     GridItemsCompany.Add(item);
                 }
-            }            
+            }
         }
 
+        private async void EditButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Retrieve the DataContext of the clicked row
+            var button = sender as Button;
+            var rowData = button.DataContext; // Replace YourRowDataType with your actual data type
+
+            if (rowData != null)
+            {
+                var result = ContentDialogResult.None;
+                if (button?.DataContext is GridItemCompany selectedItem)
+                {
+                    var dailogcompany = new DialogCompany(true)
+                    {
+                        CompanyId = selectedItem.TreeNodesCompanyId[0].Name,
+                        CompanyName = selectedItem.TreeNodesCompanyName[0].Name,
+                        CompanyAddress = selectedItem.TreeNodesCompanyAddress[0].Name,
+                        LicenseLimit = selectedItem.TreeNodesLicenseLimit[0].Name,
+                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name,                        
+                    };
+                    if (PagePassCompanyXamlRoot.XamlRoot == null)
+                    {
+                        PagePassCompanyXamlRoot.Loaded += async (s, e) =>
+                        {
+                            result = await ShowAddCompanyDialog(dailogcompany);
+                            await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                        };
+                    }
+                    else
+                    {
+                        result = await ShowAddCompanyDialog(dailogcompany);
+                        await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                        LoadData();
+                        dataGrid.ItemsSource = null; // Clear the existing binding
+                        dataGrid.ItemsSource = GridItemsCompany;
+                    }
+                }
+                
+            }
+        }
+
+        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var rowData = button.DataContext; // Replace YourRowDataType with your actual data type
+
+            if (rowData != null)
+            {
+                var result = ContentDialogResult.None;
+                if (button?.DataContext is GridItemCompany selectedItem)
+                {
+                    var dailogcompany = new DialogCompany(true)
+                    {
+                        CompanyId = selectedItem.TreeNodesCompanyId[0].Name,
+                        CompanyName = selectedItem.TreeNodesCompanyName[0].Name,
+                        CompanyAddress = selectedItem.TreeNodesCompanyAddress[0].Name,
+                        LicenseLimit = selectedItem.TreeNodesLicenseLimit[0].Name,
+                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name,
+                    };
+                    if (PagePassCompanyXamlRoot.XamlRoot == null)
+                    {
+                        PagePassCompanyXamlRoot.Loaded += async (s, e) =>
+                        {
+                            result = await ShowAddCompanyDialog(dailogcompany);
+                            await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                        };
+                    }
+                    else
+                    {
+                        result = await ShowAddCompanyDialog(dailogcompany);
+                        await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                        LoadData();
+                        dataGrid.ItemsSource = null; // Clear the existing binding
+                        dataGrid.ItemsSource = GridItemsCompany;
+                    }
+                }
+            }
+        }        
 
         private async void btnNewCompany_Click(object sender, RoutedEventArgs e)
         {
-            //MasterMethods obj = new MasterMethods();
-            //List<Pass_Company> lst = obj.GetPassCompanies();
             var result = ContentDialogResult.None;
             var dialogCompany = new DialogCompany(false); // Create dialogCompany instance once
 
@@ -118,11 +167,14 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             {
                 result = await ShowAddCompanyDialog(dialogCompany);
                 await HandleAddCompanyDialogResultAsync(result, dialogCompany);
+                LoadData();
+                dataGrid.ItemsSource = null; // Clear the existing binding
+                dataGrid.ItemsSource = GridItemsCompany;
             }
         }
 
         private async Task<ContentDialogResult> ShowAddCompanyDialog(DialogCompany dialogCompany)
-        {
+        {            
             ContentDialog dialog = new ContentDialog
             {
                 XamlRoot = PagePassCompanyXamlRoot.XamlRoot,
@@ -148,12 +200,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
                     RowState = "ACTIVE",
-                    CreatedBy = "TestUser"
+                    CreatedBy = GlobalData.UserId
                 };
-                // Access field data from dialogCompany
-                //string companyId = dialogCompany.CompanyId;
-                //string companyName = dialogCompany.CompanyName;
-                //
+                
                 bool authResponse = new AuthPlatnedPass().CreateNewCompany(pass_Company);
                 if (authResponse)
                 {
@@ -169,9 +218,116 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    var resultNew = ContentDialogResult.None;
-                    resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+                    //var resultNew = ContentDialogResult.None;
+                    //resultNew = await ShowAddCompanyDialog(dialogCompany);
+                    //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+
+                    var dailogcompanypage = new DialogCompany();
+                    dailogcompanypage = dialogCompany;
+                    var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
+                    await HandleAddCompanyDialogResultAsync(resultNew, dailogcompanypage);
+                }
+
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                }
+            }
+        }
+
+        private async Task HandleEditCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
+        {
+            if (result == ContentDialogResult.Primary)
+            {
+                Pass_Company pass_Company = new Pass_Company
+                {
+                    CompanyID = dialogCompany.CompanyId,
+                    CompanyName = dialogCompany.CompanyName,
+                    CompanyType = dialogCompany.CompanyType,
+                    CompanyAddress = dialogCompany.CompanyAddress,
+                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
+                    RowState = "ACTIVE",
+                    ModifiedBy = GlobalData.UserId == null ? "User1" : GlobalData.UserId
+                };
+                // Access field data from dialogCompany
+                //string companyId = dialogCompany.CompanyId;
+                //string companyName = dialogCompany.CompanyName;
+                //
+                bool authResponse = new AuthPlatnedPass().EditCompany(pass_Company);
+                if (authResponse)
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                    }
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                    }
+
+                    //var resultNew = ContentDialogResult.None;
+                    //resultNew = await ShowAddCompanyDialog(dialogCompany);
+                    //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+
+                    //var dailogcompanypage = new DialogCompany();
+                    //dailogcompanypage = dialogCompany;
+                    //var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
+                    //await HandleEditCompanyDialogResultAsync(resultNew, dailogcompanypage);
+                }
+
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                }
+            }
+        }
+
+        private async Task HandleDeleteCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
+        {
+            if (result == ContentDialogResult.Primary)
+            {
+                Pass_Company pass_Company = new Pass_Company
+                {
+                    CompanyID = dialogCompany.CompanyId,
+                    CompanyName = dialogCompany.CompanyName,
+                    CompanyType = dialogCompany.CompanyType,
+                    CompanyAddress = dialogCompany.CompanyAddress,
+                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
+                    RowState = "INACTIVE",
+                    CreatedBy = GlobalData.UserId
+                };
+                // Access field data from dialogCompany
+                //string companyId = dialogCompany.CompanyId;
+                //string companyName = dialogCompany.CompanyName;
+                //
+                bool authResponse = new AuthPlatnedPass().DeleteCompany(pass_Company);
+                if (authResponse)
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                    }
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                    }
+
+                    //var dailogcompanypage = new DialogCompany();
+                    //dailogcompanypage = dialogCompany;
+                    //var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
+                    //await HandleDeleteCompanyDialogResultAsync(resultNew, dailogcompanypage);
                 }
 
             }
