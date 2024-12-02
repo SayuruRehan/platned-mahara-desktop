@@ -349,8 +349,7 @@ namespace PlatnedMahara.Classes
             catch (Exception ex)
             {
                 Logger.Log($"Error: {ex.Message}");
-                validLogin = false;
-                return validLogin;
+                return false;
             }
         }
 
@@ -365,8 +364,7 @@ namespace PlatnedMahara.Classes
             catch (Exception ex)
             {
                 Logger.Log($"Error: {ex.Message}");
-                validLogin = false;
-                return validLogin;
+                return false;
             }
         }
 
@@ -381,8 +379,7 @@ namespace PlatnedMahara.Classes
             catch (Exception ex)
             {
                 Logger.Log($"Error: {ex.Message}");
-                validLogin = false;
-                return validLogin;
+                return false;
             }
         }
 
