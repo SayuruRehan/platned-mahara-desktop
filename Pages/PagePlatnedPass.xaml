@@ -31,7 +31,8 @@
                     IsTabStop="False"
                     SelectionChanged="NavigationView_SelectionChanged8" 
                     IsSettingsVisible="False"
-                    HeaderTemplate="{StaticResource CenteredHeaderTemplate}">
+                    HeaderTemplate="{StaticResource CenteredHeaderTemplate}" 
+                    IsBackButtonVisible="Collapsed" >
         
         <NavigationView.MenuItems>
             <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="PagePassHome"/>
