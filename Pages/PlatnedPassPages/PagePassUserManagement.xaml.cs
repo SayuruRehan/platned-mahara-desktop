@@ -281,7 +281,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         ValidTo = DateTime.Now.AddDays(365),
                         UserRole = dialogUser.UserRole,
                         Password = Encrypt.EncryptPassword("defaultpass1234"),
-                        LicenseKey = "ABC",
+                        LicenseKey = GenerateRandomString(),
                         RowState = "Active",
                         CreatedBy = GlobalData.UserId
                     };
@@ -318,6 +318,18 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
+
+        #region Mahara-79
+
+        private static string GenerateRandomString(int length = 20)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        #endregion
 
 
     }
