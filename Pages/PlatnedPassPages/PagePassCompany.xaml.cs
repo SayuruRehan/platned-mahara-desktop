@@ -199,7 +199,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyType = dialogCompany.CompanyType,
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "ACTIVE",
+                    RowState = "Active",
                     CreatedBy = GlobalData.UserId
                 };
                 
@@ -249,7 +249,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyType = dialogCompany.CompanyType,
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "ACTIVE",
+                    RowState = "Active",
                     ModifiedBy = GlobalData.UserId == null ? "User1" : GlobalData.UserId
                 };
                 // Access field data from dialogCompany
@@ -302,7 +302,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyType = dialogCompany.CompanyType,
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "INACTIVE",
+                    RowState = "Inactive",
                     CreatedBy = GlobalData.UserId
                 };
                 // Access field data from dialogCompany
