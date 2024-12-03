@@ -90,10 +90,10 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
             set => txtUserEmail.Text = value;
         }
 
-        public DateTime ValidFrom
+        public DateTime? ValidFrom
         {
-            get => calValidFrom.Date.Value.DateTime;
-            set => calValidFrom.Date = new DateTimeOffset(value);
+            get => calValidFrom.Date?.DateTime;
+            set => calValidFrom.Date = value.HasValue ? new DateTimeOffset(value.Value) : (DateTimeOffset?)null;
         }
 
         public DateTime ValidTo
