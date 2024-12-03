@@ -387,54 +387,71 @@ namespace PlatnedMahara
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
 
-                Pass_Users_Company pass_User_det = new Pass_Users_Company
+                if (username != "" && password != "")
                 {
-                    UserID = loginPage.UserId
-                };
-
-                List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
-                pass_Users = new AuthPlatnedPass().GetLoginUser(pass_User_det);
-
-                if (pass_Users != null && pass_Users.Count > 0)
-                {
-                    foreach (Pass_Users_Company pu in pass_Users)
+                    Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {
-                        if (Encrypt.VerifyPassword(password, pu.Password))
+                        UserID = loginPage.UserId
+                    };
+
+                    List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
+                    pass_Users = new AuthPlatnedPass().GetLoginUser(pass_User_det);
+
+                    if (pass_Users != null && pass_Users.Count > 0)
+                    {
+                        foreach (Pass_Users_Company pu in pass_Users)
                         {
-                            GlobalData.UserId = pu.UserID;
-                            GlobalData.CompanyId = pu.CompanyID;
-                            GlobalData.IsLoggedIn = true;
-                            GlobalData.UserRole = pu.UserRole;
-                            GlobalData.UserEmail = pu.UserEmail;
-                            GlobalData.LicenseKey = pu.LicenseKey;
-                            GlobalData.UserStatus = pu.RowState;
-
-                            mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
-                            mnuItmSubProfileLogout.Visibility = Visibility.Visible;
-
-                            if (App.MainWindow is MainWindow mainWindow)
+                            if (Encrypt.VerifyPassword(password, pu.Password))
                             {
-                                mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                                GlobalData.UserId = pu.UserID;
+                                GlobalData.CompanyId = pu.CompanyID;
+                                GlobalData.IsLoggedIn = true;
+                                GlobalData.UserRole = pu.UserRole;
+                                GlobalData.UserEmail = pu.UserEmail;
+                                GlobalData.LicenseKey = pu.LicenseKey;
+                                GlobalData.UserStatus = pu.RowState;
+
+                                mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                                }
+
+                            }
+                            else
+                            {
+                                GlobalData.IsLoggedIn = false;
+
+                                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                                    mainWindow.AuthLogin();
+                                }
+
                             }
 
                         }
-                        else
-                        {
-                            GlobalData.IsLoggedIn = false;
-
-                            mnuItmSubProfileLogin.Visibility = Visibility.Visible;
-                            mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
-
-                            if (App.MainWindow is MainWindow mainWindow)
-                            {
-                                mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
-                                mainWindow.AuthLogin();
-                            }
-
-                        }
-
                     }
                 }
+                else
+                {
+                    GlobalData.IsLoggedIn = false;
+
+                    mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                    mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                        mainWindow.AuthLogin();
+                    }
+                }
+
 
             }
             else if (result == ContentDialogResult.Secondary)
@@ -486,47 +503,62 @@ namespace PlatnedMahara
                 string userId = pageResetPassword.ResetUserId;
                 string userEmail = pageResetPassword.ResetEmail;
 
-                Pass_Users_Company pass_User_reset = new Pass_Users_Company
+                if (companyId != "" && userId != "" && userEmail != "")
                 {
-                    UserID = pageResetPassword.ResetUserId
-                };
-
-                List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
-                pass_User_Reset_details = new AuthPlatnedPass().GetPasswordResetUser(pass_User_reset);
-
-                if (pass_User_Reset_details != null && pass_User_Reset_details.Count > 0)
-                {
-                    foreach (Pass_Users_Company pu in pass_User_Reset_details)
+                    Pass_Users_Company pass_User_reset = new Pass_Users_Company
                     {
+                        UserID = pageResetPassword.ResetUserId
+                    };
 
-                        if (pu.CompanyID == companyId && pu.UserEmail == userEmail)
+                    List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
+                    pass_User_Reset_details = new AuthPlatnedPass().GetPasswordResetUser(pass_User_reset);
+
+                    if (pass_User_Reset_details != null && pass_User_Reset_details.Count > 0)
+                    {
+                        foreach (Pass_Users_Company pu in pass_User_Reset_details)
                         {
 
-                            if (App.MainWindow is MainWindow mainWindow)
+                            if (pu.CompanyID == companyId && pu.UserEmail == userEmail)
                             {
-                                mainWindow.ShowInfoBar("Success!", $"Password Reset request authorized for user: {pu.UserID}", InfoBarSeverity.Success);
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Password Reset request authorized for user: {pu.UserID}", InfoBarSeverity.Success);
+                                }
+
+                                //Set New Password Page Execution
+                                var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
+                                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
+                            }
+                            else
+                            {
+                                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Validation Unsuccessful! Please check user details.", InfoBarSeverity.Warning);
+                                    mainWindow.AuthLogin();
+                                }
                             }
 
-                            //Set New Password Page Execution
-                            var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
-                            var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
-                            await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
                         }
-                        else
-                        {
-                            mnuItmSubProfileLogin.Visibility = Visibility.Visible;
-                            mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
-
-                            if (App.MainWindow is MainWindow mainWindow)
-                            {
-                                mainWindow.ShowInfoBar("Attention!", $"Validation Unsuccessful! Please check user details.", InfoBarSeverity.Warning);
-                                mainWindow.AuthLogin();
-                            }
-                        }
-
                     }
                 }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Validation Unsuccessful! Please check user details.", InfoBarSeverity.Warning);
+                        // Show the Password Reset Dialog
+                        var resetPasswordPage = new PageResetPassword(); // Create the PageResetPassword instance
+                        var resetResult = await ShowPasswordResetDialog(resetPasswordPage);
+                        await HandleResetPasswordDialogResultAsync(resetResult, resetPasswordPage);
+                    };
 
+
+                }
 
             }
             else if (resultResetPassword == ContentDialogResult.Secondary)
@@ -567,64 +599,79 @@ namespace PlatnedMahara
             //if user confirm set new password dialog
             if (resultSetNewPassword == ContentDialogResult.Primary)
             {
-                //Validation process
-
-                if (pageSetNewPassword.newPassword == pageSetNewPassword.confirmPassword)
+                if (pageSetNewPassword.newPassword != "" && pageSetNewPassword.confirmPassword != "")
                 {
-                    string companyId = pageSetNewPassword.companyId;
-                    string userId = pageSetNewPassword.userId;
-                    string newPassword = Encrypt.EncryptPassword(pageSetNewPassword.newPassword);
-                    string userEmail = pageSetNewPassword.userEmail;
-
-                    Pass_Users_Company pass_User_reset = new Pass_Users_Company
+                    //Validation process
+                    if (pageSetNewPassword.newPassword == pageSetNewPassword.confirmPassword)
                     {
-                        CompanyID = companyId,
-                        UserID = userId,
-                        Password = newPassword,
-                        UserEmail = userEmail,
-                    };
+                        string companyId = pageSetNewPassword.companyId;
+                        string userId = pageSetNewPassword.userId;
+                        string newPassword = Encrypt.EncryptPassword(pageSetNewPassword.newPassword);
+                        string userEmail = pageSetNewPassword.userEmail;
 
-                    List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
-                    bool isUpdated = new AuthPlatnedPass().EditUserPassword(pass_User_reset);
-
-                    if (isUpdated)
-                    {
-                        //Notification process
-                        if (App.MainWindow is MainWindow mainWindow)
+                        Pass_Users_Company pass_User_reset = new Pass_Users_Company
                         {
-                            mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
+                            CompanyID = companyId,
+                            UserID = userId,
+                            Password = newPassword,
+                            UserEmail = userEmail,
+                        };
+
+                        List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
+                        bool isUpdated = new AuthPlatnedPass().EditUserPassword(pass_User_reset);
+
+                        if (isUpdated)
+                        {
+                            //Notification process
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
+                            }
+
+                            // Show the Login Dialog again
+                            var loginPage = new PageLogin();
+                            var loginResult = await ShowLoginDialog(loginPage);
+                            await HandleLoginDialogResultAsync(loginResult, loginPage);
+
+
                         }
+                        else
+                        {
+                            mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                            mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
 
-                        // Show the Login Dialog again
-                        var loginPage = new PageLogin();
-                        var loginResult = await ShowLoginDialog(loginPage);
-                        await HandleLoginDialogResultAsync(loginResult, loginPage);
-
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Error!", $"Password reset unsuccessful!", InfoBarSeverity.Error);
+                                mainWindow.AuthLogin();
+                            }
+                        }
 
                     }
                     else
                     {
-                        mnuItmSubProfileLogin.Visibility = Visibility.Visible;
-                        mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
-
                         if (App.MainWindow is MainWindow mainWindow)
                         {
-                            mainWindow.ShowInfoBar("Error!", $"Password reset unsuccessful!", InfoBarSeverity.Error);
-                            mainWindow.AuthLogin();
+                            mainWindow.ShowInfoBar("Attention!", "Password doesn't match.", InfoBarSeverity.Warning);
                         }
-                    }
 
+                        pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail); // Create the PageResetPassword instance
+                        var setNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                        await HandleSetNewPasswordDialogResultAsync(setNewPassword, pageSetNewPassword);
+                    }
                 }
                 else
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Attention!", "Password doesn't match.", InfoBarSeverity.Informational);
+                        mainWindow.ShowInfoBar("Attention!", "New Password cannot be empty.", InfoBarSeverity.Warning);
                     }
 
-                    pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail);
-                    await ShowSetNewPasswordDialog(pageSetNewPassword);
+                    pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail); // Create the PageResetPassword instance
+                    var setNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                    await HandleSetNewPasswordDialogResultAsync(setNewPassword, pageSetNewPassword);
                 }
+
 
 
 
