@@ -71,7 +71,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserID = dialogUser.UserId,
                         UserName = dialogUser.UserName,
                         UserEmail = dialogUser.UserEmail,
-                        ValidFrom = dialogUser.ValidFrom,
+                        ValidFrom = (DateTime)dialogUser.ValidFrom,
                         ValidTo = dialogUser.ValidTo,
                         UserRole = dialogUser.UserRole,
                         RowState = dialogUser.RowState
@@ -247,7 +247,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 //Null validation 
 
                 //Null validation
-                if (dialogUser.UserCompanyId == "" || dialogUser.UserId == "" || dialogUser.UserName == "" || dialogUser.UserEmail == "" || dialogUser.UserRole == "" )
+                DateTime? validFrom = dialogUser.ValidFrom;
+                if (dialogUser.UserCompanyId == "" || dialogUser.UserId == "" || dialogUser.UserName == "" || !validFrom.HasValue || dialogUser.UserEmail == "" || dialogUser.UserRole == "" )
                 {
 
                     if (App.MainWindow is MainWindow mainWindow)
@@ -260,6 +261,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserCompanyId = dialogUser.UserCompanyId,
                         UserId = dialogUser.UserId,
                         UserName = dialogUser.UserName,
+                        ValidFrom = dialogUser.ValidFrom,
                         UserEmail = dialogUser.UserEmail,
                     };
 
@@ -275,7 +277,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserID = dialogUser.UserId,
                         UserName = dialogUser.UserName,
                         UserEmail = dialogUser.UserEmail,
-                        ValidFrom = dialogUser.ValidFrom,
+                        ValidFrom = (DateTime)dialogUser.ValidFrom,
                         ValidTo = DateTime.Now.AddDays(365),
                         UserRole = dialogUser.UserRole,
                         Password = Encrypt.EncryptPassword("defaultpass1234"),
@@ -299,9 +301,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                             mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                         }
 
-                        var userDialog = new DialogUser();
-                        var resultNew = await ShowAddUserDialog(userDialog);
-                        await HandleAddUserDialogResultAsync(resultNew, userDialog);
+                        dialogUser = new DialogUser();
+                        var resultNew = await ShowAddUserDialog(dialogUser);
+                        await HandleAddUserDialogResultAsync(resultNew, dialogUser);
 
                     }
                 }
