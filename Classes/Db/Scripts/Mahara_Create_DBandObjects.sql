@@ -597,3 +597,78 @@ USE [master]
 GO
 GRANT EXECUTE TO platnedpassuser;
 GO
+
+------------------------------------ DEFAULT VALUES - BASIC DATA ------------------------------------
+USE [master]
+GO
+INSERT INTO [dbo].[PASS_COMPANY_TAB]
+           ([COMPANY_ID]
+           ,[COMPANY_NAME]
+           ,[COMPANY_ADDRESS]
+           ,[LICENSE_LIMIT]
+           ,[LICENSE_CONSUMED]
+           ,[COMPANY_TYPE]
+           ,[CREATED_BY]
+           ,[CREATED_DATE]
+           ,[MODIFIED_BY]
+           ,[MODIFIED_DATE]
+           ,[ROWSTATE])
+     VALUES
+           ('PLTPVT'
+           ,'Platned (Pvt) Ltd'
+           ,'Maharagama, Sri Lanka'
+           ,'10000'
+           ,NULL
+           ,'Internal'
+           ,'PLATNEDPASS'
+           ,'2024-12-03 13:46:56.747'
+           ,NULL
+           ,NULL
+           ,'ACTIVE')
+GO
+
+INSERT INTO [dbo].[PASS_USERS_PER_COMPANY_TAB]
+           ([COMPANY_ID]
+           ,[USER_ID]
+           ,[USER_NAME]
+           ,[PASSWORD]
+           ,[USER_EMAIL]
+           ,[LICENSE_KEY]
+           ,[VALID_FROM]
+           ,[VALID_TO]
+           ,[CREATED_BY]
+           ,[CREATED_DATE]
+           ,[MODIFIED_BY]
+           ,[MODIFIED_DATE]
+           ,[USER_ROLE]
+           ,[ROWSTATE])
+     VALUES
+           ('PLTPVT'
+           ,'PLATNEDPASS'
+           ,'Platned Pass User'
+           ,'$2a$11$u8E5BK6mq3mmnJJhYq8AxuYIYA9z2kCLGwjj4SCEyaGviSMe4WF86'
+           ,'mahara@platned.com'
+           ,'ABC'
+           ,'2024-12-03'
+           ,'9999-12-03'
+           ,'PLATNEDPASS'
+           ,'2024-12-03 13:48:55.030'
+           ,NULL
+           ,NULL
+           ,'Super Admin'
+           ,'ACTIVE')
+GO
+
+INSERT INTO [dbo].[PASS_COMPANY_CONTACT_TAB]
+           ([COMPANY_ID]
+           ,[USER_ID]
+           ,[COMPANY_CONTACT_TITLE]
+           ,[COMPANY_CONTACT_NUMBER]
+           ,[COMPANY_CONTACT_EMAIL])
+     VALUES
+           ('PLTPVT'
+           ,'PLATNEDPASS'
+           ,'Platned Pass App Owner'
+           ,'+94112183634'
+           ,'mahara@platned.com')
+GO
