@@ -13,13 +13,8 @@ namespace PlatnedMahara.DataAccess.Connection
     {
         [Obsolete]
         public static SqlConnection OpenConnectiion()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["PlatnedMaharaDbProd"]?.ConnectionString;
-            //string conS = @"Server=PL-MYOB-001;Database=PG1305NZ;Integrated Security=True;user=sa;pwd=sa123SA;Encrypt=False;";
-            //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;Integrated Security=True;user=platnedpassuser;pwd=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
-            //SqlConnection con = new SqlConnection(ConfigurationSettings.AppSettings.Get("ConnStr").ToString());
-            //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
-            SqlConnection con = new SqlConnection(connectionString);
+        {            
+            SqlConnection con = GetConnection();
             if (con.State == ConnectionState.Closed)
             {
                 con.Open();
