@@ -29,8 +29,7 @@ namespace PlatnedMahara.Classes
         private static string companyId = GlobalData.CompanyId;
 
         private static readonly HttpClient client = new HttpClient();
-
-        MasterMethods masterMethods;
+        MasterMethods masterMethods;       
 
         public static async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
         {
@@ -168,10 +167,91 @@ namespace PlatnedMahara.Classes
                 return validLogin;
             }
         }
+               
 
+        #region Pass Company Methods
+        public bool CreateNewCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteCompany(Pass_Company pass_Company)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassCompany(pass_Company);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public List<Pass_Company> GetPass_Companies()
+        {
+            List<Pass_Company> pass_Companies = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Companies = new List<Pass_Company>();
+                pass_Companies = masterMethods.GetPassCompanies();
+                return pass_Companies;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Companies;
+            }
+        }
+        public Pass_Company GetPass_Companies(Pass_Company p)
+        {
+            Pass_Company pass_Company = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Company = new Pass_Company();
+                pass_Company = masterMethods.GetPassCompany(p);
+                return pass_Company;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Company;
+            }
+        }
+        #endregion
 
         #region User Management
-
         public bool CreateNewUser(Pass_Users_Company pass_User)
         {
             try

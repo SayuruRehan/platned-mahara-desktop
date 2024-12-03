@@ -336,8 +336,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             Name = name;
             Children = new ObservableCollection<TreeNodeUser>();
         }
-    }
-
+    }    
     public class GridItemUser
     {
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
