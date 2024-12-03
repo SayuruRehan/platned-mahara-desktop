@@ -135,6 +135,8 @@ namespace PlatnedMahara
         }
         // Refer from BaseUi - End
 
+        #region Key Board Mapping for Tab View
+
         private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             var senderTabView = args.Element as TabView;
@@ -202,6 +204,10 @@ namespace PlatnedMahara
 
             args.Handled = true;
         }
+
+        #endregion
+
+        #region Tab Handling (Load, New Tab)
 
         private void TabView_Loaded(object sender, RoutedEventArgs e)
         {
@@ -275,6 +281,10 @@ namespace PlatnedMahara
             tabView.SelectedItem = newTab;
         }
 
+        #endregion
+
+        #region Toast message for information
+
         public void ShowInfoBar(string title, string message, InfoBarSeverity severity)
         {
             infoBar.Title = title;
@@ -310,6 +320,10 @@ namespace PlatnedMahara
             };
             timerSound.Start();
         }
+
+        #endregion
+
+        #region Login Dialog handling
 
         private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs e)
         {
@@ -356,45 +370,12 @@ namespace PlatnedMahara
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
                 PrimaryButtonText = "Login",
                 SecondaryButtonText = "Password Reset",
-                CloseButtonText = "Cancel",
+                //CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 Content = loginPage // Set the same PageLogin instance as the content
             };
 
             return await dialog.ShowAsync(); // Return the result of the dialog
-        }
-
-        //Show Password Reset Page Dialog
-        private async Task<ContentDialogResult> ShowPasswordResetDialog(PageResetPassword pageResetPassword)
-        {
-            ContentDialog dialogReset = new ContentDialog
-            {
-                XamlRoot = MainWindowXamlRoot.XamlRoot,
-                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                PrimaryButtonText = "Validate",
-                SecondaryButtonText = "Back To Login",
-                CloseButtonText = "Cancel",
-                DefaultButton = ContentDialogButton.Primary,
-                Content = pageResetPassword
-            };
-
-            return await dialogReset.ShowAsync();
-        }
-
-        //Show Set New Password Page Dialog
-        private async Task<ContentDialogResult> ShowSetNewPasswordDialog(PageSetNewPassword pageSetNewPassword)
-        {
-            ContentDialog dialogSetNew = new ContentDialog
-            {
-                XamlRoot = MainWindowXamlRoot.XamlRoot,
-                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                PrimaryButtonText = "Submit",
-                SecondaryButtonText = "Back To Login",
-                CloseButtonText = "Cancel",
-                DefaultButton = ContentDialogButton.Primary,
-                Content = pageSetNewPassword
-            };
-            return await dialogSetNew.ShowAsync();
         }
 
         //Login Form Result Handling
@@ -472,6 +453,27 @@ namespace PlatnedMahara
             }
         }
 
+        #endregion
+
+        #region Password Reset and Set New Password handling
+
+        //Show Password Reset Page Dialog
+        private async Task<ContentDialogResult> ShowPasswordResetDialog(PageResetPassword pageResetPassword)
+        {
+            ContentDialog dialogReset = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Validate",
+                SecondaryButtonText = "Back To Login",
+                //CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = pageResetPassword
+            };
+
+            return await dialogReset.ShowAsync();
+        }
+
         //Reset Password Form Result Handling
         private async Task HandleResetPasswordDialogResultAsync(ContentDialogResult resultResetPassword, PageResetPassword pageResetPassword)
         {
@@ -541,6 +543,22 @@ namespace PlatnedMahara
                     mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                 }
             }
+        }
+
+        //Show Set New Password Page Dialog
+        private async Task<ContentDialogResult> ShowSetNewPasswordDialog(PageSetNewPassword pageSetNewPassword)
+        {
+            ContentDialog dialogSetNew = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Submit",
+                SecondaryButtonText = "Back To Login",
+                //CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = pageSetNewPassword
+            };
+            return await dialogSetNew.ShowAsync();
         }
 
         //Set New Password Form Result Handling
@@ -630,6 +648,7 @@ namespace PlatnedMahara
             }
         }
 
+        #endregion
 
     }
 }
