@@ -27,7 +27,7 @@ namespace PlatnedMahara.DataAccess.Connection
         [Obsolete]
         public static SqlConnection GetConnection()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["PlatnedMaharaDbDev"]?.ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["PlatnedMaharaDb"]?.ConnectionString;
             //string conS = @"Server=172.28.47.227\SQLEXPRESS;Database=platnedpass;User Id=platnedpassuser;Password=g91uiYMbcf+u@QF{;Encrypt=False;Connect Timeout=1000;";
             SqlConnection con = new SqlConnection(connectionString);
             return con;
