@@ -241,46 +241,71 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
-                Pass_Users_Company pass_User = new Pass_Users_Company
-                {
-                    CompanyID = dialogUser.UserCompanyId,
-                    UserID = dialogUser.UserId,
-                    UserName = dialogUser.UserName,
-                    UserEmail = dialogUser.UserEmail,
-                    ValidFrom = dialogUser.ValidFrom,
-                    ValidTo = DateTime.Now.AddDays(365),
-                    UserRole = dialogUser.UserRole,
-                    Password = Encrypt.EncryptPassword("defaultpass1234"),
-                    LicenseKey = "ABC",
-                    RowState = "Active",
-                    CreatedBy = GlobalData.UserId
-                };
-
                 // Access field data from DialogUser
                 /*string userId = dialogUser.UserId;
                 string userName = dialogUser.UserName;*/
+                //Null validation 
 
+                //Null validation
+                if (dialogUser.UserCompanyId == "" || dialogUser.UserId == "" || dialogUser.UserName == "" || dialogUser.UserEmail == "" || dialogUser.UserRole == "" )
+                {
+
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
+                    }
+                    //Creae Dialog content with field value
+                    var userDialogPage = new DialogUser(false)
+                    {
+                        UserCompanyId = dialogUser.UserCompanyId,
+                        UserId = dialogUser.UserId,
+                        UserName = dialogUser.UserName,
+                        UserEmail = dialogUser.UserEmail,
+                    };
+
+                    //refill value that added
+                    var resultNew = await ShowAddUserDialog(userDialogPage);
+                    await HandleAddUserDialogResultAsync(resultNew, userDialogPage);
+
+                }
+                else {
+                    Pass_Users_Company pass_User = new Pass_Users_Company
+                    {
+                        CompanyID = dialogUser.UserCompanyId,
+                        UserID = dialogUser.UserId,
+                        UserName = dialogUser.UserName,
+                        UserEmail = dialogUser.UserEmail,
+                        ValidFrom = dialogUser.ValidFrom,
+                        ValidTo = DateTime.Now.AddDays(365),
+                        UserRole = dialogUser.UserRole,
+                        Password = Encrypt.EncryptPassword("defaultpass1234"),
+                        LicenseKey = "ABC",
+                        RowState = "Active",
+                        CreatedBy = GlobalData.UserId
+                    };
+                    bool authResponse = new AuthPlatnedPass().CreateNewUser(pass_User);
+                    if (authResponse)
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {pass_User.UserID}", InfoBarSeverity.Success);
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                        }
+
+                        var userDialog = new DialogUser();
+                        var resultNew = await ShowAddUserDialog(userDialog);
+                        await HandleAddUserDialogResultAsync(resultNew, userDialog);
+
+                    }
+                }
                 //bool authResponse = await AuthPlatnedPass.validateLogin(userId, userName);
-                bool authResponse = new AuthPlatnedPass().CreateNewUser(pass_User);
-                if (authResponse)
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {pass_User.UserID}", InfoBarSeverity.Success);
-                    }
-                }
-                else
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
-                    }
-
-                    var resultNew = ContentDialogResult.None;
-                    resultNew = await ShowAddUserDialog(dialogUser);
-                    await HandleAddUserDialogResultAsync(resultNew, dialogUser);
-
-                }
 
             }
             else
