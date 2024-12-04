@@ -650,6 +650,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <DelaySign>True</DelaySign>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <AppxPackageDir>C:\Users\NimeshEkanayakePlatn\source\repos\apt-desktop\bin\Release\</AppxPackageDir>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
