@@ -96,11 +96,12 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
             set => calValidFrom.Date = value.HasValue ? new DateTimeOffset(value.Value) : (DateTimeOffset?)null;
         }
 
-        public DateTime ValidTo
+        public DateTime? ValidTo
         {
-            get => calValidTo.Date.Value.DateTime;
-            set => calValidTo.Date = new DateTimeOffset(value);
+            get => calValidTo.Date?.DateTime;
+            set => calValidTo.Date = value.HasValue ? new DateTimeOffset(value.Value) : (DateTimeOffset?)null;
         }
+
 
         public string UserRole
         {

@@ -27,7 +27,7 @@
                 <TextBox x:Name="txtCompanyId" Header="" PlaceholderText="Company ID" Width="400" MaxWidth="400" MaxLength="6" CharacterCasing="Upper" />
                 <TextBox x:Name="txtCompanyName" Header="" PlaceholderText="Company Name" Width="400" MaxWidth="400" MaxLength="200" CharacterCasing="Normal" Margin="0,10,0,0" />
                 <TextBox x:Name="txtCompanyAddress" Header="" PlaceholderText="Company Address" Width="400" MaxWidth="400" MaxLength="1000" CharacterCasing="Normal" Margin="0,10,0,0" />
-                <TextBox x:Name="txtLicenseLimit" Header="" PlaceholderText="License Limit" Width="400" MaxWidth="400" MaxLength="10" CharacterCasing="Normal" Margin="0,10,0,0"/>
+                <TextBox x:Name="txtLicenseLimit" BeforeTextChanging="txtLicenseLimit_BeforeTextChanging" Header="" PlaceholderText="License Limit" Width="400" MaxWidth="400" MaxLength="10" CharacterCasing="Normal" Margin="0,10,0,0"/>
                 <ComboBox x:Name="cmbCompanyType" Header="" PlaceholderText="Company Type" Width="400" MaxWidth="400" Margin="0,10,0,0" SelectedItem="Customer">
                     <x:String>Internal</x:String>
                     <x:String>Sister</x:String>

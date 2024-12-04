@@ -197,9 +197,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
-                    //Creae Dialog content with field value
+                    //Create Dialog content with field value
                     var CompanyDialogPage = new DialogCompany()
                     {
                         CompanyId = dialogCompany.CompanyId,
@@ -207,11 +207,12 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         CompanyAddress = dialogCompany.CompanyAddress,
                         LicenseLimit = dialogCompany.LicenseLimit,
                         CompanyType = dialogCompany.CompanyType,
+
                     };
+
                     //refill value that added
-                   
-                    //var resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+                    var resultNew = await ShowAddCompanyDialog(CompanyDialogPage);
+                    await HandleAddCompanyDialogResultAsync(resultNew, CompanyDialogPage);
                 }
                 else {
                     Pass_Company pass_Company = new Pass_Company
@@ -243,7 +244,14 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         //resultNew = await ShowAddCompanyDialog(dialogCompany);
                         //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
 
-                        dialogCompany = new DialogCompany();
+                        dialogCompany = new DialogCompany()
+                        {
+                            CompanyId = pass_Company.CompanyID,
+                            CompanyName = pass_Company.CompanyName,
+                            CompanyAddress = pass_Company.CompanyAddress,
+                            LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
+                            CompanyType = pass_Company.CompanyType,
+                        };
                         var resultNew = await ShowAddCompanyDialog(dialogCompany);
                         await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
                     }
@@ -270,7 +278,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
                     RowState = "Active",
-                    ModifiedBy = GlobalData.UserId == null ? "User1" : GlobalData.UserId
+                    ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
                 };
                 // Access field data from dialogCompany
                 //string companyId = dialogCompany.CompanyId;
@@ -291,14 +299,16 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    //var resultNew = ContentDialogResult.None;
-                    //resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
-
-                    //var dailogcompanypage = new DialogCompany();
-                    //dailogcompanypage = dialogCompany;
-                    //var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
-                    //await HandleEditCompanyDialogResultAsync(resultNew, dailogcompanypage);
+                    dialogCompany = new DialogCompany(true)
+                    {
+                        CompanyId = pass_Company.CompanyID,
+                        CompanyName = pass_Company.CompanyName,
+                        CompanyAddress = pass_Company.CompanyAddress,
+                        LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
+                        CompanyType = pass_Company.CompanyType,
+                    };
+                    var resultNew = await ShowAddCompanyDialog(dialogCompany);
+                    await HandleEditCompanyDialogResultAsync(resultNew, dialogCompany);
                 }
 
             }
@@ -344,10 +354,16 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    //var dailogcompanypage = new DialogCompany();
-                    //dailogcompanypage = dialogCompany;
-                    //var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
-                    //await HandleDeleteCompanyDialogResultAsync(resultNew, dailogcompanypage);
+                    dialogCompany = new DialogCompany(true)
+                    {
+                        CompanyId = pass_Company.CompanyID,
+                        CompanyName = pass_Company.CompanyName,
+                        CompanyAddress = pass_Company.CompanyAddress,
+                        LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
+                        CompanyType = pass_Company.CompanyType,
+                    };
+                    var resultNew = await ShowAddCompanyDialog(dialogCompany);
+                    await HandleDeleteCompanyDialogResultAsync(resultNew, dialogCompany);
                 }
 
             }

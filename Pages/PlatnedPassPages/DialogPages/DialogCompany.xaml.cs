@@ -74,5 +74,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
             get => cmbCompanyType.SelectedItem.ToString();
             set => cmbCompanyType.SelectedItem = value;
         }
+
+        private void txtLicenseLimit_BeforeTextChanging(TextBox sender, TextBoxBeforeTextChangingEventArgs args)
+        {
+            // Restrict input to numeric characters
+            args.Cancel = args.NewText.Any(c => !char.IsDigit(c));
+        }
     }
 }

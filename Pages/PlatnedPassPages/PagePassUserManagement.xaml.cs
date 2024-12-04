@@ -71,8 +71,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserID = dialogUser.UserId,
                         UserName = dialogUser.UserName,
                         UserEmail = dialogUser.UserEmail,
-                        ValidFrom = (DateTime)dialogUser.ValidFrom,
-                        ValidTo = dialogUser.ValidTo,
+                        ValidFrom = dialogUser.ValidFrom ?? DateTime.Now,
+                        ValidTo = dialogUser.ValidTo ?? DateTime.Now.AddDays(365),
                         UserRole = dialogUser.UserRole,
                         RowState = dialogUser.RowState
                     };
@@ -241,19 +241,14 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
-                // Access field data from DialogUser
-                /*string userId = dialogUser.UserId;
-                string userName = dialogUser.UserName;*/
-                //Null validation 
 
-                //Null validation
-                DateTime? validFrom = dialogUser.ValidFrom;
-                if (dialogUser.UserCompanyId == "" || dialogUser.UserId == "" || dialogUser.UserName == "" || !validFrom.HasValue || dialogUser.UserEmail == "" || dialogUser.UserRole == "" )
+                //Null validation 
+                if (dialogUser.UserCompanyId == "" || dialogUser.UserId == "" || dialogUser.UserName == "" || !dialogUser.ValidFrom.HasValue || dialogUser.UserEmail == "" || dialogUser.UserRole == "" )
                 {
 
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
                     //Creae Dialog content with field value
                     var userDialogPage = new DialogUser(false)
@@ -261,6 +256,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserCompanyId = dialogUser.UserCompanyId,
                         UserId = dialogUser.UserId,
                         UserName = dialogUser.UserName,
+                        ValidTo = dialogUser.ValidTo,
                         ValidFrom = dialogUser.ValidFrom,
                         UserEmail = dialogUser.UserEmail,
                     };
@@ -277,13 +273,13 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserID = dialogUser.UserId,
                         UserName = dialogUser.UserName,
                         UserEmail = dialogUser.UserEmail,
-                        ValidFrom = (DateTime)dialogUser.ValidFrom,
-                        ValidTo = DateTime.Now.AddDays(365),
+                        ValidFrom = dialogUser.ValidFrom ?? DateTime.Now,
+                        ValidTo = dialogUser.ValidTo ?? DateTime.Now.AddDays(365),
                         UserRole = dialogUser.UserRole,
                         Password = Encrypt.EncryptPassword("defaultpass1234"),
                         LicenseKey = GenerateRandomString(),
                         RowState = "Active",
-                        CreatedBy = GlobalData.UserId
+                        CreatedBy = GlobalData.UserId == null ? "User1" : GlobalData.UserId
                     };
                     bool authResponse = new AuthPlatnedPass().CreateNewUser(pass_User);
                     if (authResponse)
