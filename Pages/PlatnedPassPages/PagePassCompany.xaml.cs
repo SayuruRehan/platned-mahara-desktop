@@ -192,42 +192,62 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         {
             if (result == ContentDialogResult.Primary)
             {
-                Pass_Company pass_Company = new Pass_Company
-                {
-                    CompanyID = dialogCompany.CompanyId,
-                    CompanyName = dialogCompany.CompanyName,
-                    CompanyType = dialogCompany.CompanyType,
-                    CompanyAddress = dialogCompany.CompanyAddress,
-                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "Active",
-                    CreatedBy = GlobalData.UserId
-                };
-                
-                bool authResponse = new AuthPlatnedPass().CreateNewCompany(pass_Company);
-                if (authResponse)
+                //Null validation
+                if (dialogCompany.CompanyId == "" || dialogCompany.CompanyName == "" || dialogCompany.CompanyAddress == "" || dialogCompany.LicenseLimit == "" || dialogCompany.CompanyType == "" )
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
                     }
-                }
-                else
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
+                    //Creae Dialog content with field value
+                    var CompanyDialogPage = new DialogCompany()
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
-                    }
-
-                    //var resultNew = ContentDialogResult.None;
-                    //resultNew = await ShowAddCompanyDialog(dialogCompany);
+                        CompanyId = dialogCompany.CompanyId,
+                        CompanyName = dialogCompany.CompanyName,
+                        CompanyAddress = dialogCompany.CompanyAddress,
+                        LicenseLimit = dialogCompany.LicenseLimit,
+                        CompanyType = dialogCompany.CompanyType,
+                    };
+                    //refill value that added
+                   
+                    //var resultNew = await ShowAddCompanyDialog(dialogCompany);
                     //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
-
-                    var dailogcompanypage = new DialogCompany();
-                    dailogcompanypage = dialogCompany;
-                    var resultNew = await ShowAddCompanyDialog(dailogcompanypage);
-                    await HandleAddCompanyDialogResultAsync(resultNew, dailogcompanypage);
                 }
+                else {
+                    Pass_Company pass_Company = new Pass_Company
+                    {
+                        CompanyID = dialogCompany.CompanyId,
+                        CompanyName = dialogCompany.CompanyName,
+                        CompanyType = dialogCompany.CompanyType,
+                        CompanyAddress = dialogCompany.CompanyAddress,
+                        LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
+                        RowState = "Active",
+                        CreatedBy = GlobalData.UserId
+                    };
+                    bool authResponse = new AuthPlatnedPass().CreateNewCompany(pass_Company);
+                    if (authResponse)
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                        }
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                        }
 
+                        //var resultNew = ContentDialogResult.None;
+                        //resultNew = await ShowAddCompanyDialog(dialogCompany);
+                        //await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+
+                        dialogCompany = new DialogCompany();
+                        var resultNew = await ShowAddCompanyDialog(dialogCompany);
+                        await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+                    }
+                }
             }
             else
             {
