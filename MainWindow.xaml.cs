@@ -27,6 +27,7 @@ using Windows.Graphics;
 using WinRT.Interop;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
+using System.Xml.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -414,6 +415,8 @@ namespace PlatnedMahara
                                 mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
                                 mnuItmSubProfileLogout.Visibility = Visibility.Visible;
 
+                                checkLicenseExpiry();
+
                                 if (App.MainWindow is MainWindow mainWindow)
                                 {
                                     mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
@@ -697,5 +700,108 @@ namespace PlatnedMahara
 
         #endregion
 
+        #region Mahara-80 License Validation at Login
+
+        private void checkLicenseExpiry()
+        {
+            string configFilePath = GlobalData.configFilePath;
+            string accessTokenUrl = "";
+            string clientId = "";
+            string clientSecret = "";
+            string scope = "";
+            Boolean appLoggingEnabled = false;
+            string licenseKey = "";
+
+            try
+            {
+                if (File.Exists(configFilePath))
+                {
+                    Logger.Log("Saved basic data configurations found!");
+
+                    try
+                    {
+                        Logger.Log("Reading saved configuration started...");
+                        Logger.Log($"Configuration path: {configFilePath}");
+                        var configXml = XDocument.Load(configFilePath);
+                        Logger.Log($"Configuration reading completed: {configXml}");
+
+                        accessTokenUrl = configXml.Root.Element("AccessTokenUrl")?.Value ?? string.Empty;
+                        clientId = configXml.Root.Element("ClientId")?.Value ?? string.Empty;
+                        clientSecret = configXml.Root.Element("ClientSecret")?.Value ?? string.Empty;
+                        scope = configXml.Root.Element("Scope")?.Value ?? string.Empty;
+                        licenseKey = configXml.Root.Element("licenseKey")?.Value ?? string.Empty;
+                        appLoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+                        Logger.Log("Configuration retrieval completed!");
+
+                        Logger.Log("Changing application registration state...");
+
+                        if (licenseKey != "")
+                        {
+                            Pass_Users_Company pass_User_det = new Pass_Users_Company
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId
+                            };
+
+                            Pass_Users_Company pass_User = new Pass_Users_Company();
+                            pass_User = new AuthPlatnedPass().GetPass_User_Per_Company(pass_User_det);
+
+                            if (pass_User != null)
+                            {
+                                if (pass_User.LicenseKey == licenseKey)
+                                {
+                                    if (pass_User.ValidTo >= DateTime.Now)
+                                    {
+                                        Logger.Log("License Key is not expired. Ignoring config changes.");
+                                    }
+                                    else
+                                    {
+                                        Logger.Log("License Key is expired. Removing from configurations.");
+
+                                        Logger.Log("Saving configuration started...");
+                                        PageConfig pageConfig = new PageConfig();
+                                        pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                        Logger.Log("Saving configuration completed!");
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Log("License Key is changed on Platned Pass. Removing from configurations.");
+
+                                    Logger.Log("Saving configuration started...");
+                                    PageConfig pageConfig = new PageConfig();
+                                    pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                    Logger.Log("Saving configuration completed!");
+                                }
+                            }
+                            else
+                            {
+                                Logger.Log("User record for License Key check is not found on Platned Pass. Removing from configurations.");
+
+                                Logger.Log("Saving configuration started...");
+                                PageConfig pageConfig = new PageConfig();
+                                pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                Logger.Log("Saving configuration completed!");
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Logger.Log($"Error loading configuration: {ex.Message}", "Error");
+                    }
+                }
+                else
+                {
+                    Logger.Log("No saved basic data configurations found!");
+                }
+
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log($"Authentication failed: {ex.Message}", "Error");
+            }
+        }
+
+        #endregion
     }
 }
