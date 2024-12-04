@@ -274,8 +274,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     }
 
                     dialogCompanyContact = new DialogCompanyContact();
-                    var resultPCC = await ShowAddCompanyContactDialog(dialogCompanyContact);
-                    await HandleAddCompanyContactDialogResultAsync(resultPCC, dialogCompanyContact);
+                    var resultCompanyContact = await ShowAddCompanyContactDialog(dialogCompanyContact);
+                    await HandleAddCompanyContactDialogResultAsync(resultCompanyContact, dialogCompanyContact);
 
                     }
                 }
