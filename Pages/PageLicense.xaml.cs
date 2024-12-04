@@ -50,7 +50,7 @@ namespace PlatnedMahara.Pages
 
 
 
-        protected Boolean appLoggingEnabled = false; 
+        protected Boolean appLoggingEnabled = false;
         private readonly string configFilePath = GlobalData.configFilePath;
         protected string accessTokenUrl = "";
         protected string clientId = "";
@@ -59,14 +59,6 @@ namespace PlatnedMahara.Pages
         protected Boolean validLicense = false;
         protected string licenseKey = "";
         private string token = "";
-
-        protected static string accessTokenUrlPl = GlobalData.AccessTokenUrlPl;
-        protected static string clientIdPl = GlobalData.ClientIdPl;
-        protected static string clientSecretPl = GlobalData.ClientSecretPl;
-        protected static string scopePl = GlobalData.ScopePl;
-        protected static string userId = GlobalData.UserId;
-        protected static string companyId = GlobalData.CompanyId;
-
         private static readonly HttpClient client = new HttpClient();
 
         public PageLicense()
@@ -107,65 +99,22 @@ namespace PlatnedMahara.Pages
 
                         licenseKey = txtLicenseCode.Text;
 
-
-                        var jsonBody = $@"
-                                        {{
-                                            ""Objstate"": ""IfsApp.PassUsersHandling.PassUsersPerCompanyState'Active'"",
-                                            ""LicenseKey"": ""{licenseKey}"",
-                                            ""UserId"": ""{userId}"",
-                                            ""CompanyId"": ""{companyId}""
-                                        }}";
-
-                        var jsonDoc    = JsonDocument.Parse(jsonBody);
-                        var Objstate   = jsonDoc.RootElement.GetProperty("Objstate").GetString();
-                        var LicenseKey = jsonDoc.RootElement.GetProperty("LicenseKey").GetString();
-                        var UserId     = jsonDoc.RootElement.GetProperty("UserId").GetString();
-                        var CompanyId  = jsonDoc.RootElement.GetProperty("CompanyId").GetString();
-
-                        var baseUrl = $"{GlobalData.BaseUrlPl}/main/ifsapplications/projection/v1/PassUsersHandling.svc/UsersSet";
-
-                        var filter = $"Objstate eq {Objstate} and LicenseKey eq '{LicenseKey}' and UserId eq '{UserId}' and CompanyId eq '{CompanyId}'";
-
-                        var uriBuilder = new UriBuilder(baseUrl)
+                        if (licenseKey != "")
                         {
-                            //Query = $"$filter={System.Uri.EscapeDataString(filter)}"
-                            Query = $"$filter={filter}"
-                        };
-
-                        token = await AuthPlatnedPass.GetAccessTokenPlatndPass(accessTokenUrlPl, clientIdPl, clientSecretPl, scopePl);
-
-
-                        string method = "GET";
-                        string url = uriBuilder.ToString();
-                        string headers = "";
-                        string requestBody = jsonBody;
-
-                        ApiExecution api = new ApiExecution();
-                        ApiExecution.ApiResponse apiResponse = null;
-
-                        Logger.Log("GET - Request body: " + requestBody);
-                        apiResponse = await api.Get(url, headers, requestBody, token);
-
-
-                        Logger.Log($"Response StatusCode={apiResponse.StatusCode}, ResponseBody={apiResponse.ResponseBody}");
-
-                        if (apiResponse != null && (apiResponse.StatusCode == 200 || apiResponse.StatusCode == 201))
-                        {
-                            var content = apiResponse?.ResponseBody;
-
-                            // Parse the API response content
-                            var apiResponseParsed = JsonDocument.Parse(content);
-
-                            // Check if the response contains the License_Key
-                            if (apiResponseParsed.RootElement.TryGetProperty("value", out JsonElement valueElement))
+                            Pass_Users_Company pass_User_det = new Pass_Users_Company
                             {
-                                foreach (var item in valueElement.EnumerateArray())
-                                {
-                                    var responseLicenseKey = item.GetProperty("LicenseKey").GetString();
-                                    var clientIdValue = item.GetProperty("CompanyId").GetString();
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId
+                            };
 
-                                    // Check if the license key matches the one from the request
-                                    if (responseLicenseKey == LicenseKey)
+                            Pass_Users_Company pass_User = new Pass_Users_Company();
+                            pass_User = new AuthPlatnedPass().GetPass_User_Per_Company(pass_User_det);
+
+                            if (pass_User != null)
+                            {
+                                if (pass_User.LicenseKey == licenseKey)
+                                {
+                                    if (pass_User.ValidTo >= DateTime.Now)
                                     {
                                         Logger.Log("License Key validated with Platned Pass");
 
@@ -179,23 +128,34 @@ namespace PlatnedMahara.Pages
                                             mainWindow.ShowInfoBar("Success!", "License Key validated with Platned Pass.", InfoBarSeverity.Success);
                                         }
 
+                                        validLicense = true;
                                         return validLicense;
                                     }
                                     else
                                     {
-                                        Logger.Log("License key does not match.");
+                                        Logger.Log($"License key is expired for user: {GlobalData.UserId}.");
                                         if (App.MainWindow is MainWindow mainWindow)
                                         {
-                                            mainWindow.ShowInfoBar("Error!", "License Key rejected by Platned Pass.", InfoBarSeverity.Error);
+                                            mainWindow.ShowInfoBar("Attention!", "License Key is expired!", InfoBarSeverity.Warning);
                                         }
 
                                         return validLicense;
                                     }
+
+                                }
+                                else
+                                {
+                                    Logger.Log("License key does not match.");
+                                    if (App.MainWindow is MainWindow mainWindow)
+                                    {
+                                        mainWindow.ShowInfoBar("Error!", "License Key rejected by Platned Pass.", InfoBarSeverity.Error);
+                                    }
+
+                                    return validLicense;
                                 }
                             }
                             else
                             {
-                                Logger.Log("License Key not found in the response.");
                                 if (App.MainWindow is MainWindow mainWindow)
                                 {
                                     mainWindow.ShowInfoBar("Attention!", "Please enter a valid License Key.", InfoBarSeverity.Warning);
@@ -206,16 +166,13 @@ namespace PlatnedMahara.Pages
                         }
                         else
                         {
-                            Logger.Log($"Error: {apiResponse.StatusCode}");
                             if (App.MainWindow is MainWindow mainWindow)
                             {
                                 mainWindow.ShowInfoBar("Attention!", "Please enter a valid License Key.", InfoBarSeverity.Warning);
                             }
+
                             return validLicense;
                         }
-
-
-
                     }
                     catch (System.Exception ex)
                     {
@@ -276,7 +233,7 @@ namespace PlatnedMahara.Pages
             }
         }
 
-        
+
 
 
 

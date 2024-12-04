@@ -29,7 +29,7 @@ namespace PlatnedMahara.Classes
         private static string companyId = GlobalData.CompanyId;
 
         private static readonly HttpClient client = new HttpClient();
-        MasterMethods masterMethods;       
+        MasterMethods masterMethods;
 
         public static async Task<string> GetAccessTokenPlatndPass(string accessTokenUrl, string clientId, string clientSecret, string scope)
         {
@@ -162,12 +162,13 @@ namespace PlatnedMahara.Classes
                 return validLogin;
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 validLogin = false;
                 return validLogin;
             }
         }
-               
+
 
         #region Pass Company Methods
         public bool CreateNewCompany(Pass_Company pass_Company)
@@ -332,9 +333,7 @@ namespace PlatnedMahara.Classes
             }
         }
 
-
-
-        public List<Pass_Users_Company> GetPass_Users(Pass_Users_Company p)
+        public List<Pass_Users_Company> GetPass_Users_Per_Company(Pass_Users_Company p)
         {
             List<Pass_Users_Company> pass_User = null;
             try
@@ -410,7 +409,7 @@ namespace PlatnedMahara.Classes
                 return pass_Company_Contacts;
 
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 Logger.Log($"Error: {e.Message}");
                 validLogin = false;

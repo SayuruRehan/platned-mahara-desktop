@@ -35,7 +35,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     CompanyType = dr["COMPANY_TYPE"].ToString(),
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
-                    ModifiedBy = dr["MODIFIED_BY"]  != DBNull.Value ?  dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
                     //ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
                     RowState = dr["ROWSTATE"].ToString(),
                 });
@@ -77,18 +77,18 @@ namespace PlatnedMahara.DataAccess.Methods
         public bool SavePassCompany(Pass_Company objPass_Company)
         {
             bool res = false;
-            objExecute = new Execute();            
+            objExecute = new Execute();
             param = new SqlParameter[]
             {
                 Execute.AddParameter("@COMPANY_ID",objPass_Company.CompanyID),
                 Execute.AddParameter("@COMPANY_NAME",objPass_Company.CompanyName),
                 Execute.AddParameter("@COMPANY_ADDRESS",objPass_Company.CompanyAddress),
-                Execute.AddParameter("@LICENSE_LIMIT",objPass_Company.LicenseLimit),                
+                Execute.AddParameter("@LICENSE_LIMIT",objPass_Company.LicenseLimit),
                 Execute.AddParameter("@COMPANY_TYPE",objPass_Company.CompanyType),
                 Execute.AddParameter("@CREATED_BY",objPass_Company.CreatedBy),
                 Execute.AddParameter("@ROWSTATE",objPass_Company.RowState),
             };
-            objExecute.Executes("spSavePassCompany",param, CommandType.StoredProcedure);
+            objExecute.Executes("spSavePassCompany", param, CommandType.StoredProcedure);
             res = true;
             return res;
         }
@@ -410,12 +410,18 @@ namespace PlatnedMahara.DataAccess.Methods
             objExecute = new Execute();
             param = new SqlParameter[]
             {
-                Execute.AddParameter("@COMPANY_ID",objPass_Users_Company.CompanyID),
-                Execute.AddParameter("@USER_ID",objPass_Users_Company.UserID),
+        Execute.AddParameter("@COMPANY_ID", objPass_Users_Company.CompanyID),
+        Execute.AddParameter("@USER_ID", objPass_Users_Company.UserID),
             };
-            DataRow dr = (DataRow)objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
-            if (dr != null)
+
+            // Execute the stored procedure and get a DataTable
+            DataTable dt = objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure) as DataTable;
+
+            // Ensure the DataTable is not null and contains rows
+            if (dt != null && dt.Rows.Count > 0)
             {
+                DataRow dr = dt.Rows[0]; // Get the first row
+
                 pass_Users_Company = new Pass_Users_Company
                 {
                     CompanyID = dr["COMPANY_ID"].ToString(),
@@ -434,6 +440,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     RowState = dr["ROWSTATE"].ToString(),
                 };
             }
+
             return pass_Users_Company;
         }
 
