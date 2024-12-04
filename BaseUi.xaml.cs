@@ -136,15 +136,10 @@ namespace PlatnedMahara
             GlobalData.UserName = "";
             GlobalData.CompanyId = "";
 
-            // Close the current main window instance
             if (App.MainWindow is MainWindow mainWindow)
             {
-                mainWindow.Close();
-            }
-
-            // Recreate a new main window instance and set it as the current window
-            MainWindow mainWindowNew = new MainWindow();
-            mainWindowNew.Activate();
+                mainWindow.AuthLogin();
+            }            
         }
 
         public void mnuItmSubProfileLogin_Click(object sender, RoutedEventArgs e)
