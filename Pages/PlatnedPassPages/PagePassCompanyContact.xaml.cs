@@ -186,7 +186,6 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         private async void btnNewCompanyContact_Click(object sender, RoutedEventArgs e)
         {
             var pageaddcompanycontact = new DialogCompanyContact();
-            //var result = ContentDialogResult.None;
             var resultDialogCompanyContactContent = await ShowAddCompanyContactDialog(pageaddcompanycontact);
 
             // Ensure PagePassUserManagementXamlRoot is loaded
@@ -235,7 +234,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please ensure no fields are left empty..", InfoBarSeverity.Warning);
+                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
 
                     }
                     var CompanyContactdialogPage = new DialogCompanyContact(false)
@@ -274,9 +273,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    var dialogPCC = new DialogCompanyContact();
-                    var resultPCC = await ShowAddCompanyContactDialog(dialogPCC);
-                    await HandleAddCompanyContactDialogResultAsync(resultPCC, dialogPCC);
+                    dialogCompanyContact = new DialogCompanyContact();
+                    var resultPCC = await ShowAddCompanyContactDialog(dialogCompanyContact);
+                    await HandleAddCompanyContactDialogResultAsync(resultPCC, dialogCompanyContact);
 
                     }
                 }
