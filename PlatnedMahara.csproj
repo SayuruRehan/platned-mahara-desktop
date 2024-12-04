@@ -125,6 +125,16 @@
     <None Remove="Assets\Square44x44Logo.targetsize-48.png" />
     <None Remove="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <None Remove="Pages\PageLogin.xaml" />
+    <None Remove="Pages\PagePlatnedPass.xaml" />
+    <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml" />
+    <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml" />
+    <None Remove="Pages\PlatnedPassPages\DialogPages\DialogUser.xaml" />
+    <None Remove="Pages\PlatnedPassPages\PagePassCompany.xaml" />
+    <None Remove="Pages\PlatnedPassPages\PagePassCompanyContact.xaml" />
+    <None Remove="Pages\PlatnedPassPages\PagePassHome.xaml" />
+    <None Remove="Pages\PlatnedPassPages\PagePassUserManagement.xaml" />
+    <None Remove="Pages\PageResetPassword.xaml" />
+    <None Remove="Pages\PageSetNewPassword.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -158,6 +168,7 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="CommunityToolkit.WinUI" Version="7.1.2" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.HeaderedControls" Version="8.1.240916" />
@@ -168,6 +179,7 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.241114003" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +523,36 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogUser.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\PagePassUserManagement.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\PagePassCompanyContact.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\PagePassCompany.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\PagePassHome.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PagePlatnedPass.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PageSetNewPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PageResetPassword.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PageLogin.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -607,6 +649,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <DelaySign>True</DelaySign>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
     <Target Name="_RemoveFrameworkReferences" BeforeTargets="_ConvertItems;_CalculateInputsForGenerateCurrentProjectAppxManifest">
@@ -625,5 +668,9 @@
 
     <ItemGroup>
       <PRIResource Remove="IFS_Cloud_Exports\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Classes\Db\Scripts\" />
     </ItemGroup>
 </Project>

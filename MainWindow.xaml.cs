@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,11 +16,18 @@ using Microsoft.UI.Xaml.Navigation;
 using PlatnedMahara.Classes;
 using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
+using PlatnedMahara.Pages.PlatnedPassPages;
+using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using static PlatnedMahara.Pages.PageHome;
+using Windows.Graphics;
+using WinRT.Interop;
+using Microsoft.UI;
+using Microsoft.UI.Windowing;
+using System.Xml.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -35,12 +43,28 @@ namespace PlatnedMahara
         IntPtr hWnd = IntPtr.Zero;
         private SUBCLASSPROC SubClassDelegate;
         // Refer from BaseUi - End
+        private bool centered;
+
 
         public static MainWindow Instance { get; private set; }
         public XamlRoot XamlRoot { get; private set; }
 
         private TabView tabView;
 
+        private static void Center(Window window)
+        {
+            IntPtr hWnd = WindowNative.GetWindowHandle(window);
+            WindowId windowId = Win32Interop.GetWindowIdFromWindow(hWnd);
+
+            if (AppWindow.GetFromWindowId(windowId) is AppWindow appWindow &&
+                DisplayArea.GetFromWindowId(windowId, DisplayAreaFallback.Nearest) is DisplayArea displayArea)
+            {
+                PointInt32 CenteredPosition = appWindow.Position;
+                CenteredPosition.X = (displayArea.WorkArea.Width - appWindow.Size.Width) / 2;
+                CenteredPosition.Y = (displayArea.WorkArea.Height - appWindow.Size.Height) / 2;
+                appWindow.Move(CenteredPosition);
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
@@ -61,13 +85,15 @@ namespace PlatnedMahara
             mnuItmSubHelpLicense.Click += baseUi.mnuItmSubHelpLicense_Click;
             mnuItmSubProfileLogin.Click += baseUi.mnuItmSubProfileLogin_Click;
             mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
+            mnuItmPlatnedPass.Click += baseUi.mnuItmPlatnedPass_Click;
 
             if (GlobalData.IsLoggedIn)
             {
                 mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
                 mnuItmSubProfileLogout.Visibility = Visibility.Visible;
             }
-            else {
+            else
+            {
                 mnuItmSubProfileLogin.Visibility = Visibility.Visible;
                 mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
             }
@@ -109,6 +135,8 @@ namespace PlatnedMahara
             public System.Drawing.Point ptMaxTrackSize;
         }
         // Refer from BaseUi - End
+
+        #region Key Board Mapping for Tab View
 
         private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
@@ -178,6 +206,10 @@ namespace PlatnedMahara
             args.Handled = true;
         }
 
+        #endregion
+
+        #region Tab Handling (Load, New Tab)
+
         private void TabView_Loaded(object sender, RoutedEventArgs e)
         {
             for (int i = 1; i <= 3; i++)
@@ -229,6 +261,10 @@ namespace PlatnedMahara
                     newItem.Header = "Help Window | Application License";
                     frame.Navigate(typeof(PageLicense));
                     break;
+                case 103:
+                    newItem.Header = "Administration | Platned Pass";
+                    frame.Navigate(typeof(PagePlatnedPass));
+                    break;
                 default:
                     frame.Navigate(typeof(PageHome));
                     break;
@@ -245,6 +281,10 @@ namespace PlatnedMahara
             tabView.TabItems.Add(newTab);
             tabView.SelectedItem = newTab;
         }
+
+        #endregion
+
+        #region Toast message for information
 
         public void ShowInfoBar(string title, string message, InfoBarSeverity severity)
         {
@@ -282,17 +322,26 @@ namespace PlatnedMahara
             timerSound.Start();
         }
 
+        #endregion
+
+        #region Login Dialog handling
+
         private void MainWindow_Activated(object sender, Microsoft.UI.Xaml.WindowActivatedEventArgs e)
         {
             if (!GlobalData.IsLoggedIn)
             {
                 AuthLogin();
             }
+            if (this.centered is false)
+            {
+                Center(this);
+                centered = true;
+            }
             // Unsubscribe from the Activated event to avoid calling it again
             this.Activated -= MainWindow_Activated;
         }
 
-        private async void AuthLogin()
+        public async void AuthLogin()
         {
             var result = ContentDialogResult.None;
             var loginPage = new PageLogin(); // Create PageLogin instance once
@@ -313,6 +362,7 @@ namespace PlatnedMahara
             }
         }
 
+        //Show Login Page Dialog
         private async Task<ContentDialogResult> ShowLoginDialog(PageLogin loginPage)
         {
             ContentDialog dialog = new ContentDialog
@@ -321,7 +371,7 @@ namespace PlatnedMahara
                 Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
                 PrimaryButtonText = "Login",
                 SecondaryButtonText = "Password Reset",
-                CloseButtonText = "Cancel",
+                //CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
                 Content = loginPage // Set the same PageLogin instance as the content
             };
@@ -329,25 +379,66 @@ namespace PlatnedMahara
             return await dialog.ShowAsync(); // Return the result of the dialog
         }
 
+        //Login Form Result Handling
         private async Task HandleLoginDialogResultAsync(ContentDialogResult result, PageLogin loginPage)
         {
             if (result == ContentDialogResult.Primary)
-            {                
+            {
                 // Access Username and Password from PageLogin
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
 
-                bool authResponse = await AuthPlatnedPass.validateLogin(username, password);
-                if (authResponse)
+                if (username != "" && password != "")
                 {
-                    GlobalData.IsLoggedIn = true;
-
-                    mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
-                    mnuItmSubProfileLogout.Visibility = Visibility.Visible;
-
-                    if (App.MainWindow is MainWindow mainWindow)
+                    Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                        UserID = loginPage.UserId
+                    };
+
+                    List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
+                    pass_Users = new AuthPlatnedPass().GetLoginUser(pass_User_det);
+
+                    if (pass_Users != null && pass_Users.Count > 0)
+                    {
+                        foreach (Pass_Users_Company pu in pass_Users)
+                        {
+                            if (Encrypt.VerifyPassword(password, pu.Password))
+                            {
+                                GlobalData.UserId = pu.UserID;
+                                GlobalData.CompanyId = pu.CompanyID;
+                                GlobalData.IsLoggedIn = true;
+                                GlobalData.UserRole = pu.UserRole;
+                                GlobalData.UserEmail = pu.UserEmail;
+                                GlobalData.LicenseKey = pu.LicenseKey;
+                                GlobalData.UserStatus = pu.RowState;
+
+                                mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Visible;
+
+                                checkLicenseExpiry();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
+                                }
+
+                            }
+                            else
+                            {
+                                GlobalData.IsLoggedIn = false;
+
+                                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                                    mainWindow.AuthLogin();
+                                }
+
+                            }
+
+                        }
                     }
                 }
                 else
@@ -360,32 +451,357 @@ namespace PlatnedMahara
                     if (App.MainWindow is MainWindow mainWindow)
                     {
                         mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                        mainWindow.AuthLogin();
                     }
-
-                    var resultNew = ContentDialogResult.None;
-                    resultNew = await ShowLoginDialog(loginPage);
-                    await HandleLoginDialogResultAsync(resultNew, loginPage);
-
                 }
+
 
             }
             else if (result == ContentDialogResult.Secondary)
             {
-                if (App.MainWindow is MainWindow mainWindow)
-                {
-                    mainWindow.ShowInfoBar("Success!", "Password Reset Request - Test", InfoBarSeverity.Success);
-                }
+                // Show the Password Reset Dialog
+                var resetPasswordPage = new PageResetPassword(); // Create the PageResetPassword instance
+                var resetResult = await ShowPasswordResetDialog(resetPasswordPage);
+                await HandleResetPasswordDialogResultAsync(resetResult, resetPasswordPage);
             }
             else
             {
                 if (App.MainWindow is MainWindow mainWindow)
                 {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog - Test", InfoBarSeverity.Informational);
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                 }
             }
         }
 
+        #endregion
+
+        #region Password Reset and Set New Password handling
+
+        //Show Password Reset Page Dialog
+        private async Task<ContentDialogResult> ShowPasswordResetDialog(PageResetPassword pageResetPassword)
+        {
+            ContentDialog dialogReset = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Validate",
+                SecondaryButtonText = "Back To Login",
+                //CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = pageResetPassword
+            };
+
+            return await dialogReset.ShowAsync();
+        }
+
+        //Reset Password Form Result Handling
+        private async Task HandleResetPasswordDialogResultAsync(ContentDialogResult resultResetPassword, PageResetPassword pageResetPassword)
+        {
+            //If user validates reset password page
+            if (resultResetPassword == ContentDialogResult.Primary)
+            {
+
+                // Access Username and Password from PageLogin
+                string companyId = pageResetPassword.ResetCompanyId;
+                string userId = pageResetPassword.ResetUserId;
+                string userEmail = pageResetPassword.ResetEmail;
+
+                if (companyId != "" && userId != "" && userEmail != "")
+                {
+                    Pass_Users_Company pass_User_reset = new Pass_Users_Company
+                    {
+                        UserID = pageResetPassword.ResetUserId
+                    };
+
+                    List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
+                    pass_User_Reset_details = new AuthPlatnedPass().GetPasswordResetUser(pass_User_reset);
+
+                    if (pass_User_Reset_details != null && pass_User_Reset_details.Count > 0)
+                    {
+                        foreach (Pass_Users_Company pu in pass_User_Reset_details)
+                        {
+
+                            if (pu.CompanyID == companyId && pu.UserEmail == userEmail)
+                            {
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Password Reset request authorized for user: {pu.UserID}", InfoBarSeverity.Success);
+                                }
+
+                                //Set New Password Page Execution
+                                var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
+                                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
+                            }
+                            else
+                            {
+                                mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                                mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Validation Unsuccessful! Please check user details.", InfoBarSeverity.Warning);
+                                    mainWindow.AuthLogin();
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", $"Validation Unsuccessful! Please check user details.", InfoBarSeverity.Warning);
+                        // Show the Password Reset Dialog
+                        var resetPasswordPage = new PageResetPassword(); // Create the PageResetPassword instance
+                        var resetResult = await ShowPasswordResetDialog(resetPasswordPage);
+                        await HandleResetPasswordDialogResultAsync(resetResult, resetPasswordPage);
+                    };
 
 
+                }
+
+            }
+            else if (resultResetPassword == ContentDialogResult.Secondary)
+            {
+                // Show the Login Dialog again
+                var loginPage = new PageLogin();
+                var loginResult = await ShowLoginDialog(loginPage);
+                await HandleLoginDialogResultAsync(loginResult, loginPage);
+            }
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                }
+            }
+        }
+
+        //Show Set New Password Page Dialog
+        private async Task<ContentDialogResult> ShowSetNewPasswordDialog(PageSetNewPassword pageSetNewPassword)
+        {
+            ContentDialog dialogSetNew = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Submit",
+                SecondaryButtonText = "Back To Login",
+                //CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = pageSetNewPassword
+            };
+            return await dialogSetNew.ShowAsync();
+        }
+
+        //Set New Password Form Result Handling
+        private async Task HandleSetNewPasswordDialogResultAsync(ContentDialogResult resultSetNewPassword, PageSetNewPassword pageSetNewPassword)
+        {
+            //if user confirm set new password dialog
+            if (resultSetNewPassword == ContentDialogResult.Primary)
+            {
+                if (pageSetNewPassword.newPassword != "" && pageSetNewPassword.confirmPassword != "")
+                {
+                    //Validation process
+                    if (pageSetNewPassword.newPassword == pageSetNewPassword.confirmPassword)
+                    {
+                        string companyId = pageSetNewPassword.companyId;
+                        string userId = pageSetNewPassword.userId;
+                        string newPassword = Encrypt.EncryptPassword(pageSetNewPassword.newPassword);
+                        string userEmail = pageSetNewPassword.userEmail;
+
+                        Pass_Users_Company pass_User_reset = new Pass_Users_Company
+                        {
+                            CompanyID = companyId,
+                            UserID = userId,
+                            Password = newPassword,
+                            UserEmail = userEmail,
+                        };
+
+                        List<Pass_Users_Company> pass_User_Reset_details = new List<Pass_Users_Company>();
+                        bool isUpdated = new AuthPlatnedPass().EditUserPassword(pass_User_reset);
+
+                        if (isUpdated)
+                        {
+                            //Notification process
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", "Password changed successfully.", InfoBarSeverity.Success);
+                            }
+
+                            // Show the Login Dialog again
+                            var loginPage = new PageLogin();
+                            var loginResult = await ShowLoginDialog(loginPage);
+                            await HandleLoginDialogResultAsync(loginResult, loginPage);
+
+
+                        }
+                        else
+                        {
+                            mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                            mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Error!", $"Password reset unsuccessful!", InfoBarSeverity.Error);
+                                mainWindow.AuthLogin();
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Attention!", "Password doesn't match.", InfoBarSeverity.Warning);
+                        }
+
+                        pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail); // Create the PageResetPassword instance
+                        var setNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                        await HandleSetNewPasswordDialogResultAsync(setNewPassword, pageSetNewPassword);
+                    }
+                }
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", "New Password cannot be empty.", InfoBarSeverity.Warning);
+                    }
+
+                    pageSetNewPassword = new PageSetNewPassword(pageSetNewPassword.companyId, pageSetNewPassword.userId, pageSetNewPassword.userEmail); // Create the PageResetPassword instance
+                    var setNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                    await HandleSetNewPasswordDialogResultAsync(setNewPassword, pageSetNewPassword);
+                }
+
+
+
+
+            }
+            //If user canceled the set new password dialog
+            else if (resultSetNewPassword == ContentDialogResult.Secondary)
+            {
+                // Show the Login Dialog again
+                var loginPage = new PageLogin();
+                var loginResult = await ShowLoginDialog(loginPage);
+                await HandleLoginDialogResultAsync(loginResult, loginPage);
+
+            }
+            //If user clicked back to login set new password dialog
+            else
+            {
+                if (App.MainWindow is MainWindow mainWindow)
+                {
+                    mainWindow.ShowInfoBar("Info", "User canceled new password set dialog!", InfoBarSeverity.Informational);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Mahara-80 License Validation at Login
+
+        private void checkLicenseExpiry()
+        {
+            string configFilePath = GlobalData.configFilePath;
+            string accessTokenUrl = "";
+            string clientId = "";
+            string clientSecret = "";
+            string scope = "";
+            Boolean appLoggingEnabled = false;
+            string licenseKey = "";
+
+            try
+            {
+                if (File.Exists(configFilePath))
+                {
+                    Logger.Log("Saved basic data configurations found!");
+
+                    try
+                    {
+                        Logger.Log("Reading saved configuration started...");
+                        Logger.Log($"Configuration path: {configFilePath}");
+                        var configXml = XDocument.Load(configFilePath);
+                        Logger.Log($"Configuration reading completed: {configXml}");
+
+                        accessTokenUrl = configXml.Root.Element("AccessTokenUrl")?.Value ?? string.Empty;
+                        clientId = configXml.Root.Element("ClientId")?.Value ?? string.Empty;
+                        clientSecret = configXml.Root.Element("ClientSecret")?.Value ?? string.Empty;
+                        scope = configXml.Root.Element("Scope")?.Value ?? string.Empty;
+                        licenseKey = configXml.Root.Element("licenseKey")?.Value ?? string.Empty;
+                        appLoggingEnabled = Convert.ToBoolean(configXml.Root.Element("LoggingEnabled")?.Value ?? bool.FalseString);
+                        Logger.Log("Configuration retrieval completed!");
+
+                        Logger.Log("Changing application registration state...");
+
+                        if (licenseKey != "")
+                        {
+                            Pass_Users_Company pass_User_det = new Pass_Users_Company
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId
+                            };
+
+                            Pass_Users_Company pass_User = new Pass_Users_Company();
+                            pass_User = new AuthPlatnedPass().GetPass_User_Per_Company(pass_User_det);
+
+                            if (pass_User != null)
+                            {
+                                if (pass_User.LicenseKey == licenseKey)
+                                {
+                                    if (pass_User.ValidTo >= DateTime.Now)
+                                    {
+                                        Logger.Log("License Key is not expired. Ignoring config changes.");
+                                    }
+                                    else
+                                    {
+                                        Logger.Log("License Key is expired. Removing from configurations.");
+
+                                        Logger.Log("Saving configuration started...");
+                                        PageConfig pageConfig = new PageConfig();
+                                        pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                        Logger.Log("Saving configuration completed!");
+                                    }
+                                }
+                                else
+                                {
+                                    Logger.Log("License Key is changed on Platned Pass. Removing from configurations.");
+
+                                    Logger.Log("Saving configuration started...");
+                                    PageConfig pageConfig = new PageConfig();
+                                    pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                    Logger.Log("Saving configuration completed!");
+                                }
+                            }
+                            else
+                            {
+                                Logger.Log("User record for License Key check is not found on Platned Pass. Removing from configurations.");
+
+                                Logger.Log("Saving configuration started...");
+                                PageConfig pageConfig = new PageConfig();
+                                pageConfig.SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, "");
+                                Logger.Log("Saving configuration completed!");
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Logger.Log($"Error loading configuration: {ex.Message}", "Error");
+                    }
+                }
+                else
+                {
+                    Logger.Log("No saved basic data configurations found!");
+                }
+
+            }
+            catch (System.Exception ex)
+            {
+                Logger.Log($"Authentication failed: {ex.Message}", "Error");
+            }
+        }
+
+        #endregion
     }
 }
