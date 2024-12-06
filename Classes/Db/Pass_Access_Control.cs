@@ -11,10 +11,10 @@ namespace PlatnedMahara.Classes.Db
         public string AppFunction { get; set; }
         public string AppFunctionDescription { get; set; }
         public string UserRole { get; set; }
-        public bool ReadAllowed { get; set; }
-        public bool CreateAllowed { get; set; }
-        public bool UpdateAllowed { get; set; }
-        public bool DeleteAllowed { get; set; }
+        public string ReadAllowed { get; set; }
+        public string CreateAllowed { get; set; }
+        public string UpdateAllowed { get; set; }
+        public string DeleteAllowed { get; set; }
         public string? CreatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string? ModifiedBy { get; set; }
