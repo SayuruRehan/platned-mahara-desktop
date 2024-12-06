@@ -389,7 +389,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             { btnNewCompany.Visibility = Visibility.Visible; }
             else { btnNewCompany.Visibility = Visibility.Collapsed; }
 
-            foreach (var user in GridItemCompany)
+            foreach (var user in GridItemsCompany)
             {
                 user.CanEdit = AccessControl.IsGranted("BTN_EDIT_COMPANY", "U");
                 user.CanDelete = AccessControl.IsGranted("BTN_DELETE_COMPANY ", "D");

@@ -395,7 +395,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             { btnNewAccessRole.Visibility = Visibility.Visible; }
             else { btnNewAccessRole.Visibility = Visibility.Collapsed; }
 
-            foreach (var user in GridItemAccessRole)
+            foreach (var user in GridItemsAccessRole)
             {
                 user.CanEdit = AccessControl.IsGranted("BTN_EDIT_ACCESS_CONTROL", "U");
                 user.CanDelete = AccessControl.IsGranted("BTN_DELETE_ACCESS_CONTROL ", "D");
