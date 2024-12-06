@@ -391,7 +391,7 @@ namespace PlatnedMahara
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
 
-                if (username != "" && password != "")
+                if (username != "" || password != "")
                 {
                     Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {
@@ -441,6 +441,19 @@ namespace PlatnedMahara
 
                             }
 
+                        }
+                    }
+                    else
+                    {
+                        GlobalData.IsLoggedIn = false;
+
+                        mnuItmSubProfileLogin.Visibility = Visibility.Visible;
+                        mnuItmSubProfileLogout.Visibility = Visibility.Collapsed;
+
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Attention!", $"Login Unsuccessful! Please check login credentials.", InfoBarSeverity.Warning);
+                            mainWindow.AuthLogin();
                         }
                     }
                 }
