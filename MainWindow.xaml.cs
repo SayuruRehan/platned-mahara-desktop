@@ -28,6 +28,7 @@ using WinRT.Interop;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using System.Xml.Linq;
+using Windows.ApplicationModel.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -65,11 +66,13 @@ namespace PlatnedMahara
                 appWindow.Move(CenteredPosition);
             }
         }
+
         public MainWindow()
         {
             InitializeComponent();
 
             this.Activated += MainWindow_Activated;
+            this.Closed += MainWindow_Closed;  // Handle the window's Closed event
 
             // Refer from BaseUi - Start
             hWnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
@@ -802,6 +805,13 @@ namespace PlatnedMahara
             }
         }
 
+        #endregion
+
+        #region  Mahara-84 Handle window closed event
+        private async void MainWindow_Closed(object sender, Microsoft.UI.Xaml.WindowEventArgs e)
+        {
+            Application.Current.Exit();
+        }
         #endregion
     }
 }
