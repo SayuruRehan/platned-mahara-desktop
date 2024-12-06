@@ -31,11 +31,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class PasePassAccessControl : Microsoft.UI.Xaml.Controls.Page
+    public sealed partial class PagePassAccessControl : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemAccessRole> GridItemsAccessRole { get; set; }
 
-        public PasePassAccessControl()
+        public PagePassAccessControl()
         {
             this.InitializeComponent();
             LoadData();
@@ -57,7 +57,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         // Initialize with default values
                         TreeNodesAppFunction = new ObservableCollection<TreeNode> { new TreeNode(pa.AppFunction) },
                         TreeNodesAppFuncDescription = new ObservableCollection<TreeNode> { new TreeNode(pa.AppFunctionDescription) },
-                        TreeNodesUserRole = new ObservableCollection<TreeNode> { new TreeNode(pa.UserRole) },
+                        TreeNodesUserRole = new ObservableCollection<TreeNode> { new TreeNode(pa.UserRole.Trim()) },
                         TreeNodesReadAllowed = new ObservableCollection<TreeNode> { new TreeNode(pa.ReadAllowed.ToString()) },
                         TreeNodesCreateAllowed = new ObservableCollection<TreeNode> { new TreeNode(pa.CreateAllowed.ToString()) },
                         TreeNodesUpdateAllowed = new ObservableCollection<TreeNode> { new TreeNode(pa.UpdateAllowed.ToString()) },
@@ -73,7 +73,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
-
+        
         private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
@@ -83,34 +83,35 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             if (rowData != null)
             {
                 var result = ContentDialogResult.None;
-                if (button?.DataContext is GridItemCompany selectedItem)
+                if (button?.DataContext is GridItemAccessRole selectedItem)
                 {
-                    var dailogcompany = new DialogCompany(true)
+                    var dailogAccessControl = new DialogAccessControl(true)
                     {
-                        CompanyId = selectedItem.TreeNodesCompanyId[0].Name,
-                        CompanyName = selectedItem.TreeNodesCompanyName[0].Name,
-                        CompanyAddress = selectedItem.TreeNodesCompanyAddress[0].Name,
-                        LicenseLimit = selectedItem.TreeNodesLicenseLimit[0].Name,
-                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name,
+                        AppFunction = selectedItem.TreeNodesAppFunction[0].Name,
+                        AppFunctionDescription = selectedItem.TreeNodesAppFuncDescription[0].Name,
+                        UserRole = selectedItem.TreeNodesUserRole[0].Name,
+                        ReadAllowed = selectedItem.TreeNodesReadAllowed[0].Name,
+                        CreateAllowed = selectedItem.TreeNodesCreateAllowed[0].Name,
+                        UpdateAllowed = selectedItem.TreeNodesUpdateAllowed[0].Name,
+                        DeleteAllowed = selectedItem.TreeNodesDeleteAllowed[0].Name,
                     };
                     if (PagePassAccessRoleXamlRoot.XamlRoot == null)
                     {
                         PagePassAccessRoleXamlRoot.Loaded += async (s, e) =>
                         {
-                            result = await ShowAddCompanyDialog(dailogcompany);
-                            await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                            result = await ShowAddAccessControlDialog(dailogAccessControl);
+                            await HandleEditAccessControlDialogResultAsync(result, dailogAccessControl);
                         };
                     }
                     else
                     {
-                        result = await ShowAddCompanyDialog(dailogcompany);
-                        await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                        result = await ShowAddAccessControlDialog(dailogAccessControl);
+                        await HandleEditAccessControlDialogResultAsync(result, dailogAccessControl);
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsAccessRole;
                     }
                 }
-
             }
         }
 
@@ -122,28 +123,30 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             if (rowData != null)
             {
                 var result = ContentDialogResult.None;
-                if (button?.DataContext is GridItemCompany selectedItem)
+                if (button?.DataContext is GridItemAccessRole selectedItem)
                 {
-                    var dailogcompany = new DialogCompany(true)
+                    var dailogAccessControl = new DialogAccessControl(true)
                     {
-                        CompanyId = selectedItem.TreeNodesCompanyId[0].Name,
-                        CompanyName = selectedItem.TreeNodesCompanyName[0].Name,
-                        CompanyAddress = selectedItem.TreeNodesCompanyAddress[0].Name,
-                        LicenseLimit = selectedItem.TreeNodesLicenseLimit[0].Name,
-                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name,
+                        AppFunction = selectedItem.TreeNodesAppFunction[0].Name,
+                        AppFunctionDescription = selectedItem.TreeNodesAppFuncDescription[0].Name,
+                        UserRole = selectedItem.TreeNodesUserRole[0].Name,
+                        ReadAllowed = selectedItem.TreeNodesReadAllowed[0].Name,
+                        CreateAllowed = selectedItem.TreeNodesCreateAllowed[0].Name,
+                        UpdateAllowed = selectedItem.TreeNodesUpdateAllowed[0].Name,
+                        DeleteAllowed = selectedItem.TreeNodesDeleteAllowed[0].Name,
                     };
                     if (PagePassAccessRoleXamlRoot.XamlRoot == null)
                     {
                         PagePassAccessRoleXamlRoot.Loaded += async (s, e) =>
                         {
-                            result = await ShowAddCompanyDialog(dailogcompany);
-                            await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                            result = await ShowAddAccessControlDialog(dailogAccessControl);
+                            await HandleDeleteAccessControlDialogResultAsync(result, dailogAccessControl);
                         };
                     }
                     else
                     {
-                        result = await ShowAddCompanyDialog(dailogcompany);
-                        await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                        result = await ShowAddAccessControlDialog(dailogAccessControl);
+                        await HandleDeleteAccessControlDialogResultAsync(result, dailogAccessControl);
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsAccessRole;
@@ -151,32 +154,34 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
+        
+
 
         private async void btnNewAccessRole_Click(object sender, RoutedEventArgs e)
         {
             var result = ContentDialogResult.None;
-            var dialogCompany = new DialogCompany(false); // Create dialogCompany instance once
+            var dialogAccess = new DialogAccessControl(false); // Create dialogCompany instance once
 
             // Ensure PagePassUserManagementXamlRoot is loaded
             if (PagePassAccessRoleXamlRoot.XamlRoot == null)
             {
                 PagePassAccessRoleXamlRoot.Loaded += async (s, e) =>
                 {
-                    result = await ShowAddCompanyDialog(dialogCompany);
-                    await HandleAddCompanyDialogResultAsync(result, dialogCompany);
+                    result = await ShowAddAccessControlDialog(dialogAccess);
+                    await HandleAddAccessControlDialogResultAsync(result, dialogAccess);
                 };
             }
             else
             {
-                result = await ShowAddCompanyDialog(dialogCompany);
-                await HandleAddCompanyDialogResultAsync(result, dialogCompany);
+                result = await ShowAddAccessControlDialog(dialogAccess);
+                await HandleAddAccessControlDialogResultAsync(result, dialogAccess);
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemsAccessRole;
             }
         }
 
-        private async Task<ContentDialogResult> ShowAddCompanyDialog(DialogCompany dialogCompany)
+        private async Task<ContentDialogResult> ShowAddAccessControlDialog(DialogAccessControl dialogAccess)
         {
             ContentDialog dialog = new ContentDialog
             {
@@ -185,56 +190,60 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 PrimaryButtonText = "Process",
                 CloseButtonText = "Cancel",
                 DefaultButton = ContentDialogButton.Primary,
-                Content = dialogCompany // Set the same dialogCompany instance as the content
+                Content = dialogAccess // Set the same dialogCompany instance as the content
             };
 
             return await dialog.ShowAsync(); // Return the result of the dialog
         }
 
-        private async Task HandleAddCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
+        private async Task HandleAddAccessControlDialogResultAsync(ContentDialogResult result, DialogAccessControl dialogAccess)
         {
             if (result == ContentDialogResult.Primary)
             {
                 //Null validation
-                if (dialogCompany.CompanyId == "" || dialogCompany.CompanyName == "" || dialogCompany.CompanyAddress == "" || dialogCompany.LicenseLimit == "" || dialogCompany.CompanyType == "")
+                if (dialogAccess.AppFunction == "" || dialogAccess.AppFunctionDescription == "" || dialogAccess.UserRole == "" || dialogAccess.ReadAllowed == "" || dialogAccess.CreateAllowed == "" || dialogAccess.UpdateAllowed == "" || dialogAccess.DeleteAllowed == "")
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
                     //Create Dialog content with field value
-                    var CompanyDialogPage = new DialogCompany()
+                    var AccessControlDialogPage = new DialogAccessControl()
                     {
-                        CompanyId = dialogCompany.CompanyId,
-                        CompanyName = dialogCompany.CompanyName,
-                        CompanyAddress = dialogCompany.CompanyAddress,
-                        LicenseLimit = dialogCompany.LicenseLimit,
-                        CompanyType = dialogCompany.CompanyType,
+                        AppFunction = dialogAccess.AppFunction,
+                        AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                        UserRole = dialogAccess.UserRole,
+                        ReadAllowed = dialogAccess.ReadAllowed,
+                        CreateAllowed = dialogAccess.CreateAllowed,
+                        UpdateAllowed = dialogAccess.UpdateAllowed,
+                        DeleteAllowed = dialogAccess.DeleteAllowed,
 
                     };
 
                     //refill value that added
-                    var resultNew = await ShowAddCompanyDialog(CompanyDialogPage);
-                    await HandleAddCompanyDialogResultAsync(resultNew, CompanyDialogPage);
+                    var resultNew = await ShowAddAccessControlDialog(AccessControlDialogPage);
+                    await HandleAddAccessControlDialogResultAsync(resultNew, AccessControlDialogPage);
                 }
                 else
                 {
-                    Pass_Company pass_Company = new Pass_Company
+                    var ReadAllowed = Convert.ToBoolean(dialogAccess.ReadAllowed);
+                    Pass_Access_Control pass_Access_Control = new Pass_Access_Control
                     {
-                        CompanyID = dialogCompany.CompanyId,
-                        CompanyName = dialogCompany.CompanyName,
-                        CompanyType = dialogCompany.CompanyType,
-                        CompanyAddress = dialogCompany.CompanyAddress,
-                        LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                        RowState = "Active",
-                        CreatedBy = GlobalData.UserId
+                        AppFunction = dialogAccess.AppFunction,
+                        AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                        UserRole = dialogAccess.UserRole,
+                        ReadAllowed = dialogAccess.ReadAllowed.ToString(),
+                        CreateAllowed = dialogAccess.CreateAllowed.ToString(),
+                        UpdateAllowed = dialogAccess.UpdateAllowed.ToString(),
+                        DeleteAllowed = dialogAccess.DeleteAllowed.ToString(),
+                        CreatedBy = GlobalData.UserId,
                     };
-                    bool authResponse = new AuthPlatnedPass().CreateNewCompany(pass_Company);
+                    bool authResponse = new AuthPlatnedPass().CreateNewAccessControl(pass_Access_Control);
                     if (authResponse)
                     {
                         if (App.MainWindow is MainWindow mainWindow)
                         {
-                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Function: {pass_Access_Control.AppFunction} for Role: {dialogAccess.UserRole}", InfoBarSeverity.Success);
                         }
                     }
                     else
@@ -244,16 +253,18 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                             mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                         }
 
-                        dialogCompany = new DialogCompany()
+                        dialogAccess = new DialogAccessControl()
                         {
-                            CompanyId = pass_Company.CompanyID,
-                            CompanyName = pass_Company.CompanyName,
-                            CompanyAddress = pass_Company.CompanyAddress,
-                            LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
-                            CompanyType = pass_Company.CompanyType,
+                            AppFunction = dialogAccess.AppFunction,
+                            AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                            UserRole = dialogAccess.UserRole,
+                            ReadAllowed = dialogAccess.ReadAllowed,
+                            CreateAllowed = dialogAccess.CreateAllowed,
+                            UpdateAllowed = dialogAccess.UpdateAllowed,
+                            DeleteAllowed = dialogAccess.DeleteAllowed,
                         };
-                        var resultNew = await ShowAddCompanyDialog(dialogCompany);
-                        await HandleAddCompanyDialogResultAsync(resultNew, dialogCompany);
+                        var resultNew = await ShowAddAccessControlDialog(dialogAccess);
+                        await HandleAddAccessControlDialogResultAsync(resultNew, dialogAccess);
                     }
                 }
             }
@@ -266,27 +277,28 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
-        private async Task HandleEditCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
+        private async Task HandleEditAccessControlDialogResultAsync(ContentDialogResult result, DialogAccessControl dialogAccess)
         {
             if (result == ContentDialogResult.Primary)
             {
-                Pass_Company pass_Company = new Pass_Company
+                Pass_Access_Control pass_Access_Control = new Pass_Access_Control
                 {
-                    CompanyID = dialogCompany.CompanyId,
-                    CompanyName = dialogCompany.CompanyName,
-                    CompanyType = dialogCompany.CompanyType,
-                    CompanyAddress = dialogCompany.CompanyAddress,
-                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "Active",
+                    AppFunction = dialogAccess.AppFunction,
+                    AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                    UserRole = dialogAccess.UserRole,
+                    ReadAllowed = dialogAccess.ReadAllowed.ToString(),
+                    CreateAllowed = dialogAccess.CreateAllowed.ToString(),
+                    UpdateAllowed = dialogAccess.UpdateAllowed.ToString(),
+                    DeleteAllowed = dialogAccess.DeleteAllowed.ToString(),
                     ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
                 };
-                
-                bool authResponse = new AuthPlatnedPass().EditCompany(pass_Company);
+
+                bool authResponse = new AuthPlatnedPass().EditAccessControl(pass_Access_Control);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Function: {pass_Access_Control.AppFunction} for Role: {dialogAccess.UserRole}", InfoBarSeverity.Success);
                     }
                 }
                 else
@@ -296,18 +308,20 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    dialogCompany = new DialogCompany(true)
+                    dialogAccess = new DialogAccessControl()
                     {
-                        CompanyId = pass_Company.CompanyID,
-                        CompanyName = pass_Company.CompanyName,
-                        CompanyAddress = pass_Company.CompanyAddress,
-                        LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
-                        CompanyType = pass_Company.CompanyType,
-                    };
-                    var resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    await HandleEditCompanyDialogResultAsync(resultNew, dialogCompany);
-                }
+                        AppFunction = dialogAccess.AppFunction,
+                        AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                        UserRole = dialogAccess.UserRole,
+                        ReadAllowed = dialogAccess.ReadAllowed,
+                        CreateAllowed = dialogAccess.CreateAllowed,
+                        UpdateAllowed = dialogAccess.UpdateAllowed,
+                        DeleteAllowed = dialogAccess.DeleteAllowed,
 
+                    };
+                    var resultNew = await ShowAddAccessControlDialog(dialogAccess);
+                    await HandleAddAccessControlDialogResultAsync(resultNew, dialogAccess);
+                }
             }
             else
             {
@@ -318,30 +332,22 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
-        private async Task HandleDeleteCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
+
+        private async Task HandleDeleteAccessControlDialogResultAsync(ContentDialogResult result, DialogAccessControl dialogAccess)
         {
             if (result == ContentDialogResult.Primary)
             {
-                Pass_Company pass_Company = new Pass_Company
+                Pass_Access_Control pass_Access_Control = new Pass_Access_Control
                 {
-                    CompanyID = dialogCompany.CompanyId,
-                    CompanyName = dialogCompany.CompanyName,
-                    CompanyType = dialogCompany.CompanyType,
-                    CompanyAddress = dialogCompany.CompanyAddress,
-                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "Inactive",
-                    CreatedBy = GlobalData.UserId
+                    AppFunction = dialogAccess.AppFunction,
+                    UserRole = dialogAccess.UserRole
                 };
-                // Access field data from dialogCompany
-                //string companyId = dialogCompany.CompanyId;
-                //string companyName = dialogCompany.CompanyName;
-                //
-                bool authResponse = new AuthPlatnedPass().DeleteCompany(pass_Company);
+                bool authResponse = new AuthPlatnedPass().DeleteAccessControl(pass_Access_Control);
                 if (authResponse)
                 {
                     if (App.MainWindow is MainWindow mainWindow)
                     {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
+                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Function: {pass_Access_Control.AppFunction} for Role: {dialogAccess.UserRole}", InfoBarSeverity.Success);
                     }
                 }
                 else
@@ -351,16 +357,19 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
                     }
 
-                    dialogCompany = new DialogCompany(true)
+                    dialogAccess = new DialogAccessControl()
                     {
-                        CompanyId = pass_Company.CompanyID,
-                        CompanyName = pass_Company.CompanyName,
-                        CompanyAddress = pass_Company.CompanyAddress,
-                        LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
-                        CompanyType = pass_Company.CompanyType,
+                        AppFunction = dialogAccess.AppFunction,
+                        AppFunctionDescription = dialogAccess.AppFunctionDescription,
+                        UserRole = dialogAccess.UserRole,
+                        ReadAllowed = dialogAccess.ReadAllowed,
+                        CreateAllowed = dialogAccess.CreateAllowed,
+                        UpdateAllowed = dialogAccess.UpdateAllowed,
+                        DeleteAllowed = dialogAccess.DeleteAllowed,
+
                     };
-                    var resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    await HandleDeleteCompanyDialogResultAsync(resultNew, dialogCompany);
+                    var resultNew = await ShowAddAccessControlDialog(dialogAccess);
+                    await HandleAddAccessControlDialogResultAsync(resultNew, dialogAccess);
                 }
 
             }
