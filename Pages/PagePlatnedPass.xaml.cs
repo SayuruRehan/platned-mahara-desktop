@@ -57,7 +57,11 @@ namespace PlatnedMahara.Pages
 
         private void AccessCheck()
         {
-            if (AccessControl.IsGranted("PGE_READ_USER ", "R"))
+            if(AccessControl.IsGranted("PGE_READ_COMPANY", "R"))
+            { pagePassCompany.Visibility = Visibility.Visible; }
+            else { pagePassCompany.Visibility = Visibility.Collapsed; }
+
+            if (AccessControl.IsGranted("PGE_READ_USER", "R"))
             { pagePassUserManagement.Visibility = Visibility.Visible; }
             else { pagePassUserManagement.Visibility = Visibility.Collapsed; }
 

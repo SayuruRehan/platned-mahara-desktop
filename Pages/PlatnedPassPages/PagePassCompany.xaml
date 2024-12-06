@@ -14,7 +14,7 @@
     </Page.Resources>
     
     <StackPanel Orientation="Vertical">
-        <Button Content="New Company" Click="btnNewCompany_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Margin="0,15,15,0" />
+        <Button x:Name="btnNewCompany" Content="New Company" Click="btnNewCompany_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Margin="0,15,15,0" />
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="15,15,15,15" x:Name="PagePassCompanyXamlRoot" >
             <ScrollView Height="Auto" Width="1700" ContentOrientation="None"
