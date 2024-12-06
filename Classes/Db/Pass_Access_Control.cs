@@ -9,6 +9,7 @@ namespace PlatnedMahara.Classes.Db
     public class Pass_Access_Control
     {
         public string AppFunction { get; set; }
+        public string AppFunctionDescription { get; set; }
         public string UserRole { get; set; }
         public bool ReadAllowed { get; set; }
         public bool CreateAllowed { get; set; }
