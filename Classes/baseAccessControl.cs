@@ -16,7 +16,7 @@ namespace PlatnedMahara.Classes
     {
         #region Mahara-85 - RBAC validations
 
-        private static string userRole = "User";
+        private static string userRole = GlobalData.UserRole;
 
         static AccessControl()
         {
@@ -66,7 +66,7 @@ namespace PlatnedMahara.Classes
 
                 if (pass_Access != null)
                 {
-                    return pass_Access.ReadAllowed;
+                    return Convert.ToBoolean(pass_Access.ReadAllowed);
                 }
             }
             return false;
@@ -91,7 +91,7 @@ namespace PlatnedMahara.Classes
 
                 if (pass_Access != null)
                 {
-                    return pass_Access.CreateAllowed;
+                    return Convert.ToBoolean(pass_Access.CreateAllowed);
                 }
             }
             return false;
@@ -116,7 +116,7 @@ namespace PlatnedMahara.Classes
 
                 if (pass_Access != null)
                 {
-                    return pass_Access.UpdateAllowed;
+                    return Convert.ToBoolean(pass_Access.UpdateAllowed);
                 }
             }
             return false;
@@ -141,7 +141,7 @@ namespace PlatnedMahara.Classes
 
                 if (pass_Access != null)
                 {
-                    return pass_Access.DeleteAllowed;
+                    return Convert.ToBoolean(pass_Access.DeleteAllowed);
                 }
             }
             return false;
