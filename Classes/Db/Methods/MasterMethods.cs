@@ -557,5 +557,62 @@ namespace PlatnedMahara.DataAccess.Methods
 
 
         #endregion
+
+        #region Mahara-85 - Pass Access Control Methods
+
+        public List<Pass_Access_Control> GetAccessRecords()
+        {
+            List<Pass_Access_Control> pass_Access_Control = new List<Pass_Access_Control>();
+            objExecute = new Execute();
+            DataTable dt = (DataTable)objExecute.Executes("spGetAccessData", ReturnType.DataTable, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
+            {
+                pass_Access_Control.Add(new Pass_Access_Control
+                {
+                    AppFunction = dr["APP_FUNCTION"].ToString(),
+                    UserRole = dr["USER_ROLE"].ToString(),
+                    ReadAllowed = Convert.ToBoolean(dr["READ_ALLOWED"].ToString()),
+                    UpdateAllowed = Convert.ToBoolean(dr["UPDATE_ALLOWED"].ToString()),
+                    DeleteAllowed = Convert.ToBoolean(dr["DELETE_ALLOWED"].ToString()),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
+                });
+            }
+            return pass_Access_Control;
+        }
+
+        public Pass_Access_Control GetAccessPerFunction(Pass_Access_Control objPass_Access_Control)
+        {
+            Pass_Access_Control pass_Access_Control = null;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@APP_FUNCTION",objPass_Access_Control.AppFunction),
+                Execute.AddParameter("@USER_ROLE",objPass_Access_Control.UserRole),
+            };
+            DataTable dt = (DataTable)objExecute.Executes("spGetAccessPerFunction", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                pass_Access_Control = new Pass_Access_Control
+                {
+                    AppFunction = dr["APP_FUNCTION"].ToString(),
+                    UserRole = dr["USER_ROLE"].ToString(),
+                    ReadAllowed = Convert.ToBoolean(dr["READ_ALLOWED"].ToString()),
+                    UpdateAllowed = Convert.ToBoolean(dr["UPDATE_ALLOWED"].ToString()),
+                    DeleteAllowed = Convert.ToBoolean(dr["DELETE_ALLOWED"].ToString()),
+                    CreatedBy = dr["CREATED_BY"] != DBNull.Value ? dr["CREATED_BY"].ToString() : "",
+                    CreatedDate = dr["CREATED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["CREATED_DATE"]) : null,
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
+                };
+            }
+            return pass_Access_Control;
+
+        }
+
+        #endregion
     }
 }
