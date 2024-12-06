@@ -61,6 +61,10 @@ namespace PlatnedMahara.Pages
             { pagePassCompany.Visibility = Visibility.Visible; }
             else { pagePassCompany.Visibility = Visibility.Collapsed; }
 
+            if (AccessControl.IsGranted("PGE_READ_COMPANY_CONTACT", "R"))
+            { pagePassCompanyContact.Visibility = Visibility.Visible; }
+            else { pagePassCompanyContact.Visibility = Visibility.Collapsed; }
+
             if (AccessControl.IsGranted("PGE_READ_USER", "R"))
             { pagePassUserManagement.Visibility = Visibility.Visible; }
             else { pagePassUserManagement.Visibility = Visibility.Collapsed; }

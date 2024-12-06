@@ -815,4 +815,16 @@ VALUES
     ('BTN_EDIT_COMPANY', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
 	('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
     ('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
-    ('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);
+    ('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);

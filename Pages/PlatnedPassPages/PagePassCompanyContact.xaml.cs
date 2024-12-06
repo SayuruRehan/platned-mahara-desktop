@@ -38,6 +38,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItemCompanyContact;
+
+            // Mahara-85
+            AccessCheck();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e)
@@ -291,6 +294,25 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
+
+        #region Mahara-85 - Access Check
+
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("BTN_NEW_COMPANY_CONTACT", "C"))
+            { btnNewCompanyContact.Visibility = Visibility.Visible; }
+            else { btnNewCompanyContact.Visibility = Visibility.Collapsed; }
+
+            foreach (var user in GridItemCompanyContact)
+            {
+                user.CanEdit = AccessControl.IsGranted("BTN_EDIT_COMPANY_CONTACT", "U");
+                user.CanDelete = AccessControl.IsGranted("BTN_DELETE_COMPANY_CONTACT", "D");
+            }
+            dataGrid.ItemsSource = null; // Refresh binding
+            dataGrid.ItemsSource = GridItemCompanyContact;
+        }
+
+        #endregion
 
     }
 
