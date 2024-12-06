@@ -503,6 +503,51 @@ namespace PlatnedMahara.Classes
             }
         }
 
+        public bool CreateNewAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
 
         #endregion
 
