@@ -42,6 +42,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItemsAccessRole;
+
+            // Mahara-85
+            AccessCheck();
         }
 
         private void LoadData()
@@ -334,7 +337,6 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
-
         private async Task HandleDeleteAccessControlDialogResultAsync(ContentDialogResult result, DialogAccessControl dialogAccess)
         {
             if (result == ContentDialogResult.Primary)
@@ -383,6 +385,26 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
+
+
+        #region Mahara-85 - Access Check
+
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("BTN_NEW_ACCESS_CONTROL", "C"))
+            { btnNewAccessRole.Visibility = Visibility.Visible; }
+            else { btnNewAccessRole.Visibility = Visibility.Collapsed; }
+
+            foreach (var user in GridItemAccessRole)
+            {
+                user.CanEdit = AccessControl.IsGranted("BTN_EDIT_ACCESS_CONTROL", "U");
+                user.CanDelete = AccessControl.IsGranted("BTN_DELETE_ACCESS_CONTROL ", "D");
+            }
+            dataGrid.ItemsSource = null; // Refresh binding
+            dataGrid.ItemsSource = GridItemsAccessRole;
+        }
+
+        #endregion
     }
 
     /// <summary>

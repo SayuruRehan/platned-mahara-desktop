@@ -827,4 +827,16 @@ VALUES
     ('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
 	('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
     ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
-    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);
+    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);
