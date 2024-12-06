@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel Orientation="Vertical">
-        <Button Content="New User" Click="btnNewUser_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Margin="0,15,15,0" />
+        <Button x:Name="btnNewUser" Content="New User" Click="btnNewUser_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right" Margin="0,15,15,0" />
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="15,15,15,15" x:Name="PagePassUserManagementXamlRoot" >
             <ScrollView Height="Auto" Width="1220" ContentOrientation="None"

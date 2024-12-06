@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using PlatnedMahara.Classes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,6 +28,9 @@ namespace PlatnedMahara.Pages
         public PagePlatnedPass()
         {
             this.InitializeComponent();
+
+            // Mahara-85
+            AccessCheck();
         }
 
         private void NavigationView_SelectionChanged8(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
@@ -48,5 +52,17 @@ namespace PlatnedMahara.Pages
                 contentFramePlatnedPass.Navigate(pageType);
            /* }*/
         }
+
+        #region Mahara-85 - Access Check
+
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("PGE_READ_USER ", "R"))
+            { pagePassUserManagement.Visibility = Visibility.Visible; }
+            else { pagePassUserManagement.Visibility = Visibility.Collapsed; }
+
+        }
+
+        #endregion
     }
 }

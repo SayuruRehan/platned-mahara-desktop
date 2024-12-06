@@ -38,6 +38,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             LoadData();
             dataGrid.ItemsSource = GridItemsUser;
 
+            // Mahara-85
+            AccessCheck();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e)
@@ -327,7 +329,24 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         #endregion
 
+        #region Mahara-85 - Access Check
 
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("BTN_NEW_USE", "C")) 
+            { btnNewUser.Visibility = Visibility.Visible; } 
+            else { btnNewUser.Visibility = Visibility.Collapsed; }
+
+            if (AccessControl.IsGranted("BTN_EDIT_USER", "U"))
+            { btnNewUser.Visibility = Visibility.Visible; }
+            else { btnNewUser.Visibility = Visibility.Collapsed; }
+
+            if (AccessControl.IsGranted("BTN_EDIT_USER", "D"))
+            { btnNewUser.Visibility = Visibility.Visible; }
+            else { btnNewUser.Visibility = Visibility.Collapsed; }
+        }
+
+        #endregion
     }
 
     /// <summary>
