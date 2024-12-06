@@ -778,3 +778,29 @@ INSERT INTO [dbo].[PASS_COMPANY_CONTACT_TAB]
            ,'+94112183634'
            ,'mahara@platned.com')
 GO
+
+INSERT INTO [dbo].[PASS_USER_ROLE_ACCESS_TAB]
+           ([APP_FUNCTION],
+            [APP_FUNCTION_DESC],
+            [USER_ROLE],
+            [READ_ALLOWED],
+            [CREATE_ALLOWED],
+            [UPDATE_ALLOWED],
+            [DELETE_ALLOWED],
+            [CREATED_BY],
+            [CREATED_DATE],
+            [MODIFIED_BY],
+            [MODIFIED_DATE])
+VALUES
+    ('BTN_NEW_USER', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_USER', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_USER', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_USER ', 'READ USER Details page functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_USER ', 'READ USER Details page functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_USER ', 'READ USER Details page functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_USER', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_USER', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_USER', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_USER', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_USER', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_USER', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);
