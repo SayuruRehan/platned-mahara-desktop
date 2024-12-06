@@ -30,6 +30,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     public sealed partial class PagePassCompanyContact : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemCompanyContact> GridItemCompanyContact { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
+
         public PagePassCompanyContact()
         {
             this.InitializeComponent();
@@ -306,6 +309,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
     public class GridItemCompanyContact
     {
+        public bool CanDelete { get; internal set; }
+        public bool CanEdit { get; internal set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyContactTitle { get; set; }

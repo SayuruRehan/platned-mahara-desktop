@@ -32,6 +32,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     public sealed partial class PagePassCompany : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemCompany> GridItemsCompany { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
 
         public PagePassCompany()
         {
@@ -396,6 +398,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
     public class GridItemCompany
     {
+        public bool CanDelete { get; internal set; }
+        public bool CanEdit { get; internal set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyName { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyAddress { get; set; }

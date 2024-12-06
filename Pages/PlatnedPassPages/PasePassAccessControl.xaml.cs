@@ -34,6 +34,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     public sealed partial class PagePassAccessControl : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemAccessRole> GridItemsAccessRole { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
 
         public PagePassAccessControl()
         {
@@ -401,6 +403,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
     public class GridItemAccessRole
     {
+        public bool CanDelete { get; internal set; }
+        public bool CanEdit { get; internal set; }
         public ObservableCollection<TreeNode> TreeNodesAppFunction { get; set; }
         public ObservableCollection<TreeNode> TreeNodesAppFuncDescription { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserRole { get; set; }
