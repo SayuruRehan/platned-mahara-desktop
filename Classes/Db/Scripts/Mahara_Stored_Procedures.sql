@@ -299,3 +299,25 @@ BEGIN
     ORDER BY USER_ID;
 END;
 GO
+
+-------------------------- Role Access --------------------------
+-----------------------------------------------------------------
+
+CREATE OR ALTER PROCEDURE spGetAccessData
+AS
+BEGIN
+    SELECT * FROM PASS_USER_ROLE_ACCESS_TAB
+    ORDER BY APP_FUNCTION, USER_ROLE;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE spGetAccessPerFunction
+    @APP_FUNCTION VARCHAR(200),
+    @USER_ROLE VARCHAR(20)
+AS
+BEGIN
+    SELECT * FROM PASS_USER_ROLE_ACCESS_TAB
+    WHERE APP_FUNCTION = @APP_FUNCTION
+    AND USER_ROLE = @USER_ROLE;
+END;
+GO
