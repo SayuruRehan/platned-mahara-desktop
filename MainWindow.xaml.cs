@@ -807,7 +807,7 @@ namespace PlatnedMahara
 
         #endregion
 
-        #region  MAHARA-84 Handle window closed event
+        #region  Mahara-84 Handle window closed event
         private async void MainWindow_Closed(object sender, Microsoft.UI.Xaml.WindowEventArgs e)
         {
             Application.Current.Exit();
