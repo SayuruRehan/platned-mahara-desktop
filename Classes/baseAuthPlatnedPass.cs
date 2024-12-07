@@ -234,7 +234,7 @@ namespace PlatnedMahara.Classes
                 return pass_Companies;
             }
         }
-        public Pass_Company GetPass_Companies(Pass_Company p)
+        public Pass_Company GetPass_Company(Pass_Company p)
         {
             Pass_Company pass_Company = null;
             try
@@ -415,6 +415,24 @@ namespace PlatnedMahara.Classes
                 Logger.Log($"Error: {e.Message}");
                 validLogin = false;
                 return pass_Company_Contacts;
+            }
+        }
+
+        public Pass_Company_Contact GetPass_Company_Contact(Pass_Company_Contact p)
+        {
+            Pass_Company_Contact pass_Company_Contact = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Company_Contact = new Pass_Company_Contact();
+                pass_Company_Contact = masterMethods.GetPassCompanyContact(p);
+                return pass_Company_Contact;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Company_Contact;
             }
         }
 

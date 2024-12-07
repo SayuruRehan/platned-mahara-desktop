@@ -106,6 +106,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         {
                             result = await ShowAddAccessControlDialog(dailogAccessControl);
                             await HandleEditAccessControlDialogResultAsync(result, dailogAccessControl);
+                            LoadData();
+                            dataGrid.ItemsSource = null; // Clear the existing binding
+                            dataGrid.ItemsSource = GridItemsAccessRole;
+                            // Mahara-85
+                            AccessCheck();
                         };
                     }
                     else
@@ -115,6 +120,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsAccessRole;
+                        // Mahara-85
+                        AccessCheck();
                     }
                 }
             }

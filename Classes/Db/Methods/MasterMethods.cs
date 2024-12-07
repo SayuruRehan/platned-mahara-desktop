@@ -162,7 +162,7 @@ namespace PlatnedMahara.DataAccess.Methods
             {
         Execute.AddParameter("@COMPANY_ID",objPass_Company_Contact.CompanyID),
             };
-            DataRow dr = (DataRow)objExecute.Executes("spGetPassCompanyContact", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            DataRow dr = (DataRow)objExecute.Executes("spGetPassCompanyContact", ReturnType.DataRow, param, CommandType.StoredProcedure);
             if (dr != null)
             {
                 pass_Company_Contact = new Pass_Company_Contact
@@ -370,7 +370,6 @@ namespace PlatnedMahara.DataAccess.Methods
             return pass_Users_Companies;
         }
 
-        [Obsolete]
         public List<Pass_Users_Company> GetUsersperCompany(Pass_Users_Company objPass_Users_Company)
         {
             List<Pass_Users_Company> pass_Users_Companies = new List<Pass_Users_Company>();
@@ -410,12 +409,12 @@ namespace PlatnedMahara.DataAccess.Methods
             objExecute = new Execute();
             param = new SqlParameter[]
             {
-        Execute.AddParameter("@COMPANY_ID", objPass_Users_Company.CompanyID),
-        Execute.AddParameter("@USER_ID", objPass_Users_Company.UserID),
+                Execute.AddParameter("@COMPANY_ID", objPass_Users_Company.CompanyID),
+                Execute.AddParameter("@USER_ID", objPass_Users_Company.UserID),
             };
 
             // Execute the stored procedure and get a DataTable
-            DataTable dt = objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure) as DataTable;
+            DataTable dt = (DataTable) objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
 
             // Ensure the DataTable is not null and contains rows
             if (dt != null && dt.Rows.Count > 0)

@@ -29,6 +29,11 @@ namespace PlatnedMahara.Classes
         public static readonly string ClientIdPl = "PlatnedPass_Service";
         public static readonly string ClientSecretPl = "XSgJKPsBNb0C3Rhv4d0nF84ag4rBZcwC";
         public static readonly string ScopePl = "openid microprofile-jwt";
+        // Mahara-86 - START
+        public static readonly string[] AccessRoleArraySuper = {"Super Admin"};
+        public static readonly string[] AccessRoleArrayUserAdmin = {"User Admin"};
+        public static readonly string[] AccessRoleArrayUser = {"User"};
+        // Mahara-86 - END
 
         // Do not change unless instance changes -- END
 

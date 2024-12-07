@@ -48,7 +48,23 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         private void LoadData()
         {
             List<Pass_Company> pass_Companies = new List<Pass_Company>();
-            pass_Companies = new AuthPlatnedPass().GetPass_Companies();
+            // Mahara-86 - START
+            if (Array.Exists(GlobalData.AccessRoleArraySuper, superRole => superRole == GlobalData.UserRole.Trim()))
+            {
+                pass_Companies = new AuthPlatnedPass().GetPass_Companies();
+            }
+            else if ((Array.Exists(GlobalData.AccessRoleArrayUserAdmin, superRole => superRole == GlobalData.UserRole.Trim())) ||
+                    (Array.Exists(GlobalData.AccessRoleArrayUser, superRole => superRole == GlobalData.UserRole.Trim())))
+            {
+                Pass_Company companyDet = new Pass_Company
+                {
+                    CompanyID = GlobalData.CompanyId
+                };
+                var singleResult = new AuthPlatnedPass().GetPass_Company(companyDet);
+                pass_Companies = new List<Pass_Company> { singleResult };
+            }
+            // Mahara-86 - END
+            
             GridItemsCompany = new ObservableCollection<GridItemCompany>();
 
             if (pass_Companies != null && pass_Companies.Count > 0)
@@ -101,6 +117,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         {
                             result = await ShowAddCompanyDialog(dailogcompany);
                             await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                            LoadData();
+                            dataGrid.ItemsSource = null; // Clear the existing binding
+                            dataGrid.ItemsSource = GridItemsCompany;
+                            // Mahara-85
+                            AccessCheck();
                         };
                     }
                     else
@@ -110,6 +131,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsCompany;
+                        // Mahara-85
+                        AccessCheck();
                     }
                 }
                 
@@ -140,6 +163,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         {
                             result = await ShowAddCompanyDialog(dailogcompany);
                             await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                            LoadData();
+                            dataGrid.ItemsSource = null; // Clear the existing binding
+                            dataGrid.ItemsSource = GridItemsCompany;
+                            // Mahara-85
+                            AccessCheck();
                         };
                     }
                     else
@@ -149,6 +177,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsCompany;
+                        // Mahara-85
+                        AccessCheck();
                     }
                 }
             }
@@ -166,6 +196,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 {
                     result = await ShowAddCompanyDialog(dialogCompany);
                     await HandleAddCompanyDialogResultAsync(result, dialogCompany);
+                    LoadData();
+                    dataGrid.ItemsSource = null; // Clear the existing binding
+                    dataGrid.ItemsSource = GridItemsCompany;
+                    // Mahara-85
+                    AccessCheck();
                 };
             }
             else
@@ -175,6 +210,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemsCompany;
+                // Mahara-85
+                AccessCheck();
             }
         }
 
