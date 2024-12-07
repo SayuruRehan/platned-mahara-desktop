@@ -25,7 +25,7 @@ namespace PlatnedMahara.Classes
 
         public static bool IsGranted(string accessFunction, string action)
         {
-            if(userRole.Trim() == "Super Admin")
+            if(GlobalData.UserRole.Trim() == "Super Admin")
             {
                 return true;
             }
