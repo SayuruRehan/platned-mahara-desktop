@@ -370,7 +370,6 @@ namespace PlatnedMahara.DataAccess.Methods
             return pass_Users_Companies;
         }
 
-        [Obsolete]
         public List<Pass_Users_Company> GetUsersperCompany(Pass_Users_Company objPass_Users_Company)
         {
             List<Pass_Users_Company> pass_Users_Companies = new List<Pass_Users_Company>();
@@ -410,8 +409,8 @@ namespace PlatnedMahara.DataAccess.Methods
             objExecute = new Execute();
             param = new SqlParameter[]
             {
-        Execute.AddParameter("@COMPANY_ID", objPass_Users_Company.CompanyID),
-        Execute.AddParameter("@USER_ID", objPass_Users_Company.UserID),
+                Execute.AddParameter("@COMPANY_ID", objPass_Users_Company.CompanyID),
+                Execute.AddParameter("@USER_ID", objPass_Users_Company.UserID),
             };
 
             // Execute the stored procedure and get a DataTable
