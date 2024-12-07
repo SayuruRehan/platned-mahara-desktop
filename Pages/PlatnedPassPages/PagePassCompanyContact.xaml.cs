@@ -316,17 +316,23 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         #region Mahara-85 - Access Check
 
-        private void AccessCheck()
+        private async Task AccessCheck()
         {
             if (AccessControl.IsGranted("BTN_NEW_COMPANY_CONTACT", "C"))
             { btnNewCompanyContact.Visibility = Visibility.Visible; }
             else { btnNewCompanyContact.Visibility = Visibility.Collapsed; }
 
-            foreach (var user in GridItemCompanyContact)
+            // Mahara-88 - Making Access check for Edit, Delete via BG thread - START
+            await Task.Run(() =>
             {
-                user.CanEdit = AccessControl.IsGranted("BTN_EDIT_COMPANY_CONTACT", "U");
-                user.CanDelete = AccessControl.IsGranted("BTN_DELETE_COMPANY_CONTACT", "D");
-            }
+                foreach (var user in GridItemCompanyContact)
+                {
+                    user.CanEdit = AccessControl.IsGranted("BTN_EDIT_COMPANY_CONTACT", "U");
+                    user.CanDelete = AccessControl.IsGranted("BTN_DELETE_COMPANY_CONTACT", "D");
+                }
+            });
+            // Mahara-88 - END
+
             dataGrid.ItemsSource = null; // Refresh binding
             dataGrid.ItemsSource = GridItemCompanyContact;
         }

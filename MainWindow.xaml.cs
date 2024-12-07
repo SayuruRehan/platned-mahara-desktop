@@ -410,7 +410,7 @@ namespace PlatnedMahara
                                 GlobalData.UserId = pu.UserID;
                                 GlobalData.CompanyId = pu.CompanyID;
                                 GlobalData.IsLoggedIn = true;
-                                GlobalData.UserRole = pu.UserRole;
+                                GlobalData.UserRole = pu.UserRole.Trim();
                                 GlobalData.UserEmail = pu.UserEmail;
                                 GlobalData.LicenseKey = pu.LicenseKey;
                                 GlobalData.UserStatus = pu.RowState;
