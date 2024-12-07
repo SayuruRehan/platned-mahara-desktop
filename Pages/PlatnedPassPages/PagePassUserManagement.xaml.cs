@@ -97,6 +97,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         // Refresh DataGrid
                         dataGrid.ItemsSource = null;
                         dataGrid.ItemsSource = GridItemsUser;
+                        // Mahara-85
+                        AccessCheck();
 
                         // Show success message
                         if (App.MainWindow is MainWindow mainWindow)

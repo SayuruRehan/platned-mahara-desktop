@@ -117,6 +117,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         {
                             result = await ShowAddCompanyDialog(dailogcompany);
                             await HandleEditCompanyDialogResultAsync(result, dailogcompany);
+                            LoadData();
+                            dataGrid.ItemsSource = null; // Clear the existing binding
+                            dataGrid.ItemsSource = GridItemsCompany;
+                            // Mahara-85
+                            AccessCheck();
                         };
                     }
                     else
@@ -126,6 +131,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsCompany;
+                        // Mahara-85
+                        AccessCheck();
                     }
                 }
                 
@@ -156,6 +163,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         {
                             result = await ShowAddCompanyDialog(dailogcompany);
                             await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
+                            LoadData();
+                            dataGrid.ItemsSource = null; // Clear the existing binding
+                            dataGrid.ItemsSource = GridItemsCompany;
+                            // Mahara-85
+                            AccessCheck();
                         };
                     }
                     else
@@ -165,6 +177,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null; // Clear the existing binding
                         dataGrid.ItemsSource = GridItemsCompany;
+                        // Mahara-85
+                        AccessCheck();
                     }
                 }
             }
@@ -182,6 +196,11 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 {
                     result = await ShowAddCompanyDialog(dialogCompany);
                     await HandleAddCompanyDialogResultAsync(result, dialogCompany);
+                    LoadData();
+                    dataGrid.ItemsSource = null; // Clear the existing binding
+                    dataGrid.ItemsSource = GridItemsCompany;
+                    // Mahara-85
+                    AccessCheck();
                 };
             }
             else
@@ -191,6 +210,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemsCompany;
+                // Mahara-85
+                AccessCheck();
             }
         }
 

@@ -83,6 +83,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         LoadData();
                         dataGrid.ItemsSource = null;
                         dataGrid.ItemsSource = GridItemCompanyContact;
+                        // Mahara-85
+                        AccessCheck();
 
                         // Show success message
                         if (App.MainWindow is MainWindow mainWindow)
