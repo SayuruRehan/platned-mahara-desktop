@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Irony.Parsing;
 using Microsoft.UI.Xaml.Controls;
+using PlatnedMahara.Classes.Db;
 using PlatnedMahara.DataAccess.Methods;
 using PlatnedMahara.Pages;
 using System;
@@ -459,6 +460,92 @@ namespace PlatnedMahara.Classes
             {
                 Logger.Log($"Error: {ex.Message}");
                 return false;
+            }
+        }
+
+        #endregion
+
+        #region Mahara-85 - Access Control Functions
+
+        public List<Pass_Access_Control> GetAccess_Records()
+        {
+            List<Pass_Access_Control> pass_Access_Records = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Access_Records = new List<Pass_Access_Control>();
+                pass_Access_Records = masterMethods.GetAccessRecords();
+                return pass_Access_Records;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Access_Records;
+            }
+        }
+
+        public Pass_Access_Control GetAccess_Per_Function(Pass_Access_Control p)
+        {
+            Pass_Access_Control pass_Access = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Access = new Pass_Access_Control();
+                pass_Access = masterMethods.GetAccessPerFunction(p);
+                return pass_Access;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Access;
+            }
+        }
+
+        public bool CreateNewAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteAccessControl(Pass_Access_Control pass_Access_Control)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassAccessControl(pass_Access_Control);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
             }
         }
 

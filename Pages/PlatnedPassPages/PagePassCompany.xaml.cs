@@ -32,12 +32,17 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     public sealed partial class PagePassCompany : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemCompany> GridItemsCompany { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
 
         public PagePassCompany()
         {
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItemsCompany;
+
+            // Mahara-85
+            AccessCheck();
         }
 
         private void LoadData()
@@ -376,6 +381,24 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
+        #region Mahara-85 - Access Check
+
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("BTN_NEW_COMPANY", "C"))
+            { btnNewCompany.Visibility = Visibility.Visible; }
+            else { btnNewCompany.Visibility = Visibility.Collapsed; }
+
+            foreach (var user in GridItemsCompany)
+            {
+                user.CanEdit = AccessControl.IsGranted("BTN_EDIT_COMPANY", "U");
+                user.CanDelete = AccessControl.IsGranted("BTN_DELETE_COMPANY ", "D");
+            }
+            dataGrid.ItemsSource = null; // Refresh binding
+            dataGrid.ItemsSource = GridItemsCompany;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -396,6 +419,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
     public class GridItemCompany
     {
+        public bool CanDelete { get; internal set; }
+        public bool CanEdit { get; internal set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyName { get; set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyAddress { get; set; }

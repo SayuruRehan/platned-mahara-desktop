@@ -201,7 +201,47 @@ ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[PASS_USERS_PER_COMPANY_TAB] CHECK CONSTRAINT [FK_PASS_USERS_PER_COMPANY_TAB_PASS_COMPANY_TAB]
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  Table [dbo].[PASS_USER_ROLE_ACCESS_TAB]    Script Date: 12/6/2024 5:12:02 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PASS_USER_ROLE_ACCESS_TAB](
+	[APP_FUNCTION] [varchar](100) NOT NULL,
+	[APP_FUNCTION_DESC] [varchar](2000) NOT NULL,
+	[USER_ROLE] [nchar](20) NOT NULL,
+    [CREATE_ALLOWED] [varchar](5) NOT NULL,
+	[READ_ALLOWED] [varchar](5) NOT NULL,    
+	[UPDATE_ALLOWED] [varchar](5) NOT NULL,
+	[DELETE_ALLOWED] [varchar](5) NOT NULL,
+	[CREATED_BY] [varchar](50) NULL,
+	[CREATED_DATE] [datetime] NULL,
+	[MODIFIED_BY] [varchar](50) NULL,
+	[MODIFIED_DATE] [datetime] NULL,
+ CONSTRAINT [PK_PASS_USER_ROLE_ACCESS_TAB_1] PRIMARY KEY CLUSTERED 
+(
+	[APP_FUNCTION] ASC,
+	[USER_ROLE] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  StoredProcedure [dbo].[spDeletePassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spDeletePassAccessControl]
+    @APP_FUNCTION VARCHAR(100),
+    @USER_ROLE VARCHAR(20)
+AS
+BEGIN
+    DELETE FROM dbo.PASS_USER_ROLE_ACCESS_TAB 
+    WHERE APP_FUNCTION = @APP_FUNCTION
+    AND USER_ROLE = @USER_ROLE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spDeletePassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -214,7 +254,7 @@ BEGIN
     DELETE FROM dbo.PASS_COMPANY_TAB WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassCompanyContact]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeletePassCompanyContact]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -228,7 +268,7 @@ BEGIN
     DELETE FROM PASS_COMPANY_CONTACT_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassUserAppLogs]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeletePassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -242,7 +282,7 @@ BEGIN
     DELETE FROM PASS_USER_APP_LOG_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeleteUsersPerCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeleteUsersPerCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -256,7 +296,31 @@ BEGIN
     DELETE FROM PASS_USERS_PER_COMPANY_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spEditPassAccessControl]
+    @APP_FUNCTION VARCHAR(100),
+    @APP_FUNCTION_DESC VARCHAR(2000),
+    @USER_ROLE VARCHAR(20),
+    @READ_ALLOWED VARCHAR(5),
+    @CREATE_ALLOWED VARCHAR(5),
+    @UPDATE_ALLOWED VARCHAR(5),
+    @DELETE_ALLOWED VARCHAR(5),
+    @MODIFIED_BY VARCHAR(20)
+AS
+BEGIN
+    UPDATE dbo.PASS_USER_ROLE_ACCESS_TAB
+    SET APP_FUNCTION = @APP_FUNCTION, APP_FUNCTION_DESC = @APP_FUNCTION_DESC, USER_ROLE = @USER_ROLE, READ_ALLOWED = @READ_ALLOWED, 
+        CREATE_ALLOWED = @CREATE_ALLOWED, UPDATE_ALLOWED = @UPDATE_ALLOWED, DELETE_ALLOWED = @DELETE_ALLOWED, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE APP_FUNCTION = @APP_FUNCTION
+    AND USER_ROLE = @USER_ROLE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spEditPassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -279,7 +343,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassCompanyContact]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassCompanyContact]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -299,7 +363,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassUserAppLogs]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -321,7 +385,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditUserPassword]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditUserPassword]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -339,7 +403,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID AND USER_EMAIL= @USER_EMAIL;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditUsersPerCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditUsersPerCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -362,7 +426,36 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetCompanyPassUserAppLogs]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetAccessData]    Script Date: 12/6/2024 7:16:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spGetAccessData]
+AS
+BEGIN
+    SELECT * FROM PASS_USER_ROLE_ACCESS_TAB
+    ORDER BY APP_FUNCTION, USER_ROLE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetAccessPerFunction]    Script Date: 12/6/2024 7:16:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spGetAccessPerFunction]
+    @APP_FUNCTION VARCHAR(200),
+    @USER_ROLE VARCHAR(20)
+AS
+BEGIN
+    SELECT * FROM PASS_USER_ROLE_ACCESS_TAB
+    WHERE APP_FUNCTION = @APP_FUNCTION
+    AND USER_ROLE = @USER_ROLE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetCompanyPassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -503,7 +596,29 @@ BEGIN
     ORDER BY USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSavePassCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSavePassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [dbo].[spSavePassAccessControl]
+    @APP_FUNCTION VARCHAR(100),
+    @APP_FUNCTION_DESC VARCHAR(2000),
+    @USER_ROLE VARCHAR(20),
+    @READ_ALLOWED VARCHAR(5),
+    @CREATE_ALLOWED VARCHAR(5),
+    @UPDATE_ALLOWED VARCHAR(5),
+    @DELETE_ALLOWED VARCHAR(5),
+    @CREATED_BY VARCHAR(50)
+AS
+BEGIN
+    INSERT INTO dbo.PASS_USER_ROLE_ACCESS_TAB(APP_FUNCTION, APP_FUNCTION_DESC, USER_ROLE, READ_ALLOWED, CREATE_ALLOWED, UPDATE_ALLOWED, DELETE_ALLOWED, CREATED_BY, CREATED_DATE)
+    VALUES(@APP_FUNCTION, @APP_FUNCTION_DESC, @USER_ROLE, @READ_ALLOWED, @CREATE_ALLOWED, @UPDATE_ALLOWED, @DELETE_ALLOWED, @CREATED_BY, GETDATE());
+
+    SELECT SCOPE_IDENTITY() AS ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spSavePassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -588,15 +703,6 @@ BEGIN
     VALUES(@COMPANY_ID, @USER_ID, @USER_NAME, @PASSWORD, @USER_EMAIL, @LICENSE_KEY, @VALID_FROM, @VALID_TO, @CREATED_BY, GETDATE(), @USER_ROLE, @ROWSTATE);
 END;
 GO
-USE [master]
-GO
-ALTER DATABASE [platnedpass] SET  READ_WRITE 
-GO
-
-USE [master]
-GO
-GRANT EXECUTE TO platnedpassuser;
-GO
 
 ------------------------------------ DEFAULT VALUES - BASIC DATA ------------------------------------
 USE [master]
@@ -672,3 +778,65 @@ INSERT INTO [dbo].[PASS_COMPANY_CONTACT_TAB]
            ,'+94112183634'
            ,'mahara@platned.com')
 GO
+
+INSERT INTO [dbo].[PASS_USER_ROLE_ACCESS_TAB]
+           ([APP_FUNCTION],
+            [APP_FUNCTION_DESC],
+            [USER_ROLE],
+            [READ_ALLOWED],
+            [CREATE_ALLOWED],
+            [UPDATE_ALLOWED],
+            [DELETE_ALLOWED],
+            [CREATED_BY],
+            [CREATED_DATE],
+            [MODIFIED_BY],
+            [MODIFIED_DATE])
+VALUES
+    ('BTN_NEW_USER', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_USER', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_USER', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_USER', 'READ USER Details page functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_USER', 'READ USER Details page functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_USER', 'READ USER Details page functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_USER', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_USER', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_USER', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_USER', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_USER', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_USER', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_COMPANY', 'READ USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY', 'READ USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY', 'READ USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_COMPANY', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_COMPANY_CONTACT', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_COMPANY_CONTACT', 'READ USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_COMPANY_CONTACT', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_COMPANY_CONTACT', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_NEW_ACCESS_CONTROL', 'NEW USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('PGE_READ_ACCESS_CONTROL', 'READ USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_EDIT_ACCESS_CONTROL', 'EDIT USER Details functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+	('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'Super Admin', 'True', 'True', 'True', 'True', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'User Admin', 'True', 'True', 'True', 'False', 'PLATNEDPASS', GETDATE(), null, null),
+    ('BTN_DELETE_ACCESS_CONTROL', 'DELETE USER functionality', 'User', 'False', 'True', 'False', 'False', 'PLATNEDPASS', GETDATE(), null, null);

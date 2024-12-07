@@ -31,6 +31,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     public sealed partial class PagePassUserManagement : Microsoft.UI.Xaml.Controls.Page
     {
         public ObservableCollection<GridItemUser> GridItemsUser { get; set; }
+        public bool CanEdit { get; set; }
+        public bool CanDelete { get; set; }
 
         public PagePassUserManagement()
         {
@@ -38,6 +40,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             LoadData();
             dataGrid.ItemsSource = GridItemsUser;
 
+            // Mahara-85
+            AccessCheck();
         }
 
         private async void EditButton_Click(object sender, RoutedEventArgs e)
@@ -327,7 +331,24 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         #endregion
 
+        #region Mahara-85 - Access Check
 
+        private void AccessCheck()
+        {
+            if (AccessControl.IsGranted("BTN_NEW_USER", "C")) 
+            { btnNewUser.Visibility = Visibility.Visible; } 
+            else { btnNewUser.Visibility = Visibility.Collapsed; }
+
+            foreach (var user in GridItemsUser)
+            {
+                user.CanEdit = AccessControl.IsGranted("BTN_EDIT_USER", "U");
+                user.CanDelete = AccessControl.IsGranted("BTN_DELETE_USER ", "D");
+            }
+            dataGrid.ItemsSource = null; // Refresh binding
+            dataGrid.ItemsSource = GridItemsUser;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -347,6 +368,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
     }    
     public class GridItemUser
     {
+        public bool CanDelete { get; internal set; }
+        public bool CanEdit { get; internal set; }
         public ObservableCollection<TreeNode> TreeNodesCompanyId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserId { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserName { get; set; }
@@ -360,6 +383,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         public ObservableCollection<TreeNode> TreeNodesModifiedDate { get; set; }
         public ObservableCollection<TreeNode> TreeNodesModifiedBy { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserRole { get; set; }
+        
 
         public GridItemUser(string companyId, string userId, string userName, string userEmail, string licenseKey, string validFrom, string validTo, string rowState, string createdDate, string createdBy, string modifiedDate, string modifiedBy, string userRole)
         {

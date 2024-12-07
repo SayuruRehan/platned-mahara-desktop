@@ -38,11 +38,12 @@
             <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="PagePassHome"/>
             <NavigationViewItem Content="Company" Icon="Calculator" ToolTipService.ToolTip="Company" SelectsOnInvoked="False">
                 <NavigationViewItem.MenuItems>
-                    <NavigationViewItem Content="Company Details" Icon="AllApps" ToolTipService.ToolTip="Company Details" Tag="PagePassCompany"/>
-                    <NavigationViewItem Content="Contact Details" Icon="ContactInfo" ToolTipService.ToolTip="Contact Details" Tag="PagePassCompanyContact"/>
+                    <NavigationViewItem x:Name="pagePassCompany" Content="Company Details" Icon="AllApps" ToolTipService.ToolTip="Company Details" Tag="PagePassCompany"/>
+                    <NavigationViewItem x:Name="pagePassCompanyContact" Content="Contact Details" Icon="ContactInfo" ToolTipService.ToolTip="Contact Details" Tag="PagePassCompanyContact"/>
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
-            <NavigationViewItem Content="User Management" Icon="People" ToolTipService.ToolTip="User Management" Tag="PagePassUserManagement"/>
+            <NavigationViewItem x:Name="pagePassUserManagement" Content="User Management" Icon="People" ToolTipService.ToolTip="User Management" Tag="PagePassUserManagement"/>
+            <NavigationViewItem x:Name="pagePassAccessControl" Content="Access Control" Icon="Permissions" ToolTipService.ToolTip="Access Control" Tag="PagePassAccessControl"/>
         </NavigationView.MenuItems>
         <Frame x:Name="contentFramePlatnedPass" />
     </NavigationView>

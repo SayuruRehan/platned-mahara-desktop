@@ -126,6 +126,7 @@
     <None Remove="Assets\Square44x44Logo.targetsize-48_altform-unplated.png" />
     <None Remove="Pages\PageLogin.xaml" />
     <None Remove="Pages\PagePlatnedPass.xaml" />
+    <None Remove="Pages\PlatnedPassPages\DialogPages\DialogAccessControl.xaml" />
     <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompany.xaml" />
     <None Remove="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml" />
     <None Remove="Pages\PlatnedPassPages\DialogPages\DialogUser.xaml" />
@@ -135,6 +136,7 @@
     <None Remove="Pages\PlatnedPassPages\PagePassUserManagement.xaml" />
     <None Remove="Pages\PageResetPassword.xaml" />
     <None Remove="Pages\PageSetNewPassword.xaml" />
+    <None Remove="Pages\PlatnedPassPages\PagePassAccessControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -523,6 +525,12 @@
     <None Update="Assets\Logos\Square44x44Logo.altform-unplated_targetsize-48.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogAccessControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\PagePassAccessControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCompanyContact.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

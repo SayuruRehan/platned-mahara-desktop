@@ -557,5 +557,122 @@ namespace PlatnedMahara.DataAccess.Methods
 
 
         #endregion
+
+        #region Mahara-85 - Pass Access Control Methods
+
+        public List<Pass_Access_Control> GetAccessRecords()
+        {
+            List<Pass_Access_Control> pass_Access_Control = new List<Pass_Access_Control>();
+            objExecute = new Execute();
+            DataTable dt = (DataTable)objExecute.Executes("spGetAccessData", ReturnType.DataTable, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
+            {
+                pass_Access_Control.Add(new Pass_Access_Control
+                {
+                    AppFunction = dr["APP_FUNCTION"].ToString(),
+                    AppFunctionDescription = dr["APP_FUNCTION_DESC"].ToString(),
+                    UserRole = dr["USER_ROLE"].ToString(),
+                    ReadAllowed = dr["READ_ALLOWED"].ToString(),
+                    CreateAllowed = dr["CREATE_ALLOWED"].ToString(),
+                    UpdateAllowed = dr["UPDATE_ALLOWED"].ToString(),
+                    DeleteAllowed = dr["DELETE_ALLOWED"].ToString(),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
+                });
+            }
+            return pass_Access_Control;
+        }
+
+        public Pass_Access_Control GetAccessPerFunction(Pass_Access_Control objPass_Access_Control)
+        {
+            Pass_Access_Control pass_Access_Control = null;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@APP_FUNCTION",objPass_Access_Control.AppFunction),
+                Execute.AddParameter("@USER_ROLE",objPass_Access_Control.UserRole),
+            };
+            DataTable dt = (DataTable)objExecute.Executes("spGetAccessPerFunction", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                pass_Access_Control = new Pass_Access_Control
+                {
+                    AppFunction = dr["APP_FUNCTION"].ToString(),
+                    AppFunctionDescription = dr["APP_FUNCTION_DESC"].ToString(),
+                    UserRole = dr["USER_ROLE"].ToString(),
+                    ReadAllowed = dr["READ_ALLOWED"].ToString(),
+                    CreateAllowed = dr["CREATE_ALLOWED"].ToString(),
+                    UpdateAllowed = dr["UPDATE_ALLOWED"].ToString(),
+                    DeleteAllowed = dr["DELETE_ALLOWED"].ToString(),
+                    CreatedBy = dr["CREATED_BY"] != DBNull.Value ? dr["CREATED_BY"].ToString() : "",
+                    CreatedDate = dr["CREATED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["CREATED_DATE"]) : null,
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
+                };
+            }
+            return pass_Access_Control;
+
+        }
+
+        public bool SavePassAccessControl(Pass_Access_Control objPass_Access_Control)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@APP_FUNCTION",objPass_Access_Control.AppFunction),
+                Execute.AddParameter("@APP_FUNCTION_DESC",objPass_Access_Control.AppFunctionDescription),
+                Execute.AddParameter("@USER_ROLE",objPass_Access_Control.UserRole),
+                Execute.AddParameter("@READ_ALLOWED",objPass_Access_Control.ReadAllowed),
+                Execute.AddParameter("@CREATE_ALLOWED",objPass_Access_Control.CreateAllowed),
+                Execute.AddParameter("@UPDATE_ALLOWED",objPass_Access_Control.UpdateAllowed),
+                Execute.AddParameter("@DELETE_ALLOWED",objPass_Access_Control.DeleteAllowed),
+                Execute.AddParameter("@CREATED_BY",objPass_Access_Control.CreatedBy),
+            };
+            objExecute.Executes("spSavePassAccessControl", param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool EditPassAccessControl(Pass_Access_Control objPass_Access_Control)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@APP_FUNCTION",objPass_Access_Control.AppFunction),
+                Execute.AddParameter("@APP_FUNCTION_DESC",objPass_Access_Control.AppFunctionDescription),
+                Execute.AddParameter("@USER_ROLE",objPass_Access_Control.UserRole),
+                Execute.AddParameter("@READ_ALLOWED",objPass_Access_Control.ReadAllowed),
+                Execute.AddParameter("@CREATE_ALLOWED",objPass_Access_Control.CreateAllowed),
+                Execute.AddParameter("@UPDATE_ALLOWED",objPass_Access_Control.UpdateAllowed),
+                Execute.AddParameter("@DELETE_ALLOWED",objPass_Access_Control.DeleteAllowed),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Access_Control.ModifiedBy),
+            };
+            objExecute.Executes("spEditPassAccessControl", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool DeletePassAccessControl(Pass_Access_Control objPass_Access_Control)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@APP_FUNCTION",objPass_Access_Control.AppFunction),
+                Execute.AddParameter("@USER_ROLE",objPass_Access_Control.UserRole),
+            };
+            objExecute.Executes("spDeletePassAccessControl", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        #endregion
     }
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PlatnedMahara.Pages.PlatnedPassPages.DialogPages.DialogAccessControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PlatnedMahara.Pages.PlatnedPassPages.DialogPages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="400" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Column="1" Height="400" VerticalAlignment="Top">
+            <TextBlock Text="Company Details" FontFamily="Arial"
+        FontSize="24" TextWrapping="WrapWholeWords"
+        CharacterSpacing="200" Foreground="CornflowerBlue" Margin="50" HorizontalAlignment="Center" />
+            <StackPanel Orientation="Vertical" Margin="15,15,15,15">
+                <TextBox x:Name="txtAppFunction" Header="" PlaceholderText="App Function" Width="400" MaxWidth="400" MaxLength="100" CharacterCasing="Upper" />
+                <TextBox x:Name="txtAppFuncDesc" Header="" PlaceholderText="Function Description" Width="400" MaxWidth="400" MaxLength="200" CharacterCasing="Normal" Margin="0,10,0,0" />
+                <ComboBox x:Name="cmbUserRole" Header="" PlaceholderText="User Role" Width="400" MaxWidth="400" Margin="0,10,0,0" SelectedItem="User">
+                    <x:String>Super Admin</x:String>
+                    <x:String>User Admin</x:String>
+                    <x:String>User</x:String>
+                </ComboBox>
+                <CheckBox x:Name="chkRead" Content="Read"/>
+                <CheckBox x:Name="chkCreate" Content="Create"/>
+                <CheckBox x:Name="chkUpdate" Content="Update"/>
+                <CheckBox x:Name="chkDelete" Content="Delete"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
