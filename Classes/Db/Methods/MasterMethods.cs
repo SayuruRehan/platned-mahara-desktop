@@ -415,7 +415,7 @@ namespace PlatnedMahara.DataAccess.Methods
             };
 
             // Execute the stored procedure and get a DataTable
-            DataTable dt = objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure) as DataTable;
+            DataTable dt = (DataTable) objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
 
             // Ensure the DataTable is not null and contains rows
             if (dt != null && dt.Rows.Count > 0)
