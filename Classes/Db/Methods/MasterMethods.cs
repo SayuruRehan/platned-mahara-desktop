@@ -162,7 +162,7 @@ namespace PlatnedMahara.DataAccess.Methods
             {
         Execute.AddParameter("@COMPANY_ID",objPass_Company_Contact.CompanyID),
             };
-            DataRow dr = (DataRow)objExecute.Executes("spGetPassCompanyContact", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            DataRow dr = (DataRow)objExecute.Executes("spGetPassCompanyContact", ReturnType.DataRow, param, CommandType.StoredProcedure);
             if (dr != null)
             {
                 pass_Company_Contact = new Pass_Company_Contact

@@ -166,7 +166,24 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         private void LoadData()
         {
             List<Pass_Company_Contact> pass_Company_Contacts = new List<Pass_Company_Contact>();
-            pass_Company_Contacts = new AuthPlatnedPass().GetPass_Company_Contacts();
+            // Mahara-86 - START
+            if (Array.Exists(GlobalData.AccessRoleArraySuper, superRole => superRole == GlobalData.UserRole.Trim()))
+            {
+                pass_Company_Contacts = new AuthPlatnedPass().GetPass_Company_Contacts();
+            }
+            else if ((Array.Exists(GlobalData.AccessRoleArrayUserAdmin, superRole => superRole == GlobalData.UserRole.Trim())) ||
+                    (Array.Exists(GlobalData.AccessRoleArrayUser, superRole => superRole == GlobalData.UserRole.Trim())))
+            {
+                Pass_Company_Contact companyDet = new Pass_Company_Contact
+                {
+                    CompanyID = GlobalData.CompanyId
+                };
+                var singleResult = new AuthPlatnedPass().GetPass_Company_Contact(companyDet);
+                pass_Company_Contacts = new List<Pass_Company_Contact> { singleResult };
+            }
+            // Mahara-86 - END
+
+            
             GridItemCompanyContact = new ObservableCollection<GridItemCompanyContact>();
             if (pass_Company_Contacts != null && pass_Company_Contacts.Count > 0)
             {

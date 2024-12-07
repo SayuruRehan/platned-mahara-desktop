@@ -1,5 +1,6 @@
 using CommunityToolkit.WinUI.UI.Controls;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -58,7 +59,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     UserId = selectedItem.TreeNodesUserId[0].Name,
                     UserName = selectedItem.TreeNodesUserName[0].Name,
                     UserEmail = selectedItem.TreeNodesUserEmail[0].Name,
-                    UserRole = selectedItem.TreeNodesUserRole[0].Name,
+                    UserRole = selectedItem.TreeNodesUserRole[0].Name.Trim(),
                     ValidFrom = DateTime.Parse(selectedItem.TreeNodesValidFrom[0].Name),
                     ValidTo = DateTime.Parse(selectedItem.TreeNodesValidTo[0].Name),
                     RowState = selectedItem.TreeNodesRowState[0].Name
@@ -171,7 +172,32 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         private void LoadData()
         {
             List<Pass_Users_Company> pass_Users = new List<Pass_Users_Company>();
-            pass_Users = new AuthPlatnedPass().GetPass_Users();
+            // Mahara-86 - START
+            if (Array.Exists(GlobalData.AccessRoleArraySuper, superRole => superRole == GlobalData.UserRole.Trim()))
+            {
+                pass_Users = new AuthPlatnedPass().GetPass_Users();
+            }
+            else if (Array.Exists(GlobalData.AccessRoleArrayUserAdmin, superRole => superRole == GlobalData.UserRole.Trim()))
+            {
+                Pass_Users_Company userDet = new Pass_Users_Company
+                {
+                    CompanyID = GlobalData.CompanyId
+                };
+
+                pass_Users = new AuthPlatnedPass().GetPass_Users_Per_Company(userDet);
+            }
+            else if (Array.Exists(GlobalData.AccessRoleArrayUser, superRole => superRole == GlobalData.UserRole.Trim()))
+            {
+                Pass_Users_Company userDet = new Pass_Users_Company
+                {
+                    CompanyID = GlobalData.CompanyId,
+                    UserID = GlobalData.UserId,
+                };
+
+                var singleResult = new AuthPlatnedPass().GetPass_User_Per_Company(userDet);
+                pass_Users = new List<Pass_Users_Company> { singleResult };
+            }
+            // Mahara-86 - END
 
             GridItemsUser = new ObservableCollection<GridItemUser>();
             if (pass_Users != null && pass_Users.Count > 0)
@@ -279,7 +305,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         UserEmail = dialogUser.UserEmail,
                         ValidFrom = dialogUser.ValidFrom ?? DateTime.Now,
                         ValidTo = dialogUser.ValidTo ?? DateTime.Now.AddDays(365),
-                        UserRole = dialogUser.UserRole,
+                        UserRole = dialogUser.UserRole.Trim(),
                         Password = Encrypt.EncryptPassword("defaultpass1234"),
                         LicenseKey = GenerateRandomString(),
                         RowState = "Active",
@@ -335,8 +361,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         private void AccessCheck()
         {
-            if (AccessControl.IsGranted("BTN_NEW_USER", "C")) 
-            { btnNewUser.Visibility = Visibility.Visible; } 
+            if (AccessControl.IsGranted("BTN_NEW_USER", "C"))
+            { btnNewUser.Visibility = Visibility.Visible; }
             else { btnNewUser.Visibility = Visibility.Collapsed; }
 
             foreach (var user in GridItemsUser)
@@ -365,7 +391,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             Name = name;
             Children = new ObservableCollection<TreeNodeUser>();
         }
-    }    
+    }
     public class GridItemUser
     {
         public bool CanDelete { get; internal set; }
@@ -383,7 +409,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
         public ObservableCollection<TreeNode> TreeNodesModifiedDate { get; set; }
         public ObservableCollection<TreeNode> TreeNodesModifiedBy { get; set; }
         public ObservableCollection<TreeNode> TreeNodesUserRole { get; set; }
-        
+
 
         public GridItemUser(string companyId, string userId, string userName, string userEmail, string licenseKey, string validFrom, string validTo, string rowState, string createdDate, string createdBy, string modifiedDate, string modifiedBy, string userRole)
         {
