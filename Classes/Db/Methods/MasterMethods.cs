@@ -122,8 +122,6 @@ namespace PlatnedMahara.DataAccess.Methods
             param = new SqlParameter[]
             {
                 Execute.AddParameter("@COMPANY_ID",objPass_Company.CompanyID),
-                Execute.AddParameter("@MODIFIED_BY",objPass_Company.ModifiedBy),
-                Execute.AddParameter("@ROWSTATE",objPass_Company.RowState),
             };
             objExecute.Executes("spDeletePassCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
             res = true;
