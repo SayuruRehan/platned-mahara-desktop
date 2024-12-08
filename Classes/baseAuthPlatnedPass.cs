@@ -666,6 +666,105 @@ namespace PlatnedMahara.Classes
         }
 
         #endregion
+
+        #region Mahara-90 Pass JSON File Methods
+        public bool CreateNewFile(Pass_Json_File pass_File)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassJsonFile(pass_File);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditFile(Pass_Json_File pass_File)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassJsonFile(pass_File);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteFile(Pass_Json_File pass_File)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassJsonFile(pass_File);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public List<Pass_Json_File> GetPass_Files()
+        {
+            List<Pass_Json_File> pass_File = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_File = new List<Pass_Json_File>();
+                pass_File = masterMethods.GetPassJsonFiles();
+                return pass_File;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_File;
+            }
+        }
+        public Pass_Json_File GetPass_FilePerUserPerCollection(Pass_Json_File p)
+        {
+            Pass_Json_File pass_File = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_File = new Pass_Json_File();
+                pass_File = masterMethods.GetPassJsonFilePerUserPerCollection(p);
+                return pass_File;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_File;
+            }
+        }
+        public bool ShareFile(Pass_Json_File pass_File)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SharePassShareJsonFile(pass_File);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
+        #endregion
+
     }
 
 
