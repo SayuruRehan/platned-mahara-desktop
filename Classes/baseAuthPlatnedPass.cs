@@ -569,6 +569,103 @@ namespace PlatnedMahara.Classes
 
         #endregion
 
+        #region Mahara-90 Pass JSON Collection Methods
+        public bool CreateNewCollection(Pass_Json_Collection pass_Collection)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SavePassJsonCollection(pass_Collection);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool EditCollection(Pass_Json_Collection pass_Collection)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.EditPassJsonCollection(pass_Collection);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public bool DeleteCollection(Pass_Json_Collection pass_Collection)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.DeletePassJsonCollection(pass_Collection);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+        public List<Pass_Json_Collection> GetPass_Collections()
+        {
+            List<Pass_Json_Collection> pass_Collection = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Collection = new List<Pass_Json_Collection>();
+                pass_Collection = masterMethods.GetPassJsonCollections();
+                return pass_Collection;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Collection;
+            }
+        }
+        public Pass_Json_Collection GetPass_CollectionsPerUser(Pass_Json_Collection p)
+        {
+            Pass_Json_Collection pass_Collection = null;
+            try
+            {
+                masterMethods = new MasterMethods();
+                pass_Collection = new Pass_Json_Collection();
+                pass_Collection = masterMethods.GetPassJsonCollectionPerUser(p);
+                return pass_Collection;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return pass_Collection;
+            }
+        }
+        public bool ShareCollection(Pass_Json_Collection pass_Collection)
+        {
+            try
+            {
+                masterMethods = new MasterMethods();
+                recordsaved = masterMethods.SharePassShareJsonCollection(pass_Collection);
+                return recordsaved;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"Error: {ex.Message}");
+                validLogin = false;
+                return validLogin;
+            }
+        }
+
+        #endregion
     }
 
 
