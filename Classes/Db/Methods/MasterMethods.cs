@@ -671,5 +671,130 @@ namespace PlatnedMahara.DataAccess.Methods
         }
 
         #endregion
+
+        #region Mahara-90 Pass Collection Methods
+        [Obsolete]
+        public List<Pass_Json_Collection> GetPassJsonCollections()
+        {
+            List<Pass_Json_Collection> pass_Json_Collection = new List<Pass_Json_Collection>();
+            objExecute = new Execute();
+            DataTable dt = (DataTable)objExecute.Executes("spGetJsonCollections", ReturnType.DataTable, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
+            {
+                pass_Json_Collection.Add(new Pass_Json_Collection
+                {
+                    CompanyID = dr["COMPANY_ID"].ToString(),
+                    UserID = dr["USER_ID"].ToString(),
+                    CollectionID = dr["COLLECTION_ID"].ToString(),
+                    CollectionName = dr["COLLECTION_NAME"].ToString(),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    RowState = dr["ROWSTATE"].ToString(),
+                });
+            }
+            return pass_Json_Collection;
+        }
+
+        [Obsolete]
+        public Pass_Json_Collection GetPassJsonCollectionPerUser(Pass_Json_Collection objPass_Json_Collection)
+        {
+            Pass_Json_Collection pass_Json_Collection = null;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+               Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
+               Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
+            };
+            DataRow dr = (DataRow)objExecute.Executes("spGetJsonCollectionPerUser", ReturnType.DataRow, param, CommandType.StoredProcedure);
+            if (dr != null)
+            {
+                pass_Json_Collection = new Pass_Json_Collection
+                {
+                    CompanyID = dr["COMPANY_ID"].ToString(),
+                    UserID = dr["USER_ID"].ToString(),
+                    CollectionID = dr["COLLECTION_ID"].ToString(),
+                    CollectionName = dr["COLLECTION_NAME"].ToString(),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    RowState = dr["ROWSTATE"].ToString(),
+                };
+            }
+            return pass_Json_Collection;
+        }
+
+        [Obsolete]
+        public bool SavePassJsonCollection(Pass_Json_Collection objPass_Json_Collection)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CollectionID),
+                Execute.AddParameter("@COLLECTION_NAME",objPass_Json_Collection.CollectionName),
+                Execute.AddParameter("@CREATED_BY",objPass_Json_Collection.CreatedBy),
+            };
+            objExecute.Executes("spSaveJsonCollection", param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool EditPassJsonCollection(Pass_Json_Collection objPass_Json_Collection)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CollectionID),
+                Execute.AddParameter("@COLLECTION_NAME",objPass_Json_Collection.CollectionName),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.ModifiedBy),
+            };
+            objExecute.Executes("spEditJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool DeletePassJsonCollection(Pass_Json_Collection objPass_Company)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Company.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Company.CompanyID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Company.CompanyID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Company.CompanyID),
+            };
+            objExecute.Executes("spDeleteJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        public bool SharePassShareJsonCollection(Pass_Json_Collection objPass_Json_Collection)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.CompanyID),
+            };
+            objExecute.Executes("spShareJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+        #endregion
+
     }
 }
