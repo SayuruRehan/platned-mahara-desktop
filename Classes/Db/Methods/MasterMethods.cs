@@ -412,7 +412,7 @@ namespace PlatnedMahara.DataAccess.Methods
             };
 
             // Execute the stored procedure and get a DataTable
-            DataTable dt = (DataTable) objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            DataTable dt = (DataTable)objExecute.Executes("spGetUserPerCompany", ReturnType.DataTable, param, CommandType.StoredProcedure);
 
             // Ensure the DataTable is not null and contains rows
             if (dt != null && dt.Rows.Count > 0)
@@ -697,20 +697,19 @@ namespace PlatnedMahara.DataAccess.Methods
             return pass_Json_Collection;
         }
 
-        [Obsolete]
-        public Pass_Json_Collection GetPassJsonCollectionPerUser(Pass_Json_Collection objPass_Json_Collection)
+        public List<Pass_Json_Collection> GetPassJsonCollectionPerUser(Pass_Json_Collection objPass_Json_Collection)
         {
-            Pass_Json_Collection pass_Json_Collection = null;
+            List<Pass_Json_Collection> pass_Json_Collections = new List<Pass_Json_Collection>();
             objExecute = new Execute();
             param = new SqlParameter[]
             {
                Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
                Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
             };
-            DataRow dr = (DataRow)objExecute.Executes("spGetJsonCollectionPerUser", ReturnType.DataRow, param, CommandType.StoredProcedure);
-            if (dr != null)
+            DataTable dt = (DataTable)objExecute.Executes("spGetJsonCollectionPerUser", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
             {
-                pass_Json_Collection = new Pass_Json_Collection
+                pass_Json_Collections.Add(new Pass_Json_Collection
                 {
                     CompanyID = dr["COMPANY_ID"].ToString(),
                     UserID = dr["USER_ID"].ToString(),
@@ -721,9 +720,9 @@ namespace PlatnedMahara.DataAccess.Methods
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
                     ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
                     RowState = dr["ROWSTATE"].ToString(),
-                };
+                });
             }
-            return pass_Json_Collection;
+            return pass_Json_Collections;
         }
 
         [Obsolete]
@@ -823,10 +822,9 @@ namespace PlatnedMahara.DataAccess.Methods
             return pass_Json_File;
         }
 
-        [Obsolete]
-        public Pass_Json_File GetPassJsonFilePerUserPerCollection(Pass_Json_File objPass_Json_File)
+        public List<Pass_Json_File> GetPassJsonFilePerUserPerCollection(Pass_Json_File objPass_Json_File)
         {
-            Pass_Json_File pass_Json_File = null;
+            List<Pass_Json_File> pass_Json_Files = new List<Pass_Json_File>();
             objExecute = new Execute();
             param = new SqlParameter[]
             {
@@ -834,10 +832,10 @@ namespace PlatnedMahara.DataAccess.Methods
                Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
                Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
             };
-            DataRow dr = (DataRow)objExecute.Executes("spGetJsonFilePerUserPerCollection", ReturnType.DataRow, param, CommandType.StoredProcedure);
-            if (dr != null)
+            DataTable dt = (DataTable)objExecute.Executes("spGetJsonFilePerUserPerCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
             {
-                pass_Json_File = new Pass_Json_File
+                pass_Json_Files.Add(new Pass_Json_File
                 {
                     CompanyID = dr["COMPANY_ID"].ToString(),
                     UserID = dr["USER_ID"].ToString(),
@@ -850,9 +848,9 @@ namespace PlatnedMahara.DataAccess.Methods
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
                     ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
                     RowState = dr["ROWSTATE"].ToString(),
-                };
+                });
             }
-            return pass_Json_File;
+            return pass_Json_Files;
         }
 
         [Obsolete]

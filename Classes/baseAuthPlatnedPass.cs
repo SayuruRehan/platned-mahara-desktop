@@ -632,13 +632,13 @@ namespace PlatnedMahara.Classes
                 return pass_Collection;
             }
         }
-        public Pass_Json_Collection GetPass_CollectionsPerUser(Pass_Json_Collection p)
+        public List<Pass_Json_Collection> GetPass_CollectionsPerUser(Pass_Json_Collection p)
         {
-            Pass_Json_Collection pass_Collection = null;
+            List<Pass_Json_Collection> pass_Collection = null;
             try
             {
                 masterMethods = new MasterMethods();
-                pass_Collection = new Pass_Json_Collection();
+                pass_Collection = new List<Pass_Json_Collection>();
                 pass_Collection = masterMethods.GetPassJsonCollectionPerUser(p);
                 return pass_Collection;
             }
@@ -730,13 +730,13 @@ namespace PlatnedMahara.Classes
                 return pass_File;
             }
         }
-        public Pass_Json_File GetPass_FilePerUserPerCollection(Pass_Json_File p)
+        public List<Pass_Json_File> GetPass_FilePerUserPerCollection(Pass_Json_File p)
         {
-            Pass_Json_File pass_File = null;
+            List<Pass_Json_File> pass_File = null;
             try
             {
                 masterMethods = new MasterMethods();
-                pass_File = new Pass_Json_File();
+                pass_File = new List<Pass_Json_File>();
                 pass_File = masterMethods.GetPassJsonFilePerUserPerCollection(p);
                 return pass_File;
             }
