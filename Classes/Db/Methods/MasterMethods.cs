@@ -763,16 +763,16 @@ namespace PlatnedMahara.DataAccess.Methods
         }
 
         [Obsolete]
-        public bool DeletePassJsonCollection(Pass_Json_Collection objPass_Company)
+        public bool DeletePassJsonCollection(Pass_Json_Collection objPass_Json_Collection)
         {
             bool res = false;
             objExecute = new Execute();
             param = new SqlParameter[]
             {
-                Execute.AddParameter("@COMPANY_ID",objPass_Company.CompanyID),
-                Execute.AddParameter("@USER_ID",objPass_Company.CompanyID),
-                Execute.AddParameter("@COLLECTION_ID",objPass_Company.CompanyID),
-                Execute.AddParameter("@MODIFIED_BY",objPass_Company.CompanyID),
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.CompanyID),
             };
             objExecute.Executes("spDeleteJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
             res = true;
@@ -791,6 +791,141 @@ namespace PlatnedMahara.DataAccess.Methods
                 Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.CompanyID),
             };
             objExecute.Executes("spShareJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+        #endregion
+
+        #region Mahara-90 Pass JSON File Methods
+
+        public List<Pass_Json_File> GetPassJsonFiles()
+        {
+            List<Pass_Json_File> pass_Json_File = new List<Pass_Json_File>();
+            objExecute = new Execute();
+            DataTable dt = (DataTable)objExecute.Executes("spGetJsonFiles", ReturnType.DataTable, CommandType.StoredProcedure);
+            foreach (DataRow dr in dt.Rows)
+            {
+                pass_Json_File.Add(new Pass_Json_File
+                {
+                    CompanyID = dr["COMPANY_ID"].ToString(),
+                    UserID = dr["USER_ID"].ToString(),
+                    CollectionID = dr["COLLECTION_ID"].ToString(),
+                    FileID = dr["FILE_ID"].ToString(),
+                    FileName = dr["FILE_NAME"].ToString(),
+                    FileContent = dr["FILE_CONTENT"].ToString(),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    RowState = dr["ROWSTATE"].ToString(),
+                });
+            }
+            return pass_Json_File;
+        }
+
+        [Obsolete]
+        public Pass_Json_File GetPassJsonFilePerUserPerCollection(Pass_Json_File objPass_Json_File)
+        {
+            Pass_Json_File pass_Json_File = null;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+               Execute.AddParameter("@COMPANY_ID",objPass_Json_File.CompanyID),
+               Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
+               Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
+            };
+            DataRow dr = (DataRow)objExecute.Executes("spGetJsonFilePerUserPerCollection", ReturnType.DataRow, param, CommandType.StoredProcedure);
+            if (dr != null)
+            {
+                pass_Json_File = new Pass_Json_File
+                {
+                    CompanyID = dr["COMPANY_ID"].ToString(),
+                    UserID = dr["USER_ID"].ToString(),
+                    CollectionID = dr["COLLECTION_ID"].ToString(),
+                    FileID = dr["FILE_ID"].ToString(),
+                    FileName = dr["FILE_NAME"].ToString(),
+                    FileContent = dr["FILE_CONTENT"].ToString(),
+                    CreatedBy = dr["CREATED_BY"].ToString(),
+                    CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
+                    ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
+                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    RowState = dr["ROWSTATE"].ToString(),
+                };
+            }
+            return pass_Json_File;
+        }
+
+        [Obsolete]
+        public bool SavePassJsonFile(Pass_Json_File objPass_Json_File)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_File.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
+                Execute.AddParameter("@File_ID",objPass_Json_File.FileID),
+                Execute.AddParameter("@FILE_NAME",objPass_Json_File.FileName),
+                Execute.AddParameter("@FILE_CONTENT",objPass_Json_File.FileContent),
+                Execute.AddParameter("@CREATED_BY",objPass_Json_File.CreatedBy),
+            };
+            objExecute.Executes("spSaveJsonFile", param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool EditPassJsonFile(Pass_Json_File objPass_Json_File)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_File.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
+                Execute.AddParameter("@File_ID",objPass_Json_File.FileID),
+                Execute.AddParameter("@FILE_NAME",objPass_Json_File.FileName),
+                Execute.AddParameter("@FILE_CONTENT",objPass_Json_File.FileContent),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_File.ModifiedBy),
+            };
+            objExecute.Executes("spEditJsonFile", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        [Obsolete]
+        public bool DeletePassJsonFile(Pass_Json_File objPass_Json_File)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_File.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
+                Execute.AddParameter("@File_ID",objPass_Json_File.FileID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_File.ModifiedBy),
+            };
+            objExecute.Executes("spDeleteJsonFile", ReturnType.DataTable, param, CommandType.StoredProcedure);
+            res = true;
+            return res;
+        }
+
+        public bool SharePassShareJsonFile(Pass_Json_File objPass_Json_File)
+        {
+            bool res = false;
+            objExecute = new Execute();
+            param = new SqlParameter[]
+            {
+                Execute.AddParameter("@COMPANY_ID",objPass_Json_File.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_File.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
+                Execute.AddParameter("@File_ID",objPass_Json_File.FileID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_File.ModifiedBy),
+            };
+            objExecute.Executes("spShareJsonFile", ReturnType.DataTable, param, CommandType.StoredProcedure);
             res = true;
             return res;
         }
