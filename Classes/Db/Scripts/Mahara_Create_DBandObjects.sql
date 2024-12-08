@@ -5,13 +5,13 @@
 ----------------------------------------------------------------------------------------------------
 --  DATE    USER        DESCRIPTION  
 --  ------  ----------  ----------------------------------------------------------------------------
---  
---  281203  NimeshE     Created the file for versioning.
+--  241208  NimeshE     Updating with new two tables and SPs.
+--  241203  NimeshE     Created the file for versioning.
 ----------------------------------------------------------------------------------------------------
 
 USE [master]
 GO
-/****** Object:  Database [platnedpass]    Script Date: 12/3/2024 6:45:48 PM ******/
+/****** Object:  Database [platnedpass]    Script Date: 12/8/2024 7:44:02 PM ******/
 CREATE DATABASE [platnedpass]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -93,10 +93,10 @@ ALTER DATABASE [platnedpass] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEAN
 GO
 USE [platnedpass]
 GO
-/****** Object:  User [platnedpassuser]    Script Date: 12/3/2024 6:45:51 PM ******/
+/****** Object:  User [platnedpassuser]    Script Date: 12/8/2024 7:44:05 PM ******/
 CREATE USER [platnedpassuser] FOR LOGIN [platnedpassuser] WITH DEFAULT_SCHEMA=[dbo]
 GO
-/****** Object:  DatabaseRole [ProcedureExecutor]    Script Date: 12/3/2024 6:45:52 PM ******/
+/****** Object:  DatabaseRole [ProcedureExecutor]    Script Date: 12/8/2024 7:44:06 PM ******/
 CREATE ROLE [ProcedureExecutor]
 GO
 ALTER ROLE [db_accessadmin] ADD MEMBER [platnedpassuser]
@@ -107,7 +107,7 @@ ALTER ROLE [db_datareader] ADD MEMBER [platnedpassuser]
 GO
 ALTER ROLE [db_datawriter] ADD MEMBER [platnedpassuser]
 GO
-/****** Object:  Table [dbo].[PASS_COMPANY_CONTACT_TAB]    Script Date: 12/3/2024 6:45:52 PM ******/
+/****** Object:  Table [dbo].[PASS_COMPANY_CONTACT_TAB]    Script Date: 12/8/2024 7:44:07 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -120,7 +120,7 @@ CREATE TABLE [dbo].[PASS_COMPANY_CONTACT_TAB](
 	[COMPANY_CONTACT_EMAIL] [varchar](100) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PASS_COMPANY_TAB]    Script Date: 12/3/2024 6:45:53 PM ******/
+/****** Object:  Table [dbo].[PASS_COMPANY_TAB]    Script Date: 12/8/2024 7:44:08 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -132,9 +132,9 @@ CREATE TABLE [dbo].[PASS_COMPANY_TAB](
 	[LICENSE_LIMIT] [int] NOT NULL,
 	[LICENSE_CONSUMED] [int] NULL,
 	[COMPANY_TYPE] [varchar](50) NULL,
-	[CREATED_BY] [varchar](20) NULL,
+	[CREATED_BY] [varchar](50) NULL,
 	[CREATED_DATE] [datetime] NULL,
-	[MODIFIED_BY] [varchar](20) NULL,
+	[MODIFIED_BY] [varchar](50) NULL,
 	[MODIFIED_DATE] [datetime] NULL,
 	[ROWSTATE] [varchar](20) NULL,
  CONSTRAINT [PK_PASS_COMPANY_TAB] PRIMARY KEY CLUSTERED 
@@ -143,7 +143,51 @@ CREATE TABLE [dbo].[PASS_COMPANY_TAB](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PASS_USER_APP_LOG_TAB]    Script Date: 12/3/2024 6:45:53 PM ******/
+/****** Object:  Table [dbo].[PASS_JSON_COLLECTION_TAB]    Script Date: 12/8/2024 7:44:08 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PASS_JSON_COLLECTION_TAB](
+	[COMPANY_ID] [varchar](6) NOT NULL,
+	[USER_ID] [varchar](50) NOT NULL,
+	[COLLECTION_ID] [varchar](50) NOT NULL,
+	[COLLECTION_NAME] [varchar](500) NULL,
+	[CREATED_BY] [varchar](50) NULL,
+	[CREATED_DATE] [datetime] NULL,
+	[MODIFIED_BY] [varchar](50) NULL,
+	[MODIFIED_DATE] [datetime] NULL,
+	[ROWSTATE] [varchar](20) NULL,
+ CONSTRAINT [PK_PASS_JSON_COLLECTION_TAB] PRIMARY KEY CLUSTERED 
+(
+	[COLLECTION_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PASS_JSON_FILE_TAB]    Script Date: 12/8/2024 7:44:08 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PASS_JSON_FILE_TAB](
+	[COMPANY_ID] [varchar](6) NOT NULL,
+	[USER_ID] [varchar](50) NOT NULL,
+	[COLLECTION_ID] [varchar](50) NOT NULL,
+	[FILE_ID] [uniqueidentifier] NOT NULL,
+	[FILE_NAME] [varchar](500) NOT NULL,
+	[FILE_CONTENT] [varchar](max) NULL,
+	[CREATED_BY] [varchar](50) NULL,
+	[CREATED_DATE] [datetime] NULL,
+	[MODIFIED_BY] [varchar](50) NULL,
+	[MODIFIED_DATE] [datetime] NULL,
+	[ROWSTATE] [varchar](20) NULL,
+ CONSTRAINT [PK_PASS_JSON_FILE_TAB] PRIMARY KEY CLUSTERED 
+(
+	[FILE_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PASS_USER_APP_LOG_TAB]    Script Date: 12/8/2024 7:44:08 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -158,7 +202,26 @@ CREATE TABLE [dbo].[PASS_USER_APP_LOG_TAB](
 	[PLATNED_REMARKS] [nvarchar](max) NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PASS_USERS_PER_COMPANY_TAB]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  Table [dbo].[PASS_USER_ROLE_ACCESS_TAB]    Script Date: 12/8/2024 7:44:08 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PASS_USER_ROLE_ACCESS_TAB](
+	[APP_FUNCTION] [varchar](100) NOT NULL,
+	[APP_FUNCTION_DESC] [varchar](2000) NOT NULL,
+	[USER_ROLE] [nchar](20) NOT NULL,
+	[CREATE_ALLOWED] [varchar](5) NOT NULL,
+	[READ_ALLOWED] [varchar](5) NOT NULL,
+	[UPDATE_ALLOWED] [varchar](5) NOT NULL,
+	[DELETE_ALLOWED] [varchar](5) NOT NULL,
+	[CREATED_BY] [varchar](50) NULL,
+	[CREATED_DATE] [datetime] NULL,
+	[MODIFIED_BY] [varchar](50) NULL,
+	[MODIFIED_DATE] [datetime] NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PASS_USERS_PER_COMPANY_TAB]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -184,48 +247,92 @@ CREATE TABLE [dbo].[PASS_USERS_PER_COMPANY_TAB](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
+ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB]  WITH NOCHECK ADD  CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
 REFERENCES [dbo].[PASS_COMPANY_TAB] ([COMPANY_ID])
 GO
 ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB] CHECK CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_COMPANY_TAB]
 GO
-ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_USERS_PER_COMPANY_TAB] FOREIGN KEY([USER_ID])
+ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB]  WITH NOCHECK ADD  CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_USERS_PER_COMPANY_TAB] FOREIGN KEY([USER_ID])
 REFERENCES [dbo].[PASS_USERS_PER_COMPANY_TAB] ([USER_ID])
 GO
 ALTER TABLE [dbo].[PASS_COMPANY_CONTACT_TAB] CHECK CONSTRAINT [FK_PASS_COMPANY_CONTACT_TAB_PASS_USERS_PER_COMPANY_TAB]
 GO
-ALTER TABLE [dbo].[PASS_USERS_PER_COMPANY_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_USERS_PER_COMPANY_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
+ALTER TABLE [dbo].[PASS_JSON_COLLECTION_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_JSON_COLLECTION_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
+REFERENCES [dbo].[PASS_COMPANY_TAB] ([COMPANY_ID])
+GO
+ALTER TABLE [dbo].[PASS_JSON_COLLECTION_TAB] CHECK CONSTRAINT [FK_PASS_JSON_COLLECTION_TAB_PASS_COMPANY_TAB]
+GO
+ALTER TABLE [dbo].[PASS_JSON_COLLECTION_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_JSON_COLLECTION_TAB_PASS_USERS_PER_COMPANY_TAB] FOREIGN KEY([USER_ID])
+REFERENCES [dbo].[PASS_USERS_PER_COMPANY_TAB] ([USER_ID])
+GO
+ALTER TABLE [dbo].[PASS_JSON_COLLECTION_TAB] CHECK CONSTRAINT [FK_PASS_JSON_COLLECTION_TAB_PASS_USERS_PER_COMPANY_TAB]
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
+REFERENCES [dbo].[PASS_COMPANY_TAB] ([COMPANY_ID])
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB] CHECK CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_COMPANY_TAB]
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_JSON_COLLECTION_TAB] FOREIGN KEY([COLLECTION_ID])
+REFERENCES [dbo].[PASS_JSON_COLLECTION_TAB] ([COLLECTION_ID])
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB] CHECK CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_JSON_COLLECTION_TAB]
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB]  WITH CHECK ADD  CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_USERS_PER_COMPANY_TAB] FOREIGN KEY([USER_ID])
+REFERENCES [dbo].[PASS_USERS_PER_COMPANY_TAB] ([USER_ID])
+GO
+ALTER TABLE [dbo].[PASS_JSON_FILE_TAB] CHECK CONSTRAINT [FK_PASS_JSON_FILE_TAB_PASS_USERS_PER_COMPANY_TAB]
+GO
+ALTER TABLE [dbo].[PASS_USERS_PER_COMPANY_TAB]  WITH NOCHECK ADD  CONSTRAINT [FK_PASS_USERS_PER_COMPANY_TAB_PASS_COMPANY_TAB] FOREIGN KEY([COMPANY_ID])
 REFERENCES [dbo].[PASS_COMPANY_TAB] ([COMPANY_ID])
 ON UPDATE CASCADE
 ON DELETE CASCADE
 GO
 ALTER TABLE [dbo].[PASS_USERS_PER_COMPANY_TAB] CHECK CONSTRAINT [FK_PASS_USERS_PER_COMPANY_TAB_PASS_COMPANY_TAB]
 GO
-/****** Object:  Table [dbo].[PASS_USER_ROLE_ACCESS_TAB]    Script Date: 12/6/2024 5:12:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeleteJsonCollection]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE TABLE [dbo].[PASS_USER_ROLE_ACCESS_TAB](
-	[APP_FUNCTION] [varchar](100) NOT NULL,
-	[APP_FUNCTION_DESC] [varchar](2000) NOT NULL,
-	[USER_ROLE] [nchar](20) NOT NULL,
-    [CREATE_ALLOWED] [varchar](5) NOT NULL,
-	[READ_ALLOWED] [varchar](5) NOT NULL,    
-	[UPDATE_ALLOWED] [varchar](5) NOT NULL,
-	[DELETE_ALLOWED] [varchar](5) NOT NULL,
-	[CREATED_BY] [varchar](50) NULL,
-	[CREATED_DATE] [datetime] NULL,
-	[MODIFIED_BY] [varchar](50) NULL,
-	[MODIFIED_DATE] [datetime] NULL,
- CONSTRAINT [PK_PASS_USER_ROLE_ACCESS_TAB_1] PRIMARY KEY CLUSTERED 
-(
-	[APP_FUNCTION] ASC,
-	[USER_ROLE] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+
+CREATE   PROCEDURE [dbo].[spDeleteJsonCollection]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50)
+AS
+BEGIN
+    DELETE FROM dbo.PASS_JSON_COLLECTION_TAB 
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
+
+    DELETE FROM dbo.PASS_JSON_FILE_TAB 
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
+END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeleteJsonFile]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spDeleteJsonFile]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @FILE_ID VARCHAR(50)
+AS
+BEGIN
+    DELETE FROM dbo.PASS_JSON_FILE_TAB 
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID
+    AND FILE_ID = @FILE_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spDeletePassAccessControl]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -241,20 +348,20 @@ BEGIN
     AND USER_ROLE = @USER_ROLE;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeletePassCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE   PROCEDURE [dbo].[spDeletePassCompany]
-    @COMPANY_ID VARCHAR(10),@MODIFIED_BY VARCHAR(100) = '',@ROWSTATE VARCHAR(10) = ''
+    @COMPANY_ID VARCHAR(6)
 AS
 BEGIN
     DELETE FROM dbo.PASS_COMPANY_TAB WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassCompanyContact]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeletePassCompanyContact]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -268,7 +375,7 @@ BEGIN
     DELETE FROM PASS_COMPANY_CONTACT_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeletePassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeletePassUserAppLogs]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -282,7 +389,7 @@ BEGIN
     DELETE FROM PASS_USER_APP_LOG_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spDeleteUsersPerCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spDeleteUsersPerCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -296,7 +403,52 @@ BEGIN
     DELETE FROM PASS_USERS_PER_COMPANY_TAB WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditJsonCollection]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spEditJsonCollection]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @COLLECTION_NAME VARCHAR(500),
+    @MODIFIED_BY VARCHAR(50)
+AS
+BEGIN
+    UPDATE dbo.PASS_JSON_COLLECTION_TAB
+    SET COLLECTION_NAME = @COLLECTION_NAME, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spEditJsonFile]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spEditJsonFile]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @FILE_ID VARCHAR(50),
+    @FILE_NAME VARCHAR(500),
+    @FILE_CONTENT VARCHAR(MAX),
+    @MODIFIED_BY VARCHAR(50)
+AS
+BEGIN
+    UPDATE dbo.PASS_JSON_FILE_TAB
+    SET FILE_NAME = @FILE_NAME, FILE_CONTENT = @FILE_CONTENT, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID
+    AND FILE_ID = @FILE_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spEditPassAccessControl]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -310,7 +462,7 @@ CREATE   PROCEDURE [dbo].[spEditPassAccessControl]
     @CREATE_ALLOWED VARCHAR(5),
     @UPDATE_ALLOWED VARCHAR(5),
     @DELETE_ALLOWED VARCHAR(5),
-    @MODIFIED_BY VARCHAR(20)
+    @MODIFIED_BY VARCHAR(50)
 AS
 BEGIN
     UPDATE dbo.PASS_USER_ROLE_ACCESS_TAB
@@ -320,20 +472,20 @@ BEGIN
     AND USER_ROLE = @USER_ROLE;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE   PROCEDURE [dbo].[spEditPassCompany]
-    @COMPANY_ID VARCHAR(10),
+    @COMPANY_ID VARCHAR(6),
     @COMPANY_NAME VARCHAR(200),
     @COMPANY_ADDRESS VARCHAR(1000),
     @LICENSE_LIMIT INT,
     @LICENSE_CONSUMED INT,
     @COMPANY_TYPE VARCHAR(50),
-    @MODIFIED_BY VARCHAR(20),
+    @MODIFIED_BY VARCHAR(50),
     @ROWSTATE VARCHAR(20)
 AS
 BEGIN
@@ -343,7 +495,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassCompanyContact]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassCompanyContact]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -363,7 +515,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditPassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditPassUserAppLogs]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -385,7 +537,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditUserPassword]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditUserPassword]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -403,11 +555,12 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID AND USER_EMAIL= @USER_EMAIL;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spEditUsersPerCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spEditUsersPerCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
 CREATE   PROCEDURE [dbo].[spEditUsersPerCompany]
     @COMPANY_ID VARCHAR(6),
     @USER_ID VARCHAR(50),
@@ -426,11 +579,14 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetAccessData]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetAccessData]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+-------------------------- Role Access --------------------------
+-----------------------------------------------------------------
 
 CREATE   PROCEDURE [dbo].[spGetAccessData]
 AS
@@ -439,7 +595,7 @@ BEGIN
     ORDER BY APP_FUNCTION, USER_ROLE;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetAccessPerFunction]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetAccessPerFunction]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -455,11 +611,14 @@ BEGIN
     AND USER_ROLE = @USER_ROLE;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetCompanyPassUserAppLogs]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetCompanyPassUserAppLogs]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+--------------------------- User Logs ---------------------------
+-----------------------------------------------------------------
 
 CREATE   PROCEDURE [dbo].[spGetCompanyPassUserAppLogs]
     @COMPANY_ID VARCHAR(6)
@@ -469,11 +628,77 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetLoginUser]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetJsonCollectionPerUser]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+CREATE   PROCEDURE [dbo].[spGetJsonCollectionPerUser]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50)
+AS
+BEGIN
+    SELECT * FROM PASS_JSON_COLLECTION_TAB
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetJsonCollections]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------- JSON Collection --------------------------
+-----------------------------------------------------------------
+
+CREATE   PROCEDURE [dbo].[spGetJsonCollections]
+AS
+BEGIN
+    SELECT * FROM PASS_JSON_COLLECTION_TAB
+    ORDER BY COMPANY_ID, USER_ID, CREATED_DATE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetJsonFilePerUserPerCollection]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spGetJsonFilePerUserPerCollection]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50)
+AS
+BEGIN
+    SELECT * FROM PASS_JSON_FILE_TAB
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetJsonFiles]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-------------------------- JSON File --------------------------
+-----------------------------------------------------------------
+
+CREATE   PROCEDURE [dbo].[spGetJsonFiles]
+AS
+BEGIN
+    SELECT * FROM PASS_JSON_FILE_TAB
+    ORDER BY COMPANY_ID, USER_ID, CREATED_DATE;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spGetLoginUser]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE   PROCEDURE [dbo].[spGetLoginUser]
     @USER_ID VARCHAR(50)
 AS
@@ -482,11 +707,14 @@ BEGIN
     WHERE USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassCompanies]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassCompanies]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+---------------------------- Company ----------------------------
+-----------------------------------------------------------------
 
 CREATE   PROCEDURE [dbo].[spGetPassCompanies]
 AS
@@ -495,14 +723,14 @@ BEGIN
     FROM dbo.PASS_COMPANY_TAB;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE   PROCEDURE [dbo].[spGetPassCompany]
-    @COMPANY_ID VARCHAR(10)
+    @COMPANY_ID VARCHAR(6)
 AS
 BEGIN
     SELECT * 
@@ -510,7 +738,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassCompanyContact]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassCompanyContact]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -524,11 +752,14 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassCompanyContacts]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassCompanyContacts]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+------------------------ Company Contact ------------------------
+-----------------------------------------------------------------
 
 CREATE   PROCEDURE [dbo].[spGetPassCompanyContacts]
 AS
@@ -537,7 +768,7 @@ BEGIN
     ORDER BY COMPANY_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassUserAppLogs]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassUserAppLogs]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -552,7 +783,7 @@ BEGIN
     WHERE COMPANY_ID = @COMPANY_ID AND USER_ID = @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetPassUsers]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetPassUsers]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -565,7 +796,7 @@ BEGIN
     ORDER BY USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetUserPerCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetUserPerCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -581,11 +812,14 @@ BEGIN
     AND USER_ID= @USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spGetUsersperCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spGetUsersperCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+------------------------- Company Users -------------------------
+-----------------------------------------------------------------
 
 CREATE   PROCEDURE [dbo].[spGetUsersperCompany]
     @COMPANY_ID VARCHAR(6)
@@ -596,11 +830,54 @@ BEGIN
     ORDER BY USER_ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSavePassAccessControl]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSaveJsonCollection]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+
+CREATE   PROCEDURE [dbo].[spSaveJsonCollection]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @COLLECTION_NAME VARCHAR(500),
+    @CREATED_BY VARCHAR(50)
+AS
+BEGIN
+    INSERT INTO dbo.PASS_JSON_COLLECTION_TAB(COMPANY_ID, USER_ID, COLLECTION_ID, COLLECTION_NAME, CREATED_BY, CREATED_DATE)
+    VALUES(@COMPANY_ID, @USER_ID, @COLLECTION_ID, @COLLECTION_NAME, @CREATED_BY, GETDATE());
+
+    SELECT SCOPE_IDENTITY() AS ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spSaveJsonFile]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spSaveJsonFile]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @FILE_ID VARCHAR(50),
+    @FILE_NAME VARCHAR(500),
+    @FILE_CONTENT VARCHAR(MAX),
+    @CREATED_BY VARCHAR(50)
+AS
+BEGIN
+    INSERT INTO dbo.PASS_JSON_FILE_TAB(COMPANY_ID, USER_ID, COLLECTION_ID, FILE_ID, FILE_NAME, FILE_CONTENT, CREATED_BY, CREATED_DATE)
+    VALUES(@COMPANY_ID, @USER_ID, @COLLECTION_ID, @FILE_ID, @FILE_NAME, @FILE_CONTENT, @CREATED_BY, GETDATE());
+
+    SELECT SCOPE_IDENTITY() AS ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spSavePassAccessControl]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
 CREATE   PROCEDURE [dbo].[spSavePassAccessControl]
     @APP_FUNCTION VARCHAR(100),
     @APP_FUNCTION_DESC VARCHAR(2000),
@@ -618,29 +895,30 @@ BEGIN
     SELECT SCOPE_IDENTITY() AS ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSavePassCompany]    Script Date: 12/6/2024 7:16:43 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSavePassCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE   PROCEDURE [dbo].[spSavePassCompany]
-    @COMPANY_ID VARCHAR(10),
+    @COMPANY_ID VARCHAR(6),
     @COMPANY_NAME VARCHAR(200),
     @COMPANY_ADDRESS VARCHAR(1000),
-    @LICENSE_LIMIT INT,   
+    @LICENSE_LIMIT INT,
+    @LICENSE_CONSUMED INT,
     @COMPANY_TYPE VARCHAR(50),
-    @CREATED_BY VARCHAR(20),
+    @CREATED_BY VARCHAR(50),
     @ROWSTATE VARCHAR(20)
 AS
 BEGIN
-    INSERT INTO dbo.PASS_COMPANY_TAB(COMPANY_ID, COMPANY_NAME, COMPANY_ADDRESS, LICENSE_LIMIT,  COMPANY_TYPE, CREATED_BY, CREATED_DATE, ROWSTATE)
-    VALUES(@COMPANY_ID, @COMPANY_NAME, @COMPANY_ADDRESS, @LICENSE_LIMIT,  @COMPANY_TYPE, @CREATED_BY, GETDATE(), @ROWSTATE);
+    INSERT INTO dbo.PASS_COMPANY_TAB(COMPANY_ID, COMPANY_NAME, COMPANY_ADDRESS, LICENSE_LIMIT, LICENSE_CONSUMED, COMPANY_TYPE, CREATED_BY, CREATED_DATE, ROWSTATE)
+    VALUES(@COMPANY_ID, @COMPANY_NAME, @COMPANY_ADDRESS, @LICENSE_LIMIT, @LICENSE_CONSUMED, @COMPANY_TYPE, @CREATED_BY, GETDATE(), @ROWSTATE);
 
     SELECT SCOPE_IDENTITY() AS ID;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSavePassCompanyContact]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSavePassCompanyContact]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -658,7 +936,7 @@ BEGIN
     VALUES(@COMPANY_ID, @USER_ID, @COMPANY_CONTACT_TITLE, @COMPANY_CONTACT_NUMBER, @COMPANY_CONTACT_EMAIL);
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSavePassUserAppLogs]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSavePassUserAppLogs]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -678,7 +956,7 @@ BEGIN
     VALUES(@COMPANY_ID, @USER_ID, @LOG_LINE_NUMBER, @LOG_DATE, @LOG_TYPE, @LOG_DESCRIPTION, @PLATNED_REMARKS);
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[spSaveUsersPerCompany]    Script Date: 12/3/2024 6:45:54 PM ******/
+/****** Object:  StoredProcedure [dbo].[spSaveUsersPerCompany]    Script Date: 12/8/2024 7:44:09 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -703,9 +981,62 @@ BEGIN
     VALUES(@COMPANY_ID, @USER_ID, @USER_NAME, @PASSWORD, @USER_EMAIL, @LICENSE_KEY, @VALID_FROM, @VALID_TO, @CREATED_BY, GETDATE(), @USER_ROLE, @ROWSTATE);
 END;
 GO
+/****** Object:  StoredProcedure [dbo].[spShareJsonCollection]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE   PROCEDURE [dbo].[spShareJsonCollection]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+    @COLLECTION_NAME VARCHAR(500),
+    @MODIFIED_BY VARCHAR(50)
+AS
+BEGIN
+    UPDATE dbo.PASS_JSON_COLLECTION_TAB
+    SET USER_ID = @USER_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
+
+    UPDATE dbo.PASS_JSON_FILE_TAB
+    SET USER_ID = @USER_ID, COLLECTION_ID = @COLLECTION_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[spShareJsonFile]    Script Date: 12/8/2024 7:44:09 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE   PROCEDURE [dbo].[spShareJsonFile]
+    @COMPANY_ID VARCHAR(6),
+    @USER_ID VARCHAR(50),
+    @COLLECTION_ID VARCHAR(50),
+	@FILE_ID VARCHAR(50),
+    @COLLECTION_NAME VARCHAR(500),
+    @MODIFIED_BY VARCHAR(50)
+AS
+BEGIN
+    UPDATE dbo.PASS_JSON_FILE_TAB
+    SET USER_ID = @USER_ID, COLLECTION_ID = @COLLECTION_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    WHERE COMPANY_ID = @COMPANY_ID
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID
+    AND FILE_ID = @FILE_ID;
+END;
+GO
+USE [master]
+GO
+ALTER DATABASE [platnedpass] SET  READ_WRITE 
+GO
 
 ------------------------------------ DEFAULT VALUES - BASIC DATA ------------------------------------
-USE [master]
+USE [platnedpass]
 GO
 INSERT INTO [dbo].[PASS_COMPANY_TAB]
            ([COMPANY_ID]
