@@ -375,7 +375,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     CompanyAddress = dialogCompany.CompanyAddress,
                     LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
                     RowState = "Inactive",
-                    CreatedBy = GlobalData.UserId
+                    ModifiedBy = GlobalData.UserId
                 };
                 // Access field data from dialogCompany
                 //string companyId = dialogCompany.CompanyId;
