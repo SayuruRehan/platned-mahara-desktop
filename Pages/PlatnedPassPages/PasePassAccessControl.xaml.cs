@@ -126,6 +126,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
+
+    #region Mahara-87 - Access Control Delete Button Function
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
@@ -137,7 +139,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 var dialogAccessControlDelete = new ContentDialog
                 {
                     Title = "Delete Confirmation",
-                    Content = $"Are you sure you want to delete App Function {selectedItem.TreeNodesAppFuncDescription[0].Name}?",
+                    Content = $"Are you sure you want to delete app function {selectedItem.TreeNodesAppFuncDescription[0].Name}?",
                     PrimaryButtonText = "Yes",
                     CloseButtonText = "No",
                     DefaultButton = ContentDialogButton.Close,
@@ -166,7 +168,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         // Show success message
                         if (App.MainWindow is MainWindow mainWindow)
                         {
-                            mainWindow.ShowInfoBar("Success!", $"Access Control deleted successfully.", InfoBarSeverity.Success);
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for App Function : {pass_Access_Control.AppFunction}", InfoBarSeverity.Success);
                         }
                     }
                     else
@@ -174,13 +176,13 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         // Show error message
                         if (App.MainWindow is MainWindow mainWindow)
                         {
-                            mainWindow.ShowInfoBar("Error", $"Failed to delete access control.", InfoBarSeverity.Error);
+                            mainWindow.ShowInfoBar("Error", $"Failed to delete app function.", InfoBarSeverity.Error);
                         }
                     }
                 }
             }
         }
-
+        #endregion
 
         private async void btnNewAccessRole_Click(object sender, RoutedEventArgs e)
         {

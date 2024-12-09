@@ -139,6 +139,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
+        #region Mahara-87 - Company Delete Button Function
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             // Retrieve the DataContext of the clicked row
@@ -181,7 +182,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         // Show success message
                         if (App.MainWindow is MainWindow mainWindow)
                         {
-                            mainWindow.ShowInfoBar("Success!", $"Company deleted successfully.", InfoBarSeverity.Success);
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
                         }
                     }
                     else
@@ -195,7 +196,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 }
             }
         }
-               
+        #endregion
 
         private async void btnNewCompany_Click(object sender, RoutedEventArgs e)
         {
