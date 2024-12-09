@@ -391,7 +391,7 @@ namespace PlatnedMahara
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
 
-                if (username != "" || password != "")
+                if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
                 {
                     Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {

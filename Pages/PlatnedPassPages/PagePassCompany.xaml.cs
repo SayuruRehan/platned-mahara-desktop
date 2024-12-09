@@ -141,48 +141,61 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            var rowData = button.DataContext; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemCompany selectedItem)
             {
-                var result = ContentDialogResult.None;
-                if (button?.DataContext is GridItemCompany selectedItem)
+                // Confirm delete action
+                var dialogCompanyDelete = new ContentDialog
                 {
-                    var dailogcompany = new DialogCompany(true)
+                    Title = "Delete Confirmation",
+                    Content = $"Are you sure you want to delete company {selectedItem.TreeNodesCompanyId[0].Name}?",
+                    PrimaryButtonText = "Yes",
+                    CloseButtonText = "No",
+                    DefaultButton = ContentDialogButton.Close,
+                    XamlRoot = PagePassCompanyXamlRoot.XamlRoot
+                };
+
+                var resultCompanyDel = await dialogCompanyDelete.ShowAsync();
+
+                if (resultCompanyDel == ContentDialogResult.Primary)
+                {
+
+                    Pass_Company pass_Company = new Pass_Company
                     {
-                        CompanyId = selectedItem.TreeNodesCompanyId[0].Name,
+                        CompanyID = selectedItem.TreeNodesCompanyId[0].Name,
                         CompanyName = selectedItem.TreeNodesCompanyName[0].Name,
                         CompanyAddress = selectedItem.TreeNodesCompanyAddress[0].Name,
-                        LicenseLimit = selectedItem.TreeNodesLicenseLimit[0].Name,
-                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name,
+                        CompanyType = selectedItem.TreeNodesCompanyType[0].Name
                     };
-                    if (PagePassCompanyXamlRoot.XamlRoot == null)
+
+                    // Call your delete method
+                    bool isDeleted = new AuthPlatnedPass().DeleteCompany(pass_Company);
+
+                    if (isDeleted)
                     {
-                        PagePassCompanyXamlRoot.Loaded += async (s, e) =>
+                        // Remove the item from the ObservableCollection
+                        GridItemsCompany.Remove(selectedItem);
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
                         {
-                            result = await ShowAddCompanyDialog(dailogcompany);
-                            await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
-                            LoadData();
-                            dataGrid.ItemsSource = null; // Clear the existing binding
-                            dataGrid.ItemsSource = GridItemsCompany;
-                            // Mahara-85
-                            AccessCheck();
-                        };
+                            mainWindow.ShowInfoBar("Success!", $"Company deleted successfully.", InfoBarSeverity.Success);
+                        }
                     }
                     else
                     {
-                        result = await ShowAddCompanyDialog(dailogcompany);
-                        await HandleDeleteCompanyDialogResultAsync(result, dailogcompany);
-                        LoadData();
-                        dataGrid.ItemsSource = null; // Clear the existing binding
-                        dataGrid.ItemsSource = GridItemsCompany;
-                        // Mahara-85
-                        AccessCheck();
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to delete company contact.", InfoBarSeverity.Error);
+                        }
                     }
                 }
             }
-        }        
+        }
+               
 
         private async void btnNewCompany_Click(object sender, RoutedEventArgs e)
         {
@@ -363,63 +376,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
-        private async Task HandleDeleteCompanyDialogResultAsync(ContentDialogResult result, DialogCompany dialogCompany)
-        {
-            if (result == ContentDialogResult.Primary)
-            {
-                Pass_Company pass_Company = new Pass_Company
-                {
-                    CompanyID = dialogCompany.CompanyId,
-                    CompanyName = dialogCompany.CompanyName,
-                    CompanyType = dialogCompany.CompanyType,
-                    CompanyAddress = dialogCompany.CompanyAddress,
-                    LicenseLimit = Convert.ToInt32(dialogCompany.LicenseLimit),
-                    RowState = "Inactive",
-                    ModifiedBy = GlobalData.UserId
-                };
-                // Access field data from dialogCompany
-                //string companyId = dialogCompany.CompanyId;
-                //string companyName = dialogCompany.CompanyName;
-                //
-                bool authResponse = new AuthPlatnedPass().DeleteCompany(pass_Company);
-                if (authResponse)
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Company: {pass_Company.CompanyID}", InfoBarSeverity.Success);
-                    }
-                }
-                else
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
-                    }
-
-                    dialogCompany = new DialogCompany(true)
-                    {
-                        CompanyId = pass_Company.CompanyID,
-                        CompanyName = pass_Company.CompanyName,
-                        CompanyAddress = pass_Company.CompanyAddress,
-                        LicenseLimit = Convert.ToString(pass_Company.LicenseLimit),
-                        CompanyType = pass_Company.CompanyType,
-                    };
-                    var resultNew = await ShowAddCompanyDialog(dialogCompany);
-                    await HandleDeleteCompanyDialogResultAsync(resultNew, dialogCompany);
-                }
-
-            }
-            else
-            {
-                if (App.MainWindow is MainWindow mainWindow)
-                {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
-                }
-            }
-        }
 
         #region Mahara-85 - Access Check
-
         private async Task AccessCheck()
         {
             if (AccessControl.IsGranted("BTN_NEW_COMPANY", "C"))
