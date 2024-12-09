@@ -390,8 +390,9 @@ namespace PlatnedMahara
                 // Access Username and Password from PageLogin
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
-
-                if (username != "" || password != "")
+                //Mahara 87 - Login validation logic change - START
+                if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+                //Mahara 87 - Login validation logic change - END
                 {
                     Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {

@@ -127,47 +127,62 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
             }
         }
 
+    #region Mahara-87 - Access Control Delete Button Function
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            // Retrieve the DataContext of the clicked row
             var button = sender as Button;
-            var rowData = button.DataContext; // Replace YourRowDataType with your actual data type
 
-            if (rowData != null)
+            if (button?.DataContext is GridItemAccessRole selectedItem)
             {
-                var result = ContentDialogResult.None;
-                if (button?.DataContext is GridItemAccessRole selectedItem)
+                // Confirm delete action
+                var dialogAccessControlDelete = new ContentDialog
                 {
-                    var dailogAccessControl = new DialogAccessControl(true)
+                    Title = "Delete Confirmation",
+                    Content = $"Are you sure you want to delete app function {selectedItem.TreeNodesAppFuncDescription[0].Name}?",
+                    PrimaryButtonText = "Yes",
+                    CloseButtonText = "No",
+                    DefaultButton = ContentDialogButton.Close,
+                    XamlRoot = PagePassAccessRoleXamlRoot.XamlRoot
+                };
+
+                var resultAccessControlDel = await dialogAccessControlDelete.ShowAsync();
+
+                if (resultAccessControlDel == ContentDialogResult.Primary)
+                {
+
+                    Pass_Access_Control pass_Access_Control = new Pass_Access_Control
                     {
                         AppFunction = selectedItem.TreeNodesAppFunction[0].Name,
-                        AppFunctionDescription = selectedItem.TreeNodesAppFuncDescription[0].Name,
-                        UserRole = selectedItem.TreeNodesUserRole[0].Name,
-                        ReadAllowed = selectedItem.TreeNodesReadAllowed[0].Name,
-                        CreateAllowed = selectedItem.TreeNodesCreateAllowed[0].Name,
-                        UpdateAllowed = selectedItem.TreeNodesUpdateAllowed[0].Name,
-                        DeleteAllowed = selectedItem.TreeNodesDeleteAllowed[0].Name,
+                        UserRole = selectedItem.TreeNodesUserRole[0].Name
                     };
-                    if (PagePassAccessRoleXamlRoot.XamlRoot == null)
+
+                    // Call your delete method
+                    bool isDeleted = new AuthPlatnedPass().DeleteAccessControl(pass_Access_Control);
+
+                    if (isDeleted)
                     {
-                        PagePassAccessRoleXamlRoot.Loaded += async (s, e) =>
+                        // Remove the item from the ObservableCollection
+                        GridItemsAccessRole.Remove(selectedItem);
+
+                        // Show success message
+                        if (App.MainWindow is MainWindow mainWindow)
                         {
-                            result = await ShowAddAccessControlDialog(dailogAccessControl);
-                            await HandleDeleteAccessControlDialogResultAsync(result, dailogAccessControl);
-                        };
+                            mainWindow.ShowInfoBar("Success!", $"Operation Success for App Function : {pass_Access_Control.AppFunction}", InfoBarSeverity.Success);
+                        }
                     }
                     else
                     {
-                        result = await ShowAddAccessControlDialog(dailogAccessControl);
-                        await HandleDeleteAccessControlDialogResultAsync(result, dailogAccessControl);
-                        LoadData();
-                        dataGrid.ItemsSource = null; // Clear the existing binding
-                        dataGrid.ItemsSource = GridItemsAccessRole;
+                        // Show error message
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Error", $"Failed to delete app function.", InfoBarSeverity.Error);
+                        }
                     }
                 }
             }
         }
-        
-
+        #endregion
 
         private async void btnNewAccessRole_Click(object sender, RoutedEventArgs e)
         {
@@ -334,55 +349,6 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     var resultNew = await ShowAddAccessControlDialog(dialogAccess);
                     await HandleAddAccessControlDialogResultAsync(resultNew, dialogAccess);
                 }
-            }
-            else
-            {
-                if (App.MainWindow is MainWindow mainWindow)
-                {
-                    mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
-                }
-            }
-        }
-
-        private async Task HandleDeleteAccessControlDialogResultAsync(ContentDialogResult result, DialogAccessControl dialogAccess)
-        {
-            if (result == ContentDialogResult.Primary)
-            {
-                Pass_Access_Control pass_Access_Control = new Pass_Access_Control
-                {
-                    AppFunction = dialogAccess.AppFunction,
-                    UserRole = dialogAccess.UserRole
-                };
-                bool authResponse = new AuthPlatnedPass().DeleteAccessControl(pass_Access_Control);
-                if (authResponse)
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Success!", $"Operation Success for Function: {pass_Access_Control.AppFunction} for Role: {dialogAccess.UserRole}", InfoBarSeverity.Success);
-                    }
-                }
-                else
-                {
-                    if (App.MainWindow is MainWindow mainWindow)
-                    {
-                        mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
-                    }
-
-                    dialogAccess = new DialogAccessControl()
-                    {
-                        AppFunction = dialogAccess.AppFunction,
-                        AppFunctionDescription = dialogAccess.AppFunctionDescription,
-                        UserRole = dialogAccess.UserRole,
-                        ReadAllowed = dialogAccess.ReadAllowed,
-                        CreateAllowed = dialogAccess.CreateAllowed,
-                        UpdateAllowed = dialogAccess.UpdateAllowed,
-                        DeleteAllowed = dialogAccess.DeleteAllowed,
-
-                    };
-                    var resultNew = await ShowAddAccessControlDialog(dialogAccess);
-                    await HandleAddAccessControlDialogResultAsync(resultNew, dialogAccess);
-                }
-
             }
             else
             {
