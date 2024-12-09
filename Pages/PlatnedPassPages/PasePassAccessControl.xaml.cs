@@ -205,6 +205,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemsAccessRole;
+                // Mahara-92 - START
+                AccessCheck();
+                // Mahara-92 - END
             }
         }
 
