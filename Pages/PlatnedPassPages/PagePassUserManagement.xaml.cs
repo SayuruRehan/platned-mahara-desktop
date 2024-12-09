@@ -115,6 +115,15 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         }
                     }
                 }
+                // Mahara-92 - Added cancel info messge - START
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                    }
+                }
+                // Mahara-92 - END
             }
         }
 
@@ -251,6 +260,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemsUser;
+                // Mahara-92 - START
+                AccessCheck();
+                // Mahara-92 - END
             }
         }
 
