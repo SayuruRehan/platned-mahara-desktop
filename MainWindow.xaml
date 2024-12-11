@@ -62,8 +62,9 @@
             </MenuBarItem>
         </MenuBar>
         <!-- Refer from BaseUi - End -->
-        
-        <TabView x:Name="TabViewMain" Grid.Row="2" AddTabButtonClick="TabView_AddButtonClick" TabCloseRequested="TabView_TabCloseRequested" Loaded="TabView_Loaded">
+
+        <!--<TabView x:Name="TabViewMain" Grid.Row="2" AddTabButtonClick="TabView_AddButtonClick" TabCloseRequested="TabView_TabCloseRequested" Loaded="TabView_Loaded">-->
+        <TabView x:Name="TabViewMain" Grid.Row="2" AddTabButtonClick="TabView_AddButtonClick" TabCloseRequested="TabView_TabCloseRequested">
             <TabView.KeyboardAccelerators>
                 <KeyboardAccelerator Key="T" Modifiers="Control" Invoked="NewTabKeyboardAccelerator_Invoked" />
                 <KeyboardAccelerator Key="W" Modifiers="Control" Invoked="CloseSelectedTabKeyboardAccelerator_Invoked" />
