@@ -56,8 +56,8 @@ namespace PlatnedMahara.Pages
         private string entitySetParam = "";
         private string entitySetArray = "";
         // Mahara-66 - START
-        TreeViewNode personalFolder;
-        private ObservableCollection<CollectionExplorerItem> DataSource;
+        private ObservableCollection<CollectionExplorerItem> DataSource { get; set; } = new ObservableCollection<CollectionExplorerItem>();
+        private DispatcherTimer _timer;
         // Mahara-66 - END
 
         public PageHome()
@@ -66,10 +66,31 @@ namespace PlatnedMahara.Pages
             LoadData();
             dataGrid.ItemsSource = GridItems;
             // Mahara-66 - START
+            //this.Loaded += PageHome_Loaded;
             this.DataContext = this;
             LoadJsonDataThreadTask();
+
+            // Set up timer
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(GlobalData.JsonRefreshInterval);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
             // Mahara-66 - END
         }
+
+        #region Mahara-66 - Making the method 'PageHome_Loaded' Obsolete
+        /*private async void PageHome_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = this;
+            await LoadJsonDataThreadTask();
+
+            // Set up timer
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(GlobalData.JsonRefreshInterval);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }*/
+        #endregion
 
         public void PrepareConnectedAnimation(ConnectedAnimationConfiguration config)
         {
@@ -1467,6 +1488,31 @@ namespace PlatnedMahara.Pages
         }
 
         #endregion
+
+        #region Mahara-66 - Refresh JSON ThreeView in time interval
+
+        private void Timer_Tick(object sender, object e)
+        {
+            RefreshTreeViewData();
+        }
+
+        private async void RefreshTreeViewData()
+        {
+            var newData = await Task.Run(() =>
+            {
+                return GetJsonData();
+            });
+
+            // Clear and update the existing DataSource
+            DataSource.Clear();
+            foreach (var item in newData)
+            {
+                DataSource.Add(item);
+            }
+        }
+
+        #endregion
+
     }
 
 

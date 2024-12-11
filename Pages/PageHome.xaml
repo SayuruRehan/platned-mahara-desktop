@@ -63,7 +63,7 @@
                     VerticalAlignment="Top" HorizontalAlignment="Left"
                     HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
                     VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                    <TreeView ItemsSource="{x:Bind DataSource}">
+                    <TreeView ItemsSource="{x:Bind DataSource, Mode=OneWay}">
                         <TreeView.ItemTemplate>
                             <DataTemplate x:DataType="local:CollectionExplorerItem">
                                 <TreeViewItem ItemsSource="{x:Bind Children}" Content="{x:Bind Name}"/>
