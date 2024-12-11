@@ -25,6 +25,8 @@ using PlatnedMahara.Classes;
 using System.ComponentModel;
 using PlatnedMahara.Pages.PlatnedPassPages;
 using PlatnedMahara.Classes.Db;
+using System.Diagnostics;
+using Microsoft.VisualBasic;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -58,6 +60,7 @@ namespace PlatnedMahara.Pages
         // Mahara-66 - START
         private ObservableCollection<CollectionExplorerItem> DataSource { get; set; } = new ObservableCollection<CollectionExplorerItem>();
         private DispatcherTimer _timer;
+        List<CollectionExplorerItem> jsonFileListForSelectedCollection;
         // Mahara-66 - END
 
         public PageHome()
@@ -1462,7 +1465,10 @@ namespace PlatnedMahara.Pages
                         dynamicChildren.Add(new CollectionExplorerItem
                         {
                             Name = jFile.FileName + " - " + jFile.FileID, // Assuming Pass_Json_File has a FileName property
-                            Type = CollectionExplorerItem.CollectionExplorerItemType.File
+                            Type = CollectionExplorerItem.CollectionExplorerItemType.File,
+                            CollectionID = jFile.CollectionID,
+                            FileID = jFile.FileID,
+                            FileContent = jFile.FileContent
                         });
                     }
                     pass_Json_File = null;
@@ -1513,6 +1519,61 @@ namespace PlatnedMahara.Pages
 
         #endregion
 
+        #region Mahara-66 - Get selected Collection and Childres
+
+        private void TreeView_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
+        {
+            // Ensure an item is selected
+            if (args.AddedItems.Count > 0 && args.AddedItems[0] is CollectionExplorerItem selectedItem)
+            {
+                // Extract the Children data
+                var childrenData = selectedItem.Children;
+
+                // Convert children to a list (if needed)
+                var childrenList = childrenData?.ToList();
+
+                // Use the list as needed
+                ProcessChildrenData(childrenList);
+            }
+        }
+
+        // Example method to process the children data
+        private void ProcessChildrenData(List<CollectionExplorerItem> childrenList)
+        {
+            jsonFileListForSelectedCollection = childrenList;
+
+            bool foundChild = false;
+
+            foreach (var child in childrenList)
+            {
+                if (!string.IsNullOrEmpty(child.FileID))
+                {
+                    foundChild = true;
+                }
+                else
+                {
+                    foundChild = false;
+                }
+                
+                Logger.Log($"Selected Collection ID: {child.CollectionID}");
+                Logger.Log($"File ID - Name: {child.FileID} - {child.Name}");
+                Logger.Log($"File Content: {child.FileContent}");
+            }
+
+            if (foundChild)
+            {
+                PickCsvFileButton.IsEnabled = true;
+                btnStart.IsEnabled = true;
+            }
+            else
+            {
+                PickCsvFileButton.IsEnabled = false;
+                btnStart.IsEnabled = false;
+            }
+            
+        }
+
+        #endregion
     }
 
 
@@ -1560,6 +1621,9 @@ namespace PlatnedMahara.Pages
         public enum CollectionExplorerItemType { Folder, File };
         public string Name { get; set; }
         public CollectionExplorerItemType Type { get; set; }
+        public string CollectionID { get; set; }
+        public string FileID { get; set; }        
+        public string FileContent { get; set; }
         private ObservableCollection<CollectionExplorerItem> m_children;
         public ObservableCollection<CollectionExplorerItem> Children
         {
