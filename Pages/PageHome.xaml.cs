@@ -22,6 +22,9 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using Newtonsoft.Json;
 using PlatnedMahara.Classes;
+using System.ComponentModel;
+using PlatnedMahara.Pages.PlatnedPassPages;
+using PlatnedMahara.Classes.Db;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -47,17 +50,25 @@ namespace PlatnedMahara.Pages
         string jsonFilePath;
         string csvFilePath;
         bool errorFound = false;
-        private CancellationTokenSource cancellationTokenSource; 
+        private CancellationTokenSource cancellationTokenSource;
         private readonly string configFilePath = GlobalData.configFilePath;
         private string entitySet = "";
         private string entitySetParam = "";
         private string entitySetArray = "";
+        // Mahara-66 - START
+        TreeViewNode personalFolder;
+        private ObservableCollection<CollectionExplorerItem> DataSource;
+        // Mahara-66 - END
 
         public PageHome()
         {
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItems;
+            // Mahara-66 - START
+            this.DataContext = this;
+            LoadJsonDataThreadTask();
+            // Mahara-66 - END
         }
 
         public void PrepareConnectedAnimation(ConnectedAnimationConfiguration config)
@@ -96,7 +107,8 @@ namespace PlatnedMahara.Pages
             }
         }
 
-        private async void PickJsonFileButton_Click(object sender, RoutedEventArgs e)
+        #region Mahara-66 - Depreciating the method for Collection view implementation
+        /*private async void PickJsonFileButton_Click(object sender, RoutedEventArgs e)
         {
             PickJsonFileOutputTextBlock.Text = "";
 
@@ -118,7 +130,7 @@ namespace PlatnedMahara.Pages
                 {
                     try
                     {
-                        string sourceFilePath = file.Path; 
+                        string sourceFilePath = file.Path;
                         string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
@@ -158,7 +170,8 @@ namespace PlatnedMahara.Pages
                 Logger.Log("JSON file upload error! Could not retrieve the window handle.", "Error");
             }
 
-        }
+        }*/
+        #endregion
 
         private async void PickCsvFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -278,7 +291,7 @@ namespace PlatnedMahara.Pages
                 {
                     mainWindow.ShowInfoBar("Error!", "Login required to proceed. Please login/ register with Platned Pass!", InfoBarSeverity.Error);
                 }
-            }            
+            }
 
         }
 
@@ -336,7 +349,7 @@ namespace PlatnedMahara.Pages
                 string[] headers = reader.ReadLine().Split(',');
                 foreach (string header in headers)
                 {
-                        csvData.Columns.Add(header);
+                    csvData.Columns.Add(header);
                 }
                 Logger.Log("CSV headers loaded.");
 
@@ -350,7 +363,6 @@ namespace PlatnedMahara.Pages
                 Logger.Log("CSV data loaded.");
             }
         }
-
 
         public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
         {
@@ -490,7 +502,7 @@ namespace PlatnedMahara.Pages
                 {
                     Logger.Log($"Exception occurred. Possible low priority exception: {e}");
                 }
-                
+
             }
 
             string headers = "";
@@ -543,11 +555,11 @@ namespace PlatnedMahara.Pages
                         url = UrlReconstructor.ReconstructUrl(url, requestBody);
                         Logger.Log("POST - Constructed URL: " + url);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Log("No parameters found in the URL. Skipping URL Construction.");
                     }
-                    
+
                     var tempRequestBody = "";
 
                     if (bodyRawJson != "")
@@ -555,7 +567,7 @@ namespace PlatnedMahara.Pages
                         tempRequestBody = FilterRequestBody(bodyRawJson, requestBody);
                         Logger.Log("POST - Filtered Request body: " + requestBody);
                     }
-                    if(tempRequestBody != "IGNORE" && bodyRawJson != "")
+                    if (tempRequestBody != "IGNORE" && bodyRawJson != "")
                     {
                         requestBody = tempRequestBody;
                     }
@@ -571,7 +583,7 @@ namespace PlatnedMahara.Pages
                     }
                     if (apiResponse.ResponseBody.Contains("REQUEST_ERROR") && apiResponse.ResponseBody.Contains("UNEXPECTED_CONTENT_TYPE") && apiResponse.ResponseBody.Contains("multipart/mixed"))
                     {
-                        if(bodyRawJson != "")
+                        if (bodyRawJson != "")
                         {
                             ParseRawContent(bodyRawJson);
                         }
@@ -580,7 +592,7 @@ namespace PlatnedMahara.Pages
                             string jsonContent = File.ReadAllText(jsonFilePath);
                             ParseJson(jsonContent);
                         }
-                        
+
                         requestBody = BuildRequestBody(csvParameters);
                         Logger.Log("POST - Request body for SendMultipartRequest: " + requestBody);
                         apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest", entitySet, entitySetParam, entitySetArray);
@@ -707,7 +719,7 @@ namespace PlatnedMahara.Pages
                         {
                             UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
                         }
-                        
+
                     }
 
                 }
@@ -1280,13 +1292,13 @@ namespace PlatnedMahara.Pages
                 string filteredJson = JsonConvert.SerializeObject(requestBody, Formatting.Indented);
 
                 return filteredJson;
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return "IGNORE";
             }
-            
-        }
 
+        }
 
         private void WriteDataTableToCsvWithStatus(DataTable dataTable, string filePath, int iterationNumber, bool errorFound, string apiResponseBody)
         {
@@ -1380,6 +1392,81 @@ namespace PlatnedMahara.Pages
             }
         }
 
+        #region Mahara-66 - Collection and File list data bindings
+
+        public async Task LoadJsonDataThreadTask()
+        {
+            await Task.Run(() =>
+            {
+                DataSource = GetJsonData();
+            });
+        }
+
+        private ObservableCollection<CollectionExplorerItem> GetJsonData()
+        {
+
+            var list = new ObservableCollection<CollectionExplorerItem>();
+
+            List<Pass_Json_Collection> pass_Json_Collection = new List<Pass_Json_Collection>();
+            Pass_Json_Collection collectionDet = new Pass_Json_Collection
+            {
+                CompanyID = GlobalData.CompanyId,
+                UserID = GlobalData.UserId,
+            };
+            pass_Json_Collection = new AuthPlatnedPass().GetPass_CollectionsPerUser(collectionDet);
+
+
+            if (pass_Json_Collection != null && pass_Json_Collection.Count > 0)
+            {
+
+                foreach (Pass_Json_Collection jCollection in pass_Json_Collection)
+                {
+                    // Initialize a list to hold dynamic children
+                    ObservableCollection<CollectionExplorerItem>? dynamicChildren = new ObservableCollection<CollectionExplorerItem>();
+
+                    // Assuming you have a method to get pass_Json_File for the current jCollection
+
+                    List<Pass_Json_File> pass_Json_File = new List<Pass_Json_File>();
+                    Pass_Json_File fileDet = new Pass_Json_File
+                    {
+                        CompanyID = GlobalData.CompanyId,
+                        UserID = GlobalData.UserId,
+                        CollectionID = jCollection.CollectionID
+                    };
+                    pass_Json_File = new AuthPlatnedPass().GetPass_FilePerUserPerCollection(fileDet);
+
+                    // Loop through each item in pass_Json_File to generate dynamic children
+                    foreach (var jFile in pass_Json_File)
+                    {
+                        dynamicChildren.Add(new CollectionExplorerItem
+                        {
+                            Name = jFile.FileName + " - " + jFile.FileID, // Assuming Pass_Json_File has a FileName property
+                            Type = CollectionExplorerItem.CollectionExplorerItemType.File
+                        });
+                    }
+                    pass_Json_File = null;
+
+                    // Declare and initialize the folder object
+                    CollectionExplorerItem folder = new CollectionExplorerItem
+                    {
+                        Name = jCollection.CollectionName + " - " + jCollection.CollectionID,
+                        Type = CollectionExplorerItem.CollectionExplorerItemType.Folder,
+                        Children = dynamicChildren // Assign dynamically created children here
+                    };
+
+                    dynamicChildren = null;
+                    // Add the folder to the main list
+                    list.Add(folder);
+                }
+
+            }
+
+            return list;
+
+            return null;
+        }
+
+        #endregion
     }
 
 
@@ -1419,5 +1506,51 @@ namespace PlatnedMahara.Pages
         }
     }
 
+    #region Mahara-66 Collection Explorer Item class for Collection and File tree
+
+    public class CollectionExplorerItem : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public enum CollectionExplorerItemType { Folder, File };
+        public string Name { get; set; }
+        public CollectionExplorerItemType Type { get; set; }
+        private ObservableCollection<CollectionExplorerItem> m_children;
+        public ObservableCollection<CollectionExplorerItem> Children
+        {
+            get
+            {
+                if (m_children == null)
+                {
+                    m_children = new ObservableCollection<CollectionExplorerItem>();
+                }
+                return m_children;
+            }
+            set
+            {
+                m_children = value;
+            }
+        }
+
+        private bool m_isExpanded;
+        public bool IsExpanded
+        {
+            get { return m_isExpanded; }
+            set
+            {
+                if (m_isExpanded != value)
+                {
+                    m_isExpanded = value;
+                    NotifyPropertyChanged("IsExpanded");
+                }
+            }
+        }
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    #endregion
 
 }

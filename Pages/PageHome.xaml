@@ -45,16 +45,35 @@
             </Viewbox>
         </Grid>
 
-        <!-- JSON file uploading -->
-        <Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
+        <!-- JSON file uploading [Obselete] -->
+        <!--<Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
             <StackPanel Orientation="Vertical">
                 <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                     <Button x:Name="PickJsonFileButton" Content="Open JSON file" Click="PickJsonFileButton_Click" Margin="0,0,0,10"/>
                     <TextBlock x:Name="PickJsonFileOutputTextBlock" TextWrapping="Wrap" Padding="20,5,0,0"/>
                 </StackPanel>
             </StackPanel>
-        </Grid>
+        </Grid>-->
 
+        <!-- JSON Collection and File Tree -->
+        <Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
+            <StackPanel Orientation="Vertical">
+                <ScrollView Height="380" Width="370" ContentOrientation="None"
+                    ZoomMode="Enabled" IsTabStop="True"
+                    VerticalAlignment="Top" HorizontalAlignment="Left"
+                    HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                    <TreeView ItemsSource="{x:Bind DataSource}">
+                        <TreeView.ItemTemplate>
+                            <DataTemplate x:DataType="local:CollectionExplorerItem">
+                                <TreeViewItem ItemsSource="{x:Bind Children}" Content="{x:Bind Name}"/>
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </ScrollView>
+            </StackPanel>
+        </Grid>
+        
         <!-- CSV file uploading -->
         <Grid x:Name="SourceCsvElement" Grid.Row="1" Grid.Column="1" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
             <StackPanel Orientation="Vertical">
