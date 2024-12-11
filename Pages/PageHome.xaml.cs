@@ -61,6 +61,7 @@ namespace PlatnedMahara.Pages
         private ObservableCollection<CollectionExplorerItem> DataSource { get; set; } = new ObservableCollection<CollectionExplorerItem>();
         private DispatcherTimer _timer;
         List<CollectionExplorerItem> jsonFileListForSelectedCollection;
+        private string jsonFileContent;
         // Mahara-66 - END
 
         public PageHome()
@@ -299,7 +300,19 @@ namespace PlatnedMahara.Pages
                     btnRerun.IsEnabled = false;
                     btnStop.IsEnabled = true;
 
-                    await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                    // Mahara-66 - Loop for JSON FIle list for the selected collection and start execution for each JSON file - START
+                    foreach (var JSONFileContent in jsonFileListForSelectedCollection)
+                    {
+                        
+                        Logger.Log($"Selected Collection ID: {JSONFileContent.CollectionID}");
+                        Logger.Log($"File ID - Name: {JSONFileContent.FileID} - {JSONFileContent.Name}");
+                        Logger.Log($"File Content: {JSONFileContent.FileContent}");
+
+                        //await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                        await RunTestIterationsAsync(JSONFileContent.FileContent, uploadedCSVFilePath);
+                    }
+                    // Mahara-66 - END
+
                 }
                 else
                 {
@@ -362,7 +375,10 @@ namespace PlatnedMahara.Pages
         {
             tempFolderPath = GlobalData.tempFolderPath;
 
-            string jsonContent = File.ReadAllText(jsonFilePath);
+            // Mahara-66 - Setting JSONFileContent instead of reading JSON content from file - START
+            //string jsonContent = File.ReadAllText(jsonFilePath);
+            string jsonContent = jsonFileContent;
+            // Mahara-66 - END
             JObject jsonObject = JObject.Parse(jsonContent);
             apiCalls = jsonObject["item"].Select(item => (JObject)item).ToList();
             Logger.Log("API calls loaded from JSON.");
@@ -388,16 +404,23 @@ namespace PlatnedMahara.Pages
             }
         }
 
-        public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
+        // Mahara-66 - Use JSONFileContent instead of JSON file path - START
+        //public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
+        public async Task RunTestIterationsAsync(string JSONFileContent, string uploadedCSVFilePath)
+        // Mahara-66 - END
         {
             progExec.Visibility = Visibility.Visible;
             lblExecStarted.Text = DateTime.Now.ToString();
             lblExecFinished.Text = "~";
             drpShareResults.IsEnabled = true;
 
-            jsonFilePath = uploadedJSONFilePath;
+            // Mahara-66 - Use JSONFileContent instead of JSON file path - START
+            //jsonFilePath = uploadedJSONFilePath;
+            jsonFileContent = JSONFileContent;
             csvFilePath = uploadedCSVFilePath;
-            Logger.Log("jsonFilePath, csvFilePath received for execution!");
+            //Logger.Log("jsonFilePath, csvFilePath received for execution!");
+            Logger.Log("JSONFileContent, csvFilePath received for execution!");
+            // Mahara-66 - END
             InitializeAsync();
 
             GridItems.Clear();
@@ -1563,11 +1586,11 @@ namespace PlatnedMahara.Pages
             if (foundChild)
             {
                 PickCsvFileButton.IsEnabled = true;
-                btnStart.IsEnabled = true;
             }
             else
             {
                 PickCsvFileButton.IsEnabled = false;
+                PickCsvFileOutputTextBlock.Text = "";
                 btnStart.IsEnabled = false;
             }
             
