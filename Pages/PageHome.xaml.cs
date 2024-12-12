@@ -303,7 +303,7 @@ namespace PlatnedMahara.Pages
                     // Mahara-66 - Loop for JSON FIle list for the selected collection and start execution for each JSON file - START
                     foreach (var JSONFileContent in jsonFileListForSelectedCollection)
                     {
-                        
+
                         Logger.Log($"Selected Collection ID: {JSONFileContent.CollectionID}");
                         Logger.Log($"File ID - Name: {JSONFileContent.FileID} - {JSONFileContent.Name}");
                         Logger.Log($"File Content: {JSONFileContent.FileContent}");
@@ -1512,8 +1512,6 @@ namespace PlatnedMahara.Pages
             }
 
             return list;
-
-            return null;
         }
 
         #endregion
@@ -1527,17 +1525,59 @@ namespace PlatnedMahara.Pages
 
         private async void RefreshTreeViewData()
         {
+            ObservableCollection<CollectionExplorerItem> extractedList = new ObservableCollection<CollectionExplorerItem>(DataSource);
+            ObservableCollection<CollectionExplorerItem> returnedList;
+
             var newData = await Task.Run(() =>
             {
                 return GetJsonData();
             });
 
-            // Clear and update the existing DataSource
-            DataSource.Clear();
-            foreach (var item in newData)
+            returnedList = newData;
+            bool areListsEqual = AreListsEqual(extractedList, returnedList);
+
+            if (areListsEqual)
             {
-                DataSource.Add(item);
+                Logger.Log("JSON Collection Refresh Service: The lists are identical. Ignored the view refresh.");
             }
+            else
+            {
+                Logger.Log("JSON Collection Refresh Service: The lists are different. Refreshing the view.");
+                // Clear and update the existing DataSource
+                DataSource.Clear();
+                foreach (var item in newData)
+                {
+                    DataSource.Add(item);
+                }
+            }
+            
+        }
+
+        bool AreListsEqual(
+            ObservableCollection<CollectionExplorerItem> list1,
+            ObservableCollection<CollectionExplorerItem> list2)
+        {
+            if (list1.Count != list2.Count)
+                return false;
+
+            for (int i = 0; i < list1.Count; i++)
+            {
+                if (!AreItemsEqual(list1[i], list2[i]))
+                    return false;
+            }
+
+            return true;
+        }
+        bool AreItemsEqual(CollectionExplorerItem item1, CollectionExplorerItem item2)
+        {
+            if (item1 == null || item2 == null)
+                return false;
+
+            return item1.Name == item2.Name
+                    && Enumerable.SequenceEqual(item1.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 item2.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 new CollectionExplorerItemComparer());
+
         }
 
         #endregion
@@ -1577,7 +1617,7 @@ namespace PlatnedMahara.Pages
                 {
                     foundChild = false;
                 }
-                
+
                 Logger.Log($"Selected Collection ID: {child.CollectionID}");
                 Logger.Log($"File ID - Name: {child.FileID} - {child.Name}");
                 Logger.Log($"File Content: {child.FileContent}");
@@ -1593,7 +1633,7 @@ namespace PlatnedMahara.Pages
                 PickCsvFileOutputTextBlock.Text = "";
                 btnStart.IsEnabled = false;
             }
-            
+
         }
 
         #endregion
@@ -1645,7 +1685,7 @@ namespace PlatnedMahara.Pages
         public string Name { get; set; }
         public CollectionExplorerItemType Type { get; set; }
         public string CollectionID { get; set; }
-        public string FileID { get; set; }        
+        public string FileID { get; set; }
         public string FileContent { get; set; }
         private ObservableCollection<CollectionExplorerItem> m_children;
         public ObservableCollection<CollectionExplorerItem> Children
@@ -1684,6 +1724,29 @@ namespace PlatnedMahara.Pages
         }
     }
 
+    // Custom equality comparer for CollectionExplorerItem if needed
+    class CollectionExplorerItemComparer : IEqualityComparer<CollectionExplorerItem>
+    {
+        public bool Equals(CollectionExplorerItem x, CollectionExplorerItem y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return x.Name == y.Name
+                    && Enumerable.SequenceEqual(x.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 y.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 new CollectionExplorerItemComparer());
+
+        }
+
+        public int GetHashCode(CollectionExplorerItem obj)
+        {
+            return obj.Name.GetHashCode();
+        }
+    }
+
     #endregion
+
+
 
 }
