@@ -690,7 +690,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     RowState = dr["ROWSTATE"].ToString(),
                 });
             }
@@ -718,7 +718,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     RowState = dr["ROWSTATE"].ToString(),
                 });
             }
@@ -815,7 +815,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     RowState = dr["ROWSTATE"].ToString(),
                 });
             }
@@ -846,7 +846,7 @@ namespace PlatnedMahara.DataAccess.Methods
                     CreatedBy = dr["CREATED_BY"].ToString(),
                     CreatedDate = Convert.ToDateTime(dr["CREATED_DATE"]),
                     ModifiedBy = dr["MODIFIED_BY"] != DBNull.Value ? dr["MODIFIED_BY"].ToString() : "",
-                    ModifiedDate = Convert.ToDateTime(dr["MODIFIED_DATE"]),
+                    ModifiedDate = dr["MODIFIED_DATE"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(dr["MODIFIED_DATE"]) : null,
                     RowState = dr["ROWSTATE"].ToString(),
                 });
             }

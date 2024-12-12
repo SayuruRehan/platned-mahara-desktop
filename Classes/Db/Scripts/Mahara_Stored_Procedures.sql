@@ -6,8 +6,8 @@
 ----------------------------------------------------------------------------------------------------
 --  DATE    USER        DESCRIPTION  
 --  ------  ----------  ----------------------------------------------------------------------------
---  
---  281124  NimeshE     Created the file for versioning, initial script created by Bhagya.
+--  241211  NimeshE     Modified spGetJsonFilePerUserPerCollection to add missing filter param in where condition collection ID.
+--  241128  NimeshE     Created the file for versioning, initial script created by Bhagya.
 ----------------------------------------------------------------------------------------------------
 
 USE [platnedpass]
@@ -485,7 +485,8 @@ AS
 BEGIN
     SELECT * FROM PASS_JSON_FILE_TAB
     WHERE COMPANY_ID = @COMPANY_ID
-    AND USER_ID = @USER_ID;
+    AND USER_ID = @USER_ID
+    AND COLLECTION_ID = @COLLECTION_ID;
 END;
 GO
 

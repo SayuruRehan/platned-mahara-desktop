@@ -5,6 +5,7 @@
 ----------------------------------------------------------------------------------------------------
 --  DATE    USER        DESCRIPTION  
 --  ------  ----------  ----------------------------------------------------------------------------
+--  241211  NimeshE     Added script to grant Execute permission to platnedpass user.
 --  241208  NimeshE     Updating with new two tables and SPs.
 --  241203  NimeshE     Created the file for versioning.
 ----------------------------------------------------------------------------------------------------
@@ -173,7 +174,7 @@ CREATE TABLE [dbo].[PASS_JSON_FILE_TAB](
 	[COMPANY_ID] [varchar](6) NOT NULL,
 	[USER_ID] [varchar](50) NOT NULL,
 	[COLLECTION_ID] [varchar](50) NOT NULL,
-	[FILE_ID] [uniqueidentifier] NOT NULL,
+	[FILE_ID] [varchar](50) NOT NULL,
 	[FILE_NAME] [varchar](500) NOT NULL,
 	[FILE_CONTENT] [varchar](max) NULL,
 	[CREATED_BY] [varchar](50) NULL,
@@ -1033,6 +1034,11 @@ GO
 USE [master]
 GO
 ALTER DATABASE [platnedpass] SET  READ_WRITE 
+GO
+
+-------------------------------- GRANT EXEC PERMISSION TO APP OWNER ---------------------------------
+
+GRANT EXECUTE TO platnedpassuser
 GO
 
 ------------------------------------ DEFAULT VALUES - BASIC DATA ------------------------------------
