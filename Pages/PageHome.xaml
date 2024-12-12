@@ -144,6 +144,26 @@
                             <Run FontFamily="Times New Roman" x:Name="lblExecFinished">~</Run>
                         </TextBlock>
                     </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="40,0,0,0">
+                        <TextBlock>
+                            <Bold>
+                                <Run FontFamily="Times New Roman">Executing Collection </Run>
+                            </Bold>
+                        </TextBlock>
+                        <TextBlock>
+                            <Bold>
+                                <Run FontFamily="Times New Roman">Executing file </Run>
+                            </Bold>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                        <TextBlock>
+                            <Run FontFamily="Times New Roman" x:Name="lblCollectionID">~</Run>
+                        </TextBlock>
+                        <TextBlock>
+                            <Run FontFamily="Times New Roman" x:Name="lblExecutingFileID">~</Run>
+                        </TextBlock>
+                    </StackPanel>                    
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Grid.ColumnSpan="5" VerticalAlignment="Top" Margin="0,15,0,0" >

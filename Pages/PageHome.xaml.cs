@@ -62,6 +62,7 @@ namespace PlatnedMahara.Pages
         private DispatcherTimer _timer;
         List<CollectionExplorerItem> jsonFileListForSelectedCollection;
         private string jsonFileContent;
+        private string jsonCollectionNameSelected;
         // Mahara-66 - END
 
         public PageHome()
@@ -291,18 +292,20 @@ namespace PlatnedMahara.Pages
             if (GlobalData.IsLoggedIn)
             {
                 if (LoadConfigData())
-                {
-                    progExec.ShowPaused = false;
-                    progExec.ShowError = false;
-                    progExec.IsIndeterminate = true;
-                    progExec.Visibility = Visibility.Visible;
-                    btnStart.IsEnabled = false;
-                    btnRerun.IsEnabled = false;
-                    btnStop.IsEnabled = true;
+                {                 
 
                     // Mahara-66 - Loop for JSON FIle list for the selected collection and start execution for each JSON file - START
                     foreach (var JSONFileContent in jsonFileListForSelectedCollection)
                     {
+                        progExec.ShowPaused = false;
+                        progExec.ShowError = false;
+                        progExec.IsIndeterminate = true;
+                        progExec.Visibility = Visibility.Visible;
+                        btnStart.IsEnabled = false;
+                        btnRerun.IsEnabled = false;
+                        btnStop.IsEnabled = true;
+                        lblCollectionID.Text = jsonCollectionNameSelected;
+                        lblExecutingFileID.Text = JSONFileContent.Name;
 
                         Logger.Log($"Selected Collection ID: {JSONFileContent.CollectionID}");
                         Logger.Log($"File ID - Name: {JSONFileContent.FileID} - {JSONFileContent.Name}");
@@ -1597,6 +1600,7 @@ namespace PlatnedMahara.Pages
 
                 // Use the list as needed
                 ProcessChildrenData(childrenList);
+                jsonCollectionNameSelected = selectedItem.Name;
             }
         }
 
