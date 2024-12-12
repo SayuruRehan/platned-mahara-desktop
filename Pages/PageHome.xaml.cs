@@ -27,6 +27,8 @@ using PlatnedMahara.Pages.PlatnedPassPages;
 using PlatnedMahara.Classes.Db;
 using System.Diagnostics;
 using Microsoft.VisualBasic;
+using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
+using Microsoft.UI.Xaml.Data;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -62,6 +64,7 @@ namespace PlatnedMahara.Pages
         private DispatcherTimer _timer;
         List<CollectionExplorerItem> jsonFileListForSelectedCollection;
         private string jsonFileContent;
+        private string jsonCollectionNameSelected;
         // Mahara-66 - END
 
         public PageHome()
@@ -292,17 +295,19 @@ namespace PlatnedMahara.Pages
             {
                 if (LoadConfigData())
                 {
-                    progExec.ShowPaused = false;
-                    progExec.ShowError = false;
-                    progExec.IsIndeterminate = true;
-                    progExec.Visibility = Visibility.Visible;
-                    btnStart.IsEnabled = false;
-                    btnRerun.IsEnabled = false;
-                    btnStop.IsEnabled = true;
 
                     // Mahara-66 - Loop for JSON FIle list for the selected collection and start execution for each JSON file - START
                     foreach (var JSONFileContent in jsonFileListForSelectedCollection)
                     {
+                        progExec.ShowPaused = false;
+                        progExec.ShowError = false;
+                        progExec.IsIndeterminate = true;
+                        progExec.Visibility = Visibility.Visible;
+                        btnStart.IsEnabled = false;
+                        btnRerun.IsEnabled = false;
+                        btnStop.IsEnabled = true;
+                        lblCollectionID.Text = jsonCollectionNameSelected;
+                        lblExecutingFileID.Text = JSONFileContent.Name;
 
                         Logger.Log($"Selected Collection ID: {JSONFileContent.CollectionID}");
                         Logger.Log($"File ID - Name: {JSONFileContent.FileID} - {JSONFileContent.Name}");
@@ -1487,10 +1492,11 @@ namespace PlatnedMahara.Pages
                     {
                         dynamicChildren.Add(new CollectionExplorerItem
                         {
-                            Name = jFile.FileName + " - " + jFile.FileID, // Assuming Pass_Json_File has a FileName property
+                            Name = jFile.FileName + " - " + jFile.FileID,
                             Type = CollectionExplorerItem.CollectionExplorerItemType.File,
-                            CollectionID = jFile.CollectionID,
+                            FileCollectionID = jCollection.CollectionID,
                             FileID = jFile.FileID,
+                            FileName = jFile.FileName,
                             FileContent = jFile.FileContent
                         });
                     }
@@ -1501,7 +1507,9 @@ namespace PlatnedMahara.Pages
                     {
                         Name = jCollection.CollectionName + " - " + jCollection.CollectionID,
                         Type = CollectionExplorerItem.CollectionExplorerItemType.Folder,
-                        Children = dynamicChildren // Assign dynamically created children here
+                        Children = dynamicChildren, // Assign dynamically created children here
+                        CollectionName = jCollection.CollectionName,
+                        CollectionID = jCollection.CollectionID
                     };
 
                     dynamicChildren = null;
@@ -1550,7 +1558,7 @@ namespace PlatnedMahara.Pages
                     DataSource.Add(item);
                 }
             }
-            
+
         }
 
         bool AreListsEqual(
@@ -1597,6 +1605,7 @@ namespace PlatnedMahara.Pages
 
                 // Use the list as needed
                 ProcessChildrenData(childrenList);
+                jsonCollectionNameSelected = selectedItem.Name;
             }
         }
 
@@ -1634,6 +1643,188 @@ namespace PlatnedMahara.Pages
                 btnStart.IsEnabled = false;
             }
 
+        }
+
+        #endregion
+
+        #region Mahara-93 - Implementation of Rename feature for Collection/ File
+
+        private void RenameRootMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the root-level item
+                ShowRenameDialogAsync(item, isRoot: true);
+            }
+        }
+
+        private void RenameChildMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the child-level item
+                ShowRenameDialogAsync(item, isRoot: false);
+            }
+        }
+
+        private async void ShowRenameDialogAsync(CollectionExplorerItem item, bool isRoot)
+        {
+            var result = ContentDialogResult.None;
+
+            if (item != null)
+            {
+                if (isRoot)
+                {
+                    var dialogCollection = new DialogCollection()
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.CollectionID,
+                        CollectionName = item.CollectionName,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogCollection
+                    };
+
+                    result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Pass_Json_Collection pass_Collection = new Pass_Json_Collection
+                        {
+                            CompanyID = GlobalData.CompanyId,
+                            UserID = GlobalData.UserId,
+                            CollectionID = dialogCollection.CollectionId,
+                            CollectionName = dialogCollection.CollectionName,
+                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                        };
+
+                        bool execResponse = new AuthPlatnedPass().EditCollection(pass_Collection);
+                        if (execResponse)
+                        {
+                            RefreshTreeViewData();
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for Collection: {pass_Collection.CollectionName}", InfoBarSeverity.Success);
+                            }
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                            }
+
+                            dialog = new ContentDialog
+                            {
+                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                PrimaryButtonText = "Process",
+                                CloseButtonText = "Cancel",
+                                DefaultButton = ContentDialogButton.Primary,
+                                Content = dialogCollection
+                            };
+
+                            result = await dialog.ShowAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                        }
+                    }
+                }
+                else
+                {
+                    var dialogFile = new DialogFile()
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.FileCollectionID,
+                        FileId = item.FileID,
+                        FileName = item.FileName,
+                        FileContent = item.FileContent,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogFile
+                    };
+
+                    result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Pass_Json_File pass_File = new Pass_Json_File
+                        {
+                            CompanyID = GlobalData.CompanyId,
+                            UserID = GlobalData.UserId,
+                            CollectionID = dialogFile.CollectionId,
+                            FileID = dialogFile.FileId,
+                            FileName = dialogFile.FileName,
+                            //FileContent = dialogFile.FileContent,
+                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                        };
+
+                        bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
+                        if (execResponse)
+                        {
+                            RefreshTreeViewData();
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                            }
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                            }
+
+                            dialog = new ContentDialog
+                            {
+                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                PrimaryButtonText = "Process",
+                                CloseButtonText = "Cancel",
+                                DefaultButton = ContentDialogButton.Primary,
+                                Content = dialogFile
+                            };
+
+                            result = await dialog.ShowAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                        }
+                    }
+                }
+
+            }
         }
 
         #endregion
@@ -1685,7 +1876,10 @@ namespace PlatnedMahara.Pages
         public string Name { get; set; }
         public CollectionExplorerItemType Type { get; set; }
         public string CollectionID { get; set; }
+        public string CollectionName { get; set; }
+        public string FileCollectionID { get; set; }
         public string FileID { get; set; }
+        public string FileName { get; set; }
         public string FileContent { get; set; }
         private ObservableCollection<CollectionExplorerItem> m_children;
         public ObservableCollection<CollectionExplorerItem> Children
@@ -1747,6 +1941,34 @@ namespace PlatnedMahara.Pages
 
     #endregion
 
+    #region Mahara-93 - Visibility controllers for Rename feature for Collection/ File
+    public class HasChildrenToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var children = value as ObservableCollection<CollectionExplorerItem>;
+            return (children != null && children.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
+    public class NoChildrenToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var children = value as ObservableCollection<CollectionExplorerItem>;
+            return (children == null || children.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion
 }
