@@ -1677,7 +1677,7 @@ namespace PlatnedMahara.Pages
             {
                 if (isRoot)
                 {
-                    var dialogCollection = new DialogCollection(true)
+                    var dialogCollection = new DialogCollection()
                     {
                         CompanyId = GlobalData.CompanyId,
                         UserId = GlobalData.UserId,
@@ -1749,7 +1749,7 @@ namespace PlatnedMahara.Pages
                 }
                 else
                 {
-                    var dialogFile = new DialogFile(true)
+                    var dialogFile = new DialogFile()
                     {
                         CompanyId = GlobalData.CompanyId,
                         UserId = GlobalData.UserId,
@@ -1780,7 +1780,7 @@ namespace PlatnedMahara.Pages
                             CollectionID = dialogFile.CollectionId,
                             FileID = dialogFile.FileId,
                             FileName = dialogFile.FileName,
-                            FileContent = dialogFile.FileContent,
+                            //FileContent = dialogFile.FileContent,
                             ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
                         };
 
