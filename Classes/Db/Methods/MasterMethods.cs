@@ -769,9 +769,9 @@ namespace PlatnedMahara.DataAccess.Methods
             param = new SqlParameter[]
             {
                 Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@USER_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CollectionID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.ModifiedBy),
             };
             objExecute.Executes("spDeleteJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
             res = true;
