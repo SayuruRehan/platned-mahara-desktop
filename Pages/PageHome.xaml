@@ -75,13 +75,19 @@
                                         <MenuFlyout>
                                             <!-- Option for root-level rename -->
                                             <MenuFlyoutItem Text="Rename Collection"
-                                        Click="RenameRootMenuFlyoutItem_Click"
-                                        Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
+                                                Click="RenameRootMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
+                                            <MenuFlyoutItem Text="Share Collection"
+                                                Click="ShareRootMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
 
                                             <!-- Option for child-level rename -->
                                             <MenuFlyoutItem Text="Rename File"
-                                        Click="RenameChildMenuFlyoutItem_Click"
-                                        Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
+                                                Click="RenameChildMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
+                                            <MenuFlyoutItem Text="Share File"
+                                                Click="ShareChildMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
                                         </MenuFlyout>
                                     </TreeViewItem.ContextFlyout>
                                 </TreeViewItem>

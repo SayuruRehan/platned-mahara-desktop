@@ -785,9 +785,9 @@ namespace PlatnedMahara.DataAccess.Methods
             param = new SqlParameter[]
             {
                 Execute.AddParameter("@COMPANY_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@USER_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CompanyID),
-                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.CompanyID),
+                Execute.AddParameter("@USER_ID",objPass_Json_Collection.UserID),
+                Execute.AddParameter("@COLLECTION_ID",objPass_Json_Collection.CollectionID),
+                Execute.AddParameter("@MODIFIED_BY",objPass_Json_Collection.ModifiedBy),
             };
             objExecute.Executes("spShareJsonCollection", ReturnType.DataTable, param, CommandType.StoredProcedure);
             res = true;
@@ -885,7 +885,7 @@ namespace PlatnedMahara.DataAccess.Methods
                 Execute.AddParameter("@COLLECTION_ID",objPass_Json_File.CollectionID),
                 Execute.AddParameter("@File_ID",objPass_Json_File.FileID),
                 Execute.AddParameter("@FILE_NAME",objPass_Json_File.FileName),
-                Execute.AddParameter("@FILE_CONTENT",objPass_Json_File.FileContent),
+                //Execute.AddParameter("@FILE_CONTENT",objPass_Json_File.FileContent),
                 Execute.AddParameter("@MODIFIED_BY",objPass_Json_File.ModifiedBy),
             };
             objExecute.Executes("spEditJsonFile", ReturnType.DataTable, param, CommandType.StoredProcedure);

@@ -1769,29 +1769,147 @@ namespace PlatnedMahara.Pages
                         Content = dialogFile
                     };
 
+                    if (!string.IsNullOrEmpty(item.CollectionID) && string.IsNullOrEmpty(item.FileID))
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "One or more files are missing. Collection is not allowed to Rename.", InfoBarSeverity.Informational);
+                        }
+                    }
+                    else
+                    {
+                        result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            Pass_Json_File pass_File = new Pass_Json_File
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId,
+                                CollectionID = dialogFile.CollectionId,
+                                FileID = dialogFile.FileId,
+                                FileName = dialogFile.FileName,
+                                //FileContent = dialogFile.FileContent,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                }
+                            }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                }
+
+                                dialog = new ContentDialog
+                                {
+                                    XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                    PrimaryButtonText = "Process",
+                                    CloseButtonText = "Cancel",
+                                    DefaultButton = ContentDialogButton.Primary,
+                                    Content = dialogFile
+                                };
+
+                                result = await dialog.ShowAsync();
+                            }
+
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+
+        #endregion
+
+        #region Mahara-95 - Implementation of Share feature for Collection/ File
+
+        private void ShareRootMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the root-level item
+                ShowShareDialogAsync(item, isRoot: true);
+            }
+        }
+
+        private void ShareChildMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the child-level item
+                ShowShareDialogAsync(item, isRoot: false);
+            }
+        }
+
+        private async void ShowShareDialogAsync(CollectionExplorerItem item, bool isRoot)
+        {
+            var result = ContentDialogResult.None;
+
+            if (item != null)
+            {
+                if (isRoot)
+                {
+                    var dialogCollection = new DialogCollection(false, true)
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.CollectionID,
+                        CollectionName = item.CollectionName,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogCollection
+                    };
+
                     result = await dialog.ShowAsync();
 
                     if (result == ContentDialogResult.Primary)
                     {
-                        Pass_Json_File pass_File = new Pass_Json_File
+                        Pass_Json_Collection pass_Collection = new Pass_Json_Collection
                         {
                             CompanyID = GlobalData.CompanyId,
-                            UserID = GlobalData.UserId,
-                            CollectionID = dialogFile.CollectionId,
-                            FileID = dialogFile.FileId,
-                            FileName = dialogFile.FileName,
-                            //FileContent = dialogFile.FileContent,
+                            UserID = dialogCollection.UserId,
+                            CollectionID = dialogCollection.CollectionId,
+                            CollectionName = dialogCollection.CollectionName,
                             ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
                         };
 
-                        bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
+                        bool execResponse = new AuthPlatnedPass().ShareCollection(pass_Collection);
                         if (execResponse)
                         {
                             RefreshTreeViewData();
 
                             if (App.MainWindow is MainWindow mainWindow)
                             {
-                                mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for Collection: {pass_Collection.CollectionName}", InfoBarSeverity.Success);
                             }
                         }
                         else
@@ -1808,7 +1926,7 @@ namespace PlatnedMahara.Pages
                                 PrimaryButtonText = "Process",
                                 CloseButtonText = "Cancel",
                                 DefaultButton = ContentDialogButton.Primary,
-                                Content = dialogFile
+                                Content = dialogCollection
                             };
 
                             result = await dialog.ShowAsync();
@@ -1822,6 +1940,93 @@ namespace PlatnedMahara.Pages
                             mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                         }
                     }
+                }
+                else
+                {
+                    var dialogFile = new DialogFile(false, true)
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.FileCollectionID,
+                        FileId = item.FileID,
+                        FileName = item.FileName,
+                        FileContent = item.FileContent,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogFile
+                    };
+
+                    if (!string.IsNullOrEmpty(item.CollectionID) && string.IsNullOrEmpty(item.FileID))
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "One or more files are missing. Collection is not allowed to Share.", InfoBarSeverity.Informational);
+                        }
+                    }
+                    else
+                    {
+                        result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            Pass_Json_File pass_File = new Pass_Json_File
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = dialogFile.UserId,
+                                CollectionID = dialogFile.CollectionId,
+                                FileID = dialogFile.FileId,
+                                FileName = dialogFile.FileName,
+                                //FileContent = dialogFile.FileContent,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().ShareFile(pass_File);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                }
+                            }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                }
+
+                                dialog = new ContentDialog
+                                {
+                                    XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                    PrimaryButtonText = "Process",
+                                    CloseButtonText = "Cancel",
+                                    DefaultButton = ContentDialogButton.Primary,
+                                    Content = dialogFile
+                                };
+
+                                result = await dialog.ShowAsync();
+                            }
+
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                            }
+                        }
+                    }
+
                 }
 
             }

@@ -6,6 +6,7 @@
 ----------------------------------------------------------------------------------------------------
 --  DATE    USER        DESCRIPTION  
 --  ------  ----------  ----------------------------------------------------------------------------
+--  241211  NimeshE     Modified spShareJsonCollection, spEditJsonFile, spShareJsonFile
 --  241211  NimeshE     Modified spGetJsonFilePerUserPerCollection to add missing filter param in where condition collection ID.
 --  241128  NimeshE     Created the file for versioning, initial script created by Bhagya.
 ----------------------------------------------------------------------------------------------------
@@ -455,13 +456,13 @@ BEGIN
     UPDATE dbo.PASS_JSON_COLLECTION_TAB
     SET USER_ID = @USER_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
     WHERE COMPANY_ID = @COMPANY_ID
-    AND USER_ID = @USER_ID
+    AND USER_ID = @MODIFIED_BY
     AND COLLECTION_ID = @COLLECTION_ID;
 
     UPDATE dbo.PASS_JSON_FILE_TAB
-    SET USER_ID = @USER_ID, COLLECTION_ID = @COLLECTION_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    SET USER_ID = @USER_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
     WHERE COMPANY_ID = @COMPANY_ID
-    AND USER_ID = @USER_ID
+    AND USER_ID = @MODIFIED_BY
     AND COLLECTION_ID = @COLLECTION_ID;
 END;
 GO
@@ -513,12 +514,11 @@ CREATE OR ALTER PROCEDURE spEditJsonFile
     @COLLECTION_ID VARCHAR(50),
     @FILE_ID VARCHAR(50),
     @FILE_NAME VARCHAR(500),
-    @FILE_CONTENT VARCHAR(MAX),
     @MODIFIED_BY VARCHAR(50)
 AS
 BEGIN
     UPDATE dbo.PASS_JSON_FILE_TAB
-    SET FILE_NAME = @FILE_NAME, FILE_CONTENT = @FILE_CONTENT, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
+    SET FILE_NAME = @FILE_NAME, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
     WHERE COMPANY_ID = @COMPANY_ID
     AND USER_ID = @USER_ID
     AND COLLECTION_ID = @COLLECTION_ID
@@ -554,8 +554,7 @@ BEGIN
     UPDATE dbo.PASS_JSON_FILE_TAB
     SET USER_ID = @USER_ID, COLLECTION_ID = @COLLECTION_ID, MODIFIED_BY = @MODIFIED_BY, MODIFIED_DATE = GETDATE()
     WHERE COMPANY_ID = @COMPANY_ID
-    AND USER_ID = @USER_ID
-    AND COLLECTION_ID = @COLLECTION_ID
+    AND USER_ID = @MODIFIED_BY
     AND FILE_ID = @FILE_ID;
 END;
 GO
