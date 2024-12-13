@@ -65,10 +65,10 @@ namespace PlatnedMahara.Pages
                 accessToken = token;
                 Logger.Log("Authenticated successfully!");
                 btnAuthenticate.IsEnabled = false;
-
+                btnResetAuth.IsEnabled = true;
                 Logger.Log("Saving configuration started...");
                 SaveConfigData(accessTokenUrl, clientId, clientSecret, scope, appLoggingEnabled, licenseKey);
-                Logger.Log("Saving configuration completed!");
+                Logger.Log("Saving configuration completed!");                
 
                 if (App.MainWindow is MainWindow mainWindow)
                 {

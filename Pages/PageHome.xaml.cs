@@ -1,40 +1,34 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Storage.Pickers;
-using CommunityToolkit.WinUI.UI.Controls;
 using System.Data;
 using System.Collections.ObjectModel;
 using System.Xml.Linq;
 using Newtonsoft.Json.Linq;
 using System.Threading;
-using ClosedXML.Excel;
 using System.Text.RegularExpressions;
 using System.Text;
-using System.Drawing;
 using System.Threading.Tasks;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Newtonsoft.Json;
-using System.Net.Http.Json;
 using PlatnedMahara.Classes;
+using System.ComponentModel;
+using PlatnedMahara.Pages.PlatnedPassPages;
+using PlatnedMahara.Classes.Db;
+using System.Diagnostics;
+using Microsoft.VisualBasic;
+using PlatnedMahara.Pages.PlatnedPassPages.DialogPages;
+using Microsoft.UI.Xaml.Data;
 
 
 // To learn more about WinUI, the WinUI project structure,
@@ -60,18 +54,50 @@ namespace PlatnedMahara.Pages
         string jsonFilePath;
         string csvFilePath;
         bool errorFound = false;
-        private CancellationTokenSource cancellationTokenSource; 
+        private CancellationTokenSource cancellationTokenSource;
         private readonly string configFilePath = GlobalData.configFilePath;
         private string entitySet = "";
         private string entitySetParam = "";
         private string entitySetArray = "";
+        // Mahara-66 - START
+        private ObservableCollection<CollectionExplorerItem> DataSource { get; set; } = new ObservableCollection<CollectionExplorerItem>();
+        private DispatcherTimer _timer;
+        List<CollectionExplorerItem> jsonFileListForSelectedCollection;
+        private string jsonFileContent;
+        private string jsonCollectionNameSelected;
+        // Mahara-66 - END
 
         public PageHome()
         {
             this.InitializeComponent();
             LoadData();
             dataGrid.ItemsSource = GridItems;
+            // Mahara-66 - START
+            //this.Loaded += PageHome_Loaded;
+            this.DataContext = this;
+            LoadJsonDataThreadTask();
+
+            // Set up timer
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(GlobalData.JsonRefreshInterval);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+            // Mahara-66 - END
         }
+
+        #region Mahara-66 - Making the method 'PageHome_Loaded' Obsolete
+        /*private async void PageHome_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = this;
+            await LoadJsonDataThreadTask();
+
+            // Set up timer
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(GlobalData.JsonRefreshInterval);
+            _timer.Tick += Timer_Tick;
+            _timer.Start();
+        }*/
+        #endregion
 
         public void PrepareConnectedAnimation(ConnectedAnimationConfiguration config)
         {
@@ -109,7 +135,8 @@ namespace PlatnedMahara.Pages
             }
         }
 
-        private async void PickJsonFileButton_Click(object sender, RoutedEventArgs e)
+        #region Mahara-66 - Depreciating the method for Collection view implementation
+        /*private async void PickJsonFileButton_Click(object sender, RoutedEventArgs e)
         {
             PickJsonFileOutputTextBlock.Text = "";
 
@@ -131,7 +158,7 @@ namespace PlatnedMahara.Pages
                 {
                     try
                     {
-                        string sourceFilePath = file.Path; 
+                        string sourceFilePath = file.Path;
                         string tempFolderPath = GlobalData.tempFolderPath;
 
                         if (!Directory.Exists(tempFolderPath))
@@ -171,7 +198,8 @@ namespace PlatnedMahara.Pages
                 Logger.Log("JSON file upload error! Could not retrieve the window handle.", "Error");
             }
 
-        }
+        }*/
+        #endregion
 
         private async void PickCsvFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -267,15 +295,29 @@ namespace PlatnedMahara.Pages
             {
                 if (LoadConfigData())
                 {
-                    progExec.ShowPaused = false;
-                    progExec.ShowError = false;
-                    progExec.IsIndeterminate = true;
-                    progExec.Visibility = Visibility.Visible;
-                    btnStart.IsEnabled = false;
-                    btnRerun.IsEnabled = false;
-                    btnStop.IsEnabled = true;
 
-                    await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                    // Mahara-66 - Loop for JSON FIle list for the selected collection and start execution for each JSON file - START
+                    foreach (var JSONFileContent in jsonFileListForSelectedCollection)
+                    {
+                        progExec.ShowPaused = false;
+                        progExec.ShowError = false;
+                        progExec.IsIndeterminate = true;
+                        progExec.Visibility = Visibility.Visible;
+                        btnStart.IsEnabled = false;
+                        btnRerun.IsEnabled = false;
+                        btnStop.IsEnabled = true;
+                        lblCollectionID.Text = jsonCollectionNameSelected;
+                        lblExecutingFileID.Text = JSONFileContent.Name;
+
+                        Logger.Log($"Selected Collection ID: {JSONFileContent.CollectionID}");
+                        Logger.Log($"File ID - Name: {JSONFileContent.FileID} - {JSONFileContent.Name}");
+                        Logger.Log($"File Content: {JSONFileContent.FileContent}");
+
+                        //await RunTestIterationsAsync(uploadedJSONFilePath, uploadedCSVFilePath);
+                        await RunTestIterationsAsync(JSONFileContent.FileContent, uploadedCSVFilePath);
+                    }
+                    // Mahara-66 - END
+
                 }
                 else
                 {
@@ -291,7 +333,7 @@ namespace PlatnedMahara.Pages
                 {
                     mainWindow.ShowInfoBar("Error!", "Login required to proceed. Please login/ register with Platned Pass!", InfoBarSeverity.Error);
                 }
-            }            
+            }
 
         }
 
@@ -338,7 +380,10 @@ namespace PlatnedMahara.Pages
         {
             tempFolderPath = GlobalData.tempFolderPath;
 
-            string jsonContent = File.ReadAllText(jsonFilePath);
+            // Mahara-66 - Setting JSONFileContent instead of reading JSON content from file - START
+            //string jsonContent = File.ReadAllText(jsonFilePath);
+            string jsonContent = jsonFileContent;
+            // Mahara-66 - END
             JObject jsonObject = JObject.Parse(jsonContent);
             apiCalls = jsonObject["item"].Select(item => (JObject)item).ToList();
             Logger.Log("API calls loaded from JSON.");
@@ -349,7 +394,7 @@ namespace PlatnedMahara.Pages
                 string[] headers = reader.ReadLine().Split(',');
                 foreach (string header in headers)
                 {
-                        csvData.Columns.Add(header);
+                    csvData.Columns.Add(header);
                 }
                 Logger.Log("CSV headers loaded.");
 
@@ -364,17 +409,23 @@ namespace PlatnedMahara.Pages
             }
         }
 
-
-        public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
+        // Mahara-66 - Use JSONFileContent instead of JSON file path - START
+        //public async Task RunTestIterationsAsync(string uploadedJSONFilePath, string uploadedCSVFilePath)
+        public async Task RunTestIterationsAsync(string JSONFileContent, string uploadedCSVFilePath)
+        // Mahara-66 - END
         {
             progExec.Visibility = Visibility.Visible;
             lblExecStarted.Text = DateTime.Now.ToString();
             lblExecFinished.Text = "~";
             drpShareResults.IsEnabled = true;
 
-            jsonFilePath = uploadedJSONFilePath;
+            // Mahara-66 - Use JSONFileContent instead of JSON file path - START
+            //jsonFilePath = uploadedJSONFilePath;
+            jsonFileContent = JSONFileContent;
             csvFilePath = uploadedCSVFilePath;
-            Logger.Log("jsonFilePath, csvFilePath received for execution!");
+            //Logger.Log("jsonFilePath, csvFilePath received for execution!");
+            Logger.Log("JSONFileContent, csvFilePath received for execution!");
+            // Mahara-66 - END
             InitializeAsync();
 
             GridItems.Clear();
@@ -503,7 +554,7 @@ namespace PlatnedMahara.Pages
                 {
                     Logger.Log($"Exception occurred. Possible low priority exception: {e}");
                 }
-                
+
             }
 
             string headers = "";
@@ -556,11 +607,11 @@ namespace PlatnedMahara.Pages
                         url = UrlReconstructor.ReconstructUrl(url, requestBody);
                         Logger.Log("POST - Constructed URL: " + url);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Log("No parameters found in the URL. Skipping URL Construction.");
                     }
-                    
+
                     var tempRequestBody = "";
 
                     if (bodyRawJson != "")
@@ -568,7 +619,7 @@ namespace PlatnedMahara.Pages
                         tempRequestBody = FilterRequestBody(bodyRawJson, requestBody);
                         Logger.Log("POST - Filtered Request body: " + requestBody);
                     }
-                    if(tempRequestBody != "IGNORE" && bodyRawJson != "")
+                    if (tempRequestBody != "IGNORE" && bodyRawJson != "")
                     {
                         requestBody = tempRequestBody;
                     }
@@ -584,7 +635,7 @@ namespace PlatnedMahara.Pages
                     }
                     if (apiResponse.ResponseBody.Contains("REQUEST_ERROR") && apiResponse.ResponseBody.Contains("UNEXPECTED_CONTENT_TYPE") && apiResponse.ResponseBody.Contains("multipart/mixed"))
                     {
-                        if(bodyRawJson != "")
+                        if (bodyRawJson != "")
                         {
                             ParseRawContent(bodyRawJson);
                         }
@@ -593,7 +644,7 @@ namespace PlatnedMahara.Pages
                             string jsonContent = File.ReadAllText(jsonFilePath);
                             ParseJson(jsonContent);
                         }
-                        
+
                         requestBody = BuildRequestBody(csvParameters);
                         Logger.Log("POST - Request body for SendMultipartRequest: " + requestBody);
                         apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest", entitySet, entitySetParam, entitySetArray);
@@ -720,7 +771,7 @@ namespace PlatnedMahara.Pages
                         {
                             UpdateIterationStatus(iterationNumber, $"{apiLoop}/{apiCount}", apiResponse.StatusCode.ToString(), "Successful", "OK");
                         }
-                        
+
                     }
 
                 }
@@ -1293,13 +1344,13 @@ namespace PlatnedMahara.Pages
                 string filteredJson = JsonConvert.SerializeObject(requestBody, Formatting.Indented);
 
                 return filteredJson;
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 return "IGNORE";
             }
-            
-        }
 
+        }
 
         private void WriteDataTableToCsvWithStatus(DataTable dataTable, string filePath, int iterationNumber, bool errorFound, string apiResponseBody)
         {
@@ -1393,6 +1444,390 @@ namespace PlatnedMahara.Pages
             }
         }
 
+        #region Mahara-66 - Collection and File list data bindings
+
+        public async Task LoadJsonDataThreadTask()
+        {
+            await Task.Run(() =>
+            {
+                DataSource = GetJsonData();
+            });
+        }
+
+        private ObservableCollection<CollectionExplorerItem> GetJsonData()
+        {
+
+            var list = new ObservableCollection<CollectionExplorerItem>();
+
+            List<Pass_Json_Collection> pass_Json_Collection = new List<Pass_Json_Collection>();
+            Pass_Json_Collection collectionDet = new Pass_Json_Collection
+            {
+                CompanyID = GlobalData.CompanyId,
+                UserID = GlobalData.UserId,
+            };
+            pass_Json_Collection = new AuthPlatnedPass().GetPass_CollectionsPerUser(collectionDet);
+
+
+            if (pass_Json_Collection != null && pass_Json_Collection.Count > 0)
+            {
+
+                foreach (Pass_Json_Collection jCollection in pass_Json_Collection)
+                {
+                    // Initialize a list to hold dynamic children
+                    ObservableCollection<CollectionExplorerItem>? dynamicChildren = new ObservableCollection<CollectionExplorerItem>();
+
+                    // Assuming you have a method to get pass_Json_File for the current jCollection
+
+                    List<Pass_Json_File> pass_Json_File = new List<Pass_Json_File>();
+                    Pass_Json_File fileDet = new Pass_Json_File
+                    {
+                        CompanyID = GlobalData.CompanyId,
+                        UserID = GlobalData.UserId,
+                        CollectionID = jCollection.CollectionID
+                    };
+                    pass_Json_File = new AuthPlatnedPass().GetPass_FilePerUserPerCollection(fileDet);
+
+                    // Loop through each item in pass_Json_File to generate dynamic children
+                    foreach (var jFile in pass_Json_File)
+                    {
+                        dynamicChildren.Add(new CollectionExplorerItem
+                        {
+                            Name = jFile.FileName + " - " + jFile.FileID,
+                            Type = CollectionExplorerItem.CollectionExplorerItemType.File,
+                            FileCollectionID = jCollection.CollectionID,
+                            FileID = jFile.FileID,
+                            FileName = jFile.FileName,
+                            FileContent = jFile.FileContent
+                        });
+                    }
+                    pass_Json_File = null;
+
+                    // Declare and initialize the folder object
+                    CollectionExplorerItem folder = new CollectionExplorerItem
+                    {
+                        Name = jCollection.CollectionName + " - " + jCollection.CollectionID,
+                        Type = CollectionExplorerItem.CollectionExplorerItemType.Folder,
+                        Children = dynamicChildren, // Assign dynamically created children here
+                        CollectionName = jCollection.CollectionName,
+                        CollectionID = jCollection.CollectionID
+                    };
+
+                    dynamicChildren = null;
+                    // Add the folder to the main list
+                    list.Add(folder);
+                }
+
+            }
+
+            return list;
+        }
+
+        #endregion
+
+        #region Mahara-66 - Refresh JSON ThreeView in time interval
+
+        private void Timer_Tick(object sender, object e)
+        {
+            RefreshTreeViewData();
+        }
+
+        private async void RefreshTreeViewData()
+        {
+            ObservableCollection<CollectionExplorerItem> extractedList = new ObservableCollection<CollectionExplorerItem>(DataSource);
+            ObservableCollection<CollectionExplorerItem> returnedList;
+
+            var newData = await Task.Run(() =>
+            {
+                return GetJsonData();
+            });
+
+            returnedList = newData;
+            bool areListsEqual = AreListsEqual(extractedList, returnedList);
+
+            if (areListsEqual)
+            {
+                Logger.Log("JSON Collection Refresh Service: The lists are identical. Ignored the view refresh.");
+            }
+            else
+            {
+                Logger.Log("JSON Collection Refresh Service: The lists are different. Refreshing the view.");
+                // Clear and update the existing DataSource
+                DataSource.Clear();
+                foreach (var item in newData)
+                {
+                    DataSource.Add(item);
+                }
+            }
+
+        }
+
+        bool AreListsEqual(
+            ObservableCollection<CollectionExplorerItem> list1,
+            ObservableCollection<CollectionExplorerItem> list2)
+        {
+            if (list1.Count != list2.Count)
+                return false;
+
+            for (int i = 0; i < list1.Count; i++)
+            {
+                if (!AreItemsEqual(list1[i], list2[i]))
+                    return false;
+            }
+
+            return true;
+        }
+        bool AreItemsEqual(CollectionExplorerItem item1, CollectionExplorerItem item2)
+        {
+            if (item1 == null || item2 == null)
+                return false;
+
+            return item1.Name == item2.Name
+                    && Enumerable.SequenceEqual(item1.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 item2.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 new CollectionExplorerItemComparer());
+
+        }
+
+        #endregion
+
+        #region Mahara-66 - Get selected Collection and Childres
+
+        private void TreeView_SelectionChanged(TreeView sender, TreeViewSelectionChangedEventArgs args)
+        {
+            // Ensure an item is selected
+            if (args.AddedItems.Count > 0 && args.AddedItems[0] is CollectionExplorerItem selectedItem)
+            {
+                // Extract the Children data
+                var childrenData = selectedItem.Children;
+
+                // Convert children to a list (if needed)
+                var childrenList = childrenData?.ToList();
+
+                // Use the list as needed
+                ProcessChildrenData(childrenList);
+                jsonCollectionNameSelected = selectedItem.Name;
+            }
+        }
+
+        // Example method to process the children data
+        private void ProcessChildrenData(List<CollectionExplorerItem> childrenList)
+        {
+            jsonFileListForSelectedCollection = childrenList;
+
+            bool foundChild = false;
+
+            foreach (var child in childrenList)
+            {
+                if (!string.IsNullOrEmpty(child.FileID))
+                {
+                    foundChild = true;
+                }
+                else
+                {
+                    foundChild = false;
+                }
+
+                Logger.Log($"Selected Collection ID: {child.CollectionID}");
+                Logger.Log($"File ID - Name: {child.FileID} - {child.Name}");
+                Logger.Log($"File Content: {child.FileContent}");
+            }
+
+            if (foundChild)
+            {
+                PickCsvFileButton.IsEnabled = true;
+            }
+            else
+            {
+                PickCsvFileButton.IsEnabled = false;
+                PickCsvFileOutputTextBlock.Text = "";
+                btnStart.IsEnabled = false;
+            }
+
+        }
+
+        #endregion
+
+        #region Mahara-93 - Implementation of Rename feature for Collection/ File
+
+        private void RenameRootMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the root-level item
+                ShowRenameDialogAsync(item, isRoot: true);
+            }
+        }
+
+        private void RenameChildMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the child-level item
+                ShowRenameDialogAsync(item, isRoot: false);
+            }
+        }
+
+        private async void ShowRenameDialogAsync(CollectionExplorerItem item, bool isRoot)
+        {
+            var result = ContentDialogResult.None;
+
+            if (item != null)
+            {
+                if (isRoot)
+                {
+                    var dialogCollection = new DialogCollection()
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.CollectionID,
+                        CollectionName = item.CollectionName,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogCollection
+                    };
+
+                    result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Pass_Json_Collection pass_Collection = new Pass_Json_Collection
+                        {
+                            CompanyID = GlobalData.CompanyId,
+                            UserID = GlobalData.UserId,
+                            CollectionID = dialogCollection.CollectionId,
+                            CollectionName = dialogCollection.CollectionName,
+                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                        };
+
+                        bool execResponse = new AuthPlatnedPass().EditCollection(pass_Collection);
+                        if (execResponse)
+                        {
+                            RefreshTreeViewData();
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for Collection: {pass_Collection.CollectionName}", InfoBarSeverity.Success);
+                            }
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                            }
+
+                            dialog = new ContentDialog
+                            {
+                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                PrimaryButtonText = "Process",
+                                CloseButtonText = "Cancel",
+                                DefaultButton = ContentDialogButton.Primary,
+                                Content = dialogCollection
+                            };
+
+                            result = await dialog.ShowAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                        }
+                    }
+                }
+                else
+                {
+                    var dialogFile = new DialogFile()
+                    {
+                        CompanyId = GlobalData.CompanyId,
+                        UserId = GlobalData.UserId,
+                        CollectionId = item.FileCollectionID,
+                        FileId = item.FileID,
+                        FileName = item.FileName,
+                        FileContent = item.FileContent,
+                    };
+
+                    ContentDialog dialog = new ContentDialog
+                    {
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                        Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                        PrimaryButtonText = "Process",
+                        CloseButtonText = "Cancel",
+                        DefaultButton = ContentDialogButton.Primary,
+                        Content = dialogFile
+                    };
+
+                    result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Pass_Json_File pass_File = new Pass_Json_File
+                        {
+                            CompanyID = GlobalData.CompanyId,
+                            UserID = GlobalData.UserId,
+                            CollectionID = dialogFile.CollectionId,
+                            FileID = dialogFile.FileId,
+                            FileName = dialogFile.FileName,
+                            //FileContent = dialogFile.FileContent,
+                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                        };
+
+                        bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
+                        if (execResponse)
+                        {
+                            RefreshTreeViewData();
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                            }
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                            }
+
+                            dialog = new ContentDialog
+                            {
+                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                PrimaryButtonText = "Process",
+                                CloseButtonText = "Cancel",
+                                DefaultButton = ContentDialogButton.Primary,
+                                Content = dialogFile
+                            };
+
+                            result = await dialog.ShowAsync();
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        #endregion
     }
 
 
@@ -1432,5 +1867,108 @@ namespace PlatnedMahara.Pages
         }
     }
 
+    #region Mahara-66 Collection Explorer Item class for Collection and File tree
 
+    public class CollectionExplorerItem : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public enum CollectionExplorerItemType { Folder, File };
+        public string Name { get; set; }
+        public CollectionExplorerItemType Type { get; set; }
+        public string CollectionID { get; set; }
+        public string CollectionName { get; set; }
+        public string FileCollectionID { get; set; }
+        public string FileID { get; set; }
+        public string FileName { get; set; }
+        public string FileContent { get; set; }
+        private ObservableCollection<CollectionExplorerItem> m_children;
+        public ObservableCollection<CollectionExplorerItem> Children
+        {
+            get
+            {
+                if (m_children == null)
+                {
+                    m_children = new ObservableCollection<CollectionExplorerItem>();
+                }
+                return m_children;
+            }
+            set
+            {
+                m_children = value;
+            }
+        }
+
+        private bool m_isExpanded;
+        public bool IsExpanded
+        {
+            get { return m_isExpanded; }
+            set
+            {
+                if (m_isExpanded != value)
+                {
+                    m_isExpanded = value;
+                    NotifyPropertyChanged("IsExpanded");
+                }
+            }
+        }
+
+        private void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    // Custom equality comparer for CollectionExplorerItem if needed
+    class CollectionExplorerItemComparer : IEqualityComparer<CollectionExplorerItem>
+    {
+        public bool Equals(CollectionExplorerItem x, CollectionExplorerItem y)
+        {
+            if (x == null || y == null)
+                return false;
+
+            return x.Name == y.Name
+                    && Enumerable.SequenceEqual(x.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 y.Children ?? new ObservableCollection<CollectionExplorerItem>(),
+                                                 new CollectionExplorerItemComparer());
+
+        }
+
+        public int GetHashCode(CollectionExplorerItem obj)
+        {
+            return obj.Name.GetHashCode();
+        }
+    }
+
+    #endregion
+
+    #region Mahara-93 - Visibility controllers for Rename feature for Collection/ File
+    public class HasChildrenToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var children = value as ObservableCollection<CollectionExplorerItem>;
+            return (children != null && children.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class NoChildrenToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var children = value as ObservableCollection<CollectionExplorerItem>;
+            return (children == null || children.Count == 0) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion
 }

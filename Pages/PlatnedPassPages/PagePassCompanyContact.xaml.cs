@@ -100,8 +100,17 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                             mainWindow.ShowInfoBar("Error", $"Failed to update company contact.", InfoBarSeverity.Error);
                         }
                     }
-                    
+
                 }
+                // Mahara-92 - Added cancel info messge - START
+                else
+                {
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                    }
+                }
+                // Mahara-92 - END
             }
 
 
@@ -229,6 +238,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                 LoadData();
                 dataGrid.ItemsSource = null; // Clear the existing binding
                 dataGrid.ItemsSource = GridItemCompanyContact;
+                // Mahara-92 - START
+                AccessCheck();
+                // Mahara-92 - END
             }
         }
 

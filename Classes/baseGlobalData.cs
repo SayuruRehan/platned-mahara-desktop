@@ -50,5 +50,13 @@ namespace PlatnedMahara.Classes
         public static string? UserEmail { get; set; }
         public static string? LicenseKey { get; set; }
         public static string? UserStatus { get; set; }
+        // Mahara-66 - Allowing user to set JSON data refresh interval - START
+        private static Int16 _jsonRefreshInterval = 5; // Default 5 seconds
+        public static Int16 JsonRefreshInterval
+        {
+            get => _jsonRefreshInterval;
+            set => _jsonRefreshInterval = value;
+        }
+        // Mahara-66 - Allowing user to set refresh interval - END
     }
 }

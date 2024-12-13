@@ -33,6 +33,12 @@
     <Page Update="Pages\PageOtpValidation.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogFile.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\PlatnedPassPages\DialogPages\DialogCollection.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\PlatnedPassPages\DialogPages\DialogAccessControl.xaml">
       <SubType>Designer</SubType>
     </Page>

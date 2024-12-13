@@ -32,6 +32,9 @@ using Windows.ApplicationModel.Core;
 using System.Net.Mail;
 using System.Net;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using Style = Microsoft.UI.Xaml.Style;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -218,7 +221,7 @@ namespace PlatnedMahara
 
         private void TabView_Loaded(object sender, RoutedEventArgs e)
         {
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= 1; i++)
             {
                 (sender as TabView).TabItems.Add(CreateNewTab(i));
             }
@@ -239,7 +242,7 @@ namespace PlatnedMahara
             TabViewItem newItem = new TabViewItem();
 
             newItem.Header = $"Execution Window {index}";
-            newItem.IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Document };
+            newItem.IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Microsoft.UI.Xaml.Controls.Symbol.Document };
 
             // The content of the tab is often a frame that contains a page, though it could be any UIElement.
             Frame frame = new Frame();
@@ -393,8 +396,9 @@ namespace PlatnedMahara
                 // Access Username and Password from PageLogin
                 string username = loginPage.UserId;
                 string password = loginPage.Password;
-
-                if (username != "" || password != "")
+                //Mahara 87 - Login validation logic change - START
+                if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+                //Mahara 87 - Login validation logic change - END
                 {
                     Pass_Users_Company pass_User_det = new Pass_Users_Company
                     {
@@ -425,6 +429,15 @@ namespace PlatnedMahara
 
                                 if (App.MainWindow is MainWindow mainWindow)
                                 {
+                                    for (int i = 1; i <= 1; i++)
+                                    {
+                                        var newTab = CreateNewTab(i);
+                                        mainWindow.tabView.TabItems.Add(newTab);
+
+                                        // Wait for 2 seconds and then set the selected tab
+                                        SetSelectedTabWithDelay(mainWindow.tabView, newTab);
+                                    }
+
                                     mainWindow.ShowInfoBar("Success!", $"Login Success for User: {username}", InfoBarSeverity.Success);
                                 }
 
@@ -953,5 +966,16 @@ namespace PlatnedMahara
             Application.Current.Exit();
         }
         #endregion
+
+        #region Mahara-66 - Set selected tab after a delay allowing to load JSON data
+
+        private async void SetSelectedTabWithDelay(TabView tabView, TabViewItem newTab)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            tabView.SelectedItem = newTab;
+        }
+
+        #endregion
+
     }
 }

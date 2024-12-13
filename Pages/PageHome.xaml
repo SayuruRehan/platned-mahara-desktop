@@ -11,6 +11,10 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <local:HasChildrenToVisibilityConverter x:Key="HasChildrenToVisibilityConverter"/>
+        <local:NoChildrenToVisibilityConverter x:Key="NoChildrenToVisibilityConverter"/>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -45,13 +49,47 @@
             </Viewbox>
         </Grid>
 
-        <!-- JSON file uploading -->
-        <Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
+        <!-- JSON file uploading [Obselete] -->
+        <!--<Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
             <StackPanel Orientation="Vertical">
                 <StackPanel VerticalAlignment="Top" Orientation="Horizontal">
                     <Button x:Name="PickJsonFileButton" Content="Open JSON file" Click="PickJsonFileButton_Click" Margin="0,0,0,10"/>
                     <TextBlock x:Name="PickJsonFileOutputTextBlock" TextWrapping="Wrap" Padding="20,5,0,0"/>
                 </StackPanel>
+            </StackPanel>
+        </Grid>-->
+
+        <!-- JSON Collection and File Tree -->
+        <Grid x:Name="SourceJsonElement" Grid.Row="1" Grid.Column="0" MinHeight="500" Background="Transparent" Margin="5" Padding="10" Grid.RowSpan="3" MinWidth="250" >
+            <StackPanel Orientation="Vertical" x:Name="PagePassHomeXamlRoot">
+                <ScrollView Height="380" Width="370" ContentOrientation="None"
+                    ZoomMode="Enabled" IsTabStop="True"
+                    VerticalAlignment="Top" HorizontalAlignment="Left"
+                    HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                    <TreeView ItemsSource="{x:Bind DataSource, Mode=OneWay}" SelectionChanged="TreeView_SelectionChanged">
+                        <TreeView.ItemTemplate>
+                            <DataTemplate x:DataType="local:CollectionExplorerItem">
+                                <TreeViewItem ItemsSource="{x:Bind Children}" Content="{x:Bind Name}">
+                                    <TreeViewItem.ContextFlyout>
+                                        <MenuFlyout>
+                                            <!-- Option for root-level rename -->
+                                            <MenuFlyoutItem Text="Rename Collection"
+                                        Click="RenameRootMenuFlyoutItem_Click"
+                                        Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
+
+                                            <!-- Option for child-level rename -->
+                                            <MenuFlyoutItem Text="Rename File"
+                                        Click="RenameChildMenuFlyoutItem_Click"
+                                        Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
+                                        </MenuFlyout>
+                                    </TreeViewItem.ContextFlyout>
+                                </TreeViewItem>
+                            </DataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+
+                </ScrollView>
             </StackPanel>
         </Grid>
 
@@ -123,6 +161,26 @@
                         </TextBlock>
                         <TextBlock>
                             <Run FontFamily="Times New Roman" x:Name="lblExecFinished">~</Run>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="40,0,0,0">
+                        <TextBlock>
+                            <Bold>
+                                <Run FontFamily="Times New Roman">Executing Collection </Run>
+                            </Bold>
+                        </TextBlock>
+                        <TextBlock>
+                            <Bold>
+                                <Run FontFamily="Times New Roman">Executing file </Run>
+                            </Bold>
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                        <TextBlock>
+                            <Run FontFamily="Times New Roman" x:Name="lblCollectionID">~</Run>
+                        </TextBlock>
+                        <TextBlock>
+                            <Run FontFamily="Times New Roman" x:Name="lblExecutingFileID">~</Run>
                         </TextBlock>
                     </StackPanel>
                 </StackPanel>
