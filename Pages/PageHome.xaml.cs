@@ -1769,59 +1769,71 @@ namespace PlatnedMahara.Pages
                         Content = dialogFile
                     };
 
-                    result = await dialog.ShowAsync();
-
-                    if (result == ContentDialogResult.Primary)
+                    if (!string.IsNullOrEmpty(item.CollectionID) && string.IsNullOrEmpty(item.FileID))
                     {
-                        Pass_Json_File pass_File = new Pass_Json_File
+                        if (App.MainWindow is MainWindow mainWindow)
                         {
-                            CompanyID = GlobalData.CompanyId,
-                            UserID = GlobalData.UserId,
-                            CollectionID = dialogFile.CollectionId,
-                            FileID = dialogFile.FileId,
-                            FileName = dialogFile.FileName,
-                            //FileContent = dialogFile.FileContent,
-                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
-                        };
+                            mainWindow.ShowInfoBar("Info", "One or more files are missing. Collection is not allowed to Rename.", InfoBarSeverity.Informational);
+                        }
+                    }
+                    else
+                    {
+                        result = await dialog.ShowAsync();
 
-                        bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
-                        if (execResponse)
+                        if (result == ContentDialogResult.Primary)
                         {
-                            RefreshTreeViewData();
-
-                            if (App.MainWindow is MainWindow mainWindow)
+                            Pass_Json_File pass_File = new Pass_Json_File
                             {
-                                mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId,
+                                CollectionID = dialogFile.CollectionId,
+                                FileID = dialogFile.FileId,
+                                FileName = dialogFile.FileName,
+                                //FileContent = dialogFile.FileContent,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().EditFile(pass_File);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                }
                             }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                }
+
+                                dialog = new ContentDialog
+                                {
+                                    XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                    PrimaryButtonText = "Process",
+                                    CloseButtonText = "Cancel",
+                                    DefaultButton = ContentDialogButton.Primary,
+                                    Content = dialogFile
+                                };
+
+                                result = await dialog.ShowAsync();
+                            }
+
                         }
                         else
                         {
                             if (App.MainWindow is MainWindow mainWindow)
                             {
-                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                             }
-
-                            dialog = new ContentDialog
-                            {
-                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
-                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                                PrimaryButtonText = "Process",
-                                CloseButtonText = "Cancel",
-                                DefaultButton = ContentDialogButton.Primary,
-                                Content = dialogFile
-                            };
-
-                            result = await dialog.ShowAsync();
                         }
 
                     }
-                    else
-                    {
-                        if (App.MainWindow is MainWindow mainWindow)
-                        {
-                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
-                        }
-                    }
+
                 }
 
             }
@@ -1951,59 +1963,70 @@ namespace PlatnedMahara.Pages
                         Content = dialogFile
                     };
 
-                    result = await dialog.ShowAsync();
-
-                    if (result == ContentDialogResult.Primary)
+                    if (!string.IsNullOrEmpty(item.CollectionID) && string.IsNullOrEmpty(item.FileID))
                     {
-                        Pass_Json_File pass_File = new Pass_Json_File
+                        if (App.MainWindow is MainWindow mainWindow)
                         {
-                            CompanyID = GlobalData.CompanyId,
-                            UserID = dialogFile.UserId,
-                            CollectionID = dialogFile.CollectionId,
-                            FileID = dialogFile.FileId,
-                            FileName = dialogFile.FileName,
-                            //FileContent = dialogFile.FileContent,
-                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
-                        };
+                            mainWindow.ShowInfoBar("Info", "One or more files are missing. Collection is not allowed to Share.", InfoBarSeverity.Informational);
+                        }
+                    }
+                    else
+                    {
+                        result = await dialog.ShowAsync();
 
-                        bool execResponse = new AuthPlatnedPass().ShareFile(pass_File);
-                        if (execResponse)
+                        if (result == ContentDialogResult.Primary)
                         {
-                            RefreshTreeViewData();
-
-                            if (App.MainWindow is MainWindow mainWindow)
+                            Pass_Json_File pass_File = new Pass_Json_File
                             {
-                                mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = dialogFile.UserId,
+                                CollectionID = dialogFile.CollectionId,
+                                FileID = dialogFile.FileId,
+                                FileName = dialogFile.FileName,
+                                //FileContent = dialogFile.FileContent,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().ShareFile(pass_File);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                }
                             }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                }
+
+                                dialog = new ContentDialog
+                                {
+                                    XamlRoot = PagePassHomeXamlRoot.XamlRoot,
+                                    Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                                    PrimaryButtonText = "Process",
+                                    CloseButtonText = "Cancel",
+                                    DefaultButton = ContentDialogButton.Primary,
+                                    Content = dialogFile
+                                };
+
+                                result = await dialog.ShowAsync();
+                            }
+
                         }
                         else
                         {
                             if (App.MainWindow is MainWindow mainWindow)
                             {
-                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please check the details.", InfoBarSeverity.Warning);
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                             }
-
-                            dialog = new ContentDialog
-                            {
-                                XamlRoot = PagePassHomeXamlRoot.XamlRoot,
-                                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
-                                PrimaryButtonText = "Process",
-                                CloseButtonText = "Cancel",
-                                DefaultButton = ContentDialogButton.Primary,
-                                Content = dialogFile
-                            };
-
-                            result = await dialog.ShowAsync();
-                        }
-
-                    }
-                    else
-                    {
-                        if (App.MainWindow is MainWindow mainWindow)
-                        {
-                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
                         }
                     }
+
                 }
 
             }
