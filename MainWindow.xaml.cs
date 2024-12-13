@@ -29,6 +29,9 @@ using Microsoft.UI;
 using Microsoft.UI.Windowing;
 using System.Xml.Linq;
 using Windows.ApplicationModel.Core;
+using System.Net.Mail;
+using System.Net;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Style = Microsoft.UI.Xaml.Style;
@@ -523,6 +526,23 @@ namespace PlatnedMahara
             return await dialogReset.ShowAsync();
         }
 
+        //OTP Generate Function
+        public string GenerateOTP()
+        {
+            const string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            Random random = new Random();
+            char[] otp = new char[6];
+
+            for (int i = 0; i < otp.Length; i++)
+            {
+                otp[i] = characters[random.Next(characters.Length)];
+            }
+            return new string(otp);
+        }
+
+        //OTP Sending Function
+
+
         //Reset Password Form Result Handling
         private async Task HandleResetPasswordDialogResultAsync(ContentDialogResult resultResetPassword, PageResetPassword pageResetPassword)
         {
@@ -553,15 +573,76 @@ namespace PlatnedMahara
                             if (pu.CompanyID == companyId && pu.UserEmail == userEmail)
                             {
 
-                                if (App.MainWindow is MainWindow mainWindow)
+                                string otp = GenerateOTP();
+
+                                try
                                 {
-                                    mainWindow.ShowInfoBar("Success!", $"Password Reset request authorized for user: {pu.UserID}", InfoBarSeverity.Success);
+                                    //bool emailSent = await SendEmail(pu.UserEmail, otp);
+                                    //sending OTP Value via Email
+                                    bool emailSent = EmailSender.MailSender(pu.UserEmail, "Mahara Password Reset OTP Code", $"Your OTP code is: {otp}", false);
+                                    if (emailSent)
+                                    {
+                                        // Notify the user
+                                        if (App.MainWindow is MainWindow mainWindowSuccess)
+                                        {
+                                            mainWindowSuccess.ShowInfoBar("Success!", $"OTP Sent Successfully", InfoBarSeverity.Success);
+                                        }
+
+                                        for (global::System.Int32 i = 0; i < 4; i++)
+                                        {
+                                            var pageOtpValidation = new PageOtpValidation();
+                                            var resultOtpValidation = await ShowOtpValidationDialog(pageOtpValidation);
+                                            await HandleSetOtpDialogResultAsync(resultOtpValidation, pageOtpValidation);
+
+                                            // Check OTP validation
+                                            if (pageOtpValidation.Otp == otp)
+                                            {
+                                                if (App.MainWindow is MainWindow mainWindow)
+                                                {
+                                                    mainWindow.ShowInfoBar("Success!!", "OTP Verified successfully.", InfoBarSeverity.Success);
+                                                }
+
+                                                var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
+                                                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
+                                                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
+                                                break;
+                                            }
+                                            else if (i == 3)
+                                            {
+                                                var resetPasswordPage = new PageResetPassword(); // Create the PageResetPassword instance
+                                                var resetResult = await ShowPasswordResetDialog(resetPasswordPage);
+                                                await HandleResetPasswordDialogResultAsync(resetResult, resetPasswordPage);
+                                            }
+                                            else if (resultOtpValidation == ContentDialogResult.Secondary) {
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                if (App.MainWindow is MainWindow mainWindow)
+                                                {
+                                                    mainWindow.ShowInfoBar("Attention!", "OTP doesn't match.", InfoBarSeverity.Warning);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (App.MainWindow is MainWindow mainWindowAttention)
+                                        {
+                                            mainWindowAttention.ShowInfoBar("Attention!", $"OTO sending unsuccessfull.", InfoBarSeverity.Warning);
+                                        }
+                                    }
+
+                                }   
+                                catch (Exception ex)
+                                {
+                                    // Handle errors
+                                    if (App.MainWindow is MainWindow mainWindowAttention)
+                                    {
+                                        mainWindowAttention.ShowInfoBar("Attention!", $"OTO sending unsuccessfull.", InfoBarSeverity.Warning);
+                                    }
                                 }
 
-                                //Set New Password Page Execution
-                                var pageSetNewPassword = new PageSetNewPassword(companyId, userId, userEmail);
-                                var resultSetNewPassword = await ShowSetNewPasswordDialog(pageSetNewPassword);
-                                await HandleSetNewPasswordDialogResultAsync(resultSetNewPassword, pageSetNewPassword);
                             }
                             else
                             {
@@ -608,6 +689,52 @@ namespace PlatnedMahara
                 }
             }
         }
+
+        #region Task 91 -  OTP Dialog Box Handeling
+        //Show Otp validation Form
+        private async Task<ContentDialogResult> ShowOtpValidationDialog(PageOtpValidation pageOtpValidation)
+        {
+            ContentDialog dialogSetNew = new ContentDialog
+            {
+                XamlRoot = MainWindowXamlRoot.XamlRoot,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                PrimaryButtonText = "Submit",
+                SecondaryButtonText = "Resend",
+                //CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+                Content = pageOtpValidation
+            };
+            return await dialogSetNew.ShowAsync();
+        }
+
+        //Set OTP Form Result Handling
+        private async Task HandleSetOtpDialogResultAsync(ContentDialogResult resultSetOtp, PageOtpValidation pageOtpValidation)
+        {
+            //if user confirm set new password dialog
+            if (resultSetOtp == ContentDialogResult.Primary)
+            {
+                if (pageOtpValidation.Otp == "")
+                {
+                    //Validation process
+                    if (App.MainWindow is MainWindow mainWindow)
+                    {
+                        mainWindow.ShowInfoBar("Attention!", "OTP cannot be empty.", InfoBarSeverity.Warning);
+                    }
+
+                    pageOtpValidation = new PageOtpValidation(); // Create the PageResetPassword instance
+                    var setNewPassword = await ShowOtpValidationDialog(pageOtpValidation);
+                    await HandleSetOtpDialogResultAsync(setNewPassword, pageOtpValidation);
+                }
+            }
+            //If user clicked back to login set new password dialog
+            else
+            {
+                var resetPasswordPage = new PageResetPassword(); // Create the PageResetPassword instance
+                var resetResult = await ShowPasswordResetDialog(resetPasswordPage);
+                await HandleResetPasswordDialogResultAsync(resetResult, resetPasswordPage);
+            }
+        }
+        #endregion
 
         //Show Set New Password Page Dialog
         private async Task<ContentDialogResult> ShowSetNewPasswordDialog(PageSetNewPassword pageSetNewPassword)
