@@ -80,6 +80,9 @@
                                             <MenuFlyoutItem Text="Share Collection"
                                                 Click="ShareRootMenuFlyoutItem_Click"
                                                 Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
+                                            <MenuFlyoutItem Text="Delete Collection"
+                                                Click="DeleteRootMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource HasChildrenToVisibilityConverter}}"/>
 
                                             <!-- Option for child-level rename -->
                                             <MenuFlyoutItem Text="Rename File"
@@ -87,6 +90,9 @@
                                                 Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
                                             <MenuFlyoutItem Text="Share File"
                                                 Click="ShareChildMenuFlyoutItem_Click"
+                                                Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
+                                            <MenuFlyoutItem Text="Delete File"
+                                                Click="DeleteChildMenuFlyoutItem_Click"
                                                 Visibility="{x:Bind Children, Converter={StaticResource NoChildrenToVisibilityConverter}}"/>
                                         </MenuFlyout>
                                     </TreeViewItem.ContextFlyout>

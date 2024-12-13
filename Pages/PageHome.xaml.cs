@@ -2033,6 +2033,200 @@ namespace PlatnedMahara.Pages
         }
 
         #endregion
+
+        #region Mahara-94 - Implementation of Delete feature for Collection/ File
+
+        private void DeleteRootMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the root-level item
+                ShowDeleteDialogAsync(item, isRoot: true);
+            }
+        }
+
+        private void DeleteChildMenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem?.DataContext is CollectionExplorerItem item)
+            {
+                // Logic to rename the child-level item
+                ShowDeleteDialogAsync(item, isRoot: false);
+            }
+        }
+
+        private async void ShowDeleteDialogAsync(CollectionExplorerItem item, bool isRoot)
+        {
+
+            var result = ContentDialogResult.None;
+
+            if (item != null)
+            {
+                if (isRoot)
+                {
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Delete Confirmation",
+                        Content = $"Are you sure you want to delete collection {item.CollectionName}?",
+                        PrimaryButtonText = "Yes",
+                        CloseButtonText = "No",
+                        DefaultButton = ContentDialogButton.Close,
+                        XamlRoot = PagePassHomeXamlRoot.XamlRoot
+                    };
+
+                    result = await dialog.ShowAsync();
+
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Pass_Json_Collection pass_Collection = new Pass_Json_Collection
+                        {
+                            CompanyID = GlobalData.CompanyId,
+                            UserID = GlobalData.UserId,
+                            CollectionID = item.CollectionID,
+                            ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                        };
+
+                        bool execResponse = new AuthPlatnedPass().DeleteCollection(pass_Collection);
+                        if (execResponse)
+                        {
+                            RefreshTreeViewData();
+
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Success!", $"Operation Success for Collection: {pass_Collection.CollectionName}", InfoBarSeverity.Success);
+                            }
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please try again.", InfoBarSeverity.Warning);
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        if (App.MainWindow is MainWindow mainWindow)
+                        {
+                            mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                        }
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(item.CollectionID) && string.IsNullOrEmpty(item.FileID))
+                    {
+                        var dialog = new ContentDialog
+                        {
+                            Title = "Delete Confirmation",
+                            Content = $"Are you sure you want to delete collection {item.CollectionName}?",
+                            PrimaryButtonText = "Yes",
+                            CloseButtonText = "No",
+                            DefaultButton = ContentDialogButton.Close,
+                            XamlRoot = PagePassHomeXamlRoot.XamlRoot
+                        };
+
+                        result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            Pass_Json_Collection pass_Collection = new Pass_Json_Collection
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId,
+                                CollectionID = item.CollectionID,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().DeleteCollection(pass_Collection);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for Collection: {pass_Collection.CollectionName}", InfoBarSeverity.Success);
+                                }
+                            }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please try again.", InfoBarSeverity.Warning);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var dialog = new ContentDialog
+                        {
+                            Title = "Delete Confirmation",
+                            Content = $"Are you sure you want to delete file {item.FileName}?",
+                            PrimaryButtonText = "Yes",
+                            CloseButtonText = "No",
+                            DefaultButton = ContentDialogButton.Close,
+                            XamlRoot = PagePassHomeXamlRoot.XamlRoot
+                        };
+
+                        result = await dialog.ShowAsync();
+
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            Pass_Json_File pass_File = new Pass_Json_File
+                            {
+                                CompanyID = GlobalData.CompanyId,
+                                UserID = GlobalData.UserId,
+                                CollectionID = item.FileCollectionID,
+                                FileID = item.FileID,
+                                ModifiedBy = GlobalData.UserId == null ? "No_User" : GlobalData.UserId
+                            };
+
+                            bool execResponse = new AuthPlatnedPass().DeleteFile(pass_File);
+                            if (execResponse)
+                            {
+                                RefreshTreeViewData();
+
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Success!", $"Operation Success for File: {pass_File.FileName}", InfoBarSeverity.Success);
+                                }
+                            }
+                            else
+                            {
+                                if (App.MainWindow is MainWindow mainWindow)
+                                {
+                                    mainWindow.ShowInfoBar("Attention!", $"Operation Unsuccessful! Please try again.", InfoBarSeverity.Warning);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (App.MainWindow is MainWindow mainWindow)
+                            {
+                                mainWindow.ShowInfoBar("Info", "User cancelled the dialog.", InfoBarSeverity.Informational);
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        #endregion
+
     }
 
 
