@@ -24,6 +24,9 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
     public sealed partial class DialogCollection : Page
     {
         bool _isEdit = false;
+        // Mahara-95 - START
+        bool _isShare = false;
+        // Mahara-95 - END
         public DialogCollection()
         {
             this.InitializeComponent();
@@ -41,6 +44,19 @@ namespace PlatnedMahara.Pages.PlatnedPassPages.DialogPages
             txtCollectionId.IsEnabled = false;
             txtCollectionName.IsEnabled = true;
         }
+
+        // Mahara-95 - Addign a constructor for Share - START
+        public DialogCollection(bool isedit, bool isShare)
+        {
+            _isEdit = isedit;
+            _isShare = isShare;
+            this.InitializeComponent();
+            txtCompanyId.IsEnabled = false;
+            txtUserId.IsEnabled = true;
+            txtCollectionId.IsEnabled = false;
+            txtCollectionName.IsEnabled = false;
+        }
+        // Mahara-95 - END
 
         public string CompanyId
         {
