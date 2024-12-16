@@ -579,7 +579,75 @@ namespace PlatnedMahara
                                 {
                                     //bool emailSent = await SendEmail(pu.UserEmail, otp);
                                     //sending OTP Value via Email
-                                    bool emailSent = EmailSender.MailSender(pu.UserEmail, "Mahara Password Reset OTP Code", $"Your OTP code is: {otp}", false);
+                                    //OTP html body
+                                    string emailContent = $@"
+<div style=""display: flex; justify-content: center;width:100%; margin: margin: 50px 0;"">
+    <table border=""0"" cellspacing=""0"" cellpadding=""0"" style=""padding-bottom: 20px; max-width: 516px; min-width: 220px"">
+        <tbody>
+            <tr>
+                <td width=""8"" style=""width: 8px""></td>
+                <td>
+                    <div
+                        style=""border-style: solid; border-width: thin; border-color: #dadce0; border-radius: 8px; padding: 40px 20px"" align=""center"">
+                        <img
+                            src=""https://res.cloudinary.com/dqmgkczgk/image/upload/v1734331807/Platned_mahara/PlatnedLogo_v2rddw.png""
+                            width=""74"" height=""74""
+                            aria-hidden=""true""
+                            style=""margin-bottom: 16px""
+                            alt=""MaharaPlatned""
+                            class=""CToWUd""
+                            data-bit=""iit""
+                        />
+                        <div
+                            style=""
+                                font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+                                border-bottom: thin solid #dadce0;
+                                color: rgba(0, 0, 0, 0.87);
+                                line-height: 32px;
+                                padding-bottom: 24px;
+                                text-align: center;
+                                word-break: break-word;
+                            "">
+                            <div style=""font-size: 24px"">Account Password Reset</div>
+                            <table align=""center"" style=""margin-top: 8px"">
+                                <tbody>
+                                    <tr style=""line-height: normal"">
+                                        <td>
+                                            <a
+                                                style=""
+                                                    font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+                                                    color: rgba(0, 0, 0, 0.87);
+                                                    font-size: 14px;
+                                                    line-height: 20px;
+                                                ""
+                                            >{pu.UserEmail}</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div
+                            style=""
+                                font-family: Roboto-Regular, Helvetica, Arial, sans-serif;
+                                font-size: 14px;
+                                color: rgba(0, 0, 0, 0.87);
+                                line-height: 20px;
+                                padding-top: 20px;
+                                text-align: left;
+                            "">
+                            <h3>Platned Mahara Password Reset OTP</h3>
+                            <p>Keep your OTP (One-Time Password) confidential and do not share it with anyone.</p>
+                            <h4>The OTP code is: {otp}</h4>
+                            If the issue persists, contact us at mahara@platned.com for further assistance.
+                        </div>
+                    </div>
+                </td>
+                <td width=""8"" style=""width: 8px""></td>
+            </tr>
+        </tbody>
+    </table>
+</div>";
+                                    bool emailSent = EmailSender.MailSender(pu.UserEmail, "Mahara Password Reset OTP Code", emailContent, true);
                                     if (emailSent)
                                     {
                                         // Notify the user
