@@ -139,7 +139,7 @@ namespace PlatnedMahara
             if (App.MainWindow is MainWindow mainWindow)
             {
                 mainWindow.AuthLogin();
-            }            
+            }
         }
 
         public void mnuItmSubProfileLogin_Click(object sender, RoutedEventArgs e)
@@ -164,5 +164,17 @@ namespace PlatnedMahara
                 MainWindow.Instance.AddNewTabForMainWindow(103);
             }
         }
+
+        #region Mahara-97 - Template Manager
+        internal void mnuItmTemplateManager_Click(object sender, RoutedEventArgs e)
+        {
+            // Access the current instance of MainWindow
+            if (MainWindow.Instance != null)
+            {
+                // Call the method to add a new tab for PageConfig
+                MainWindow.Instance.AddNewTabForMainWindow(104);
+            }
+        }
+        #endregion Mahara-97
     }
 }
