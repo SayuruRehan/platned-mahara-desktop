@@ -311,6 +311,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
 
                 }
                 else {
+                    string generatedTempPassword = GenerateRandomString(8);
                     Pass_Users_Company pass_User = new Pass_Users_Company
                     {
                         CompanyID = dialogUser.UserCompanyId,
@@ -320,7 +321,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                         ValidFrom = dialogUser.ValidFrom ?? DateTime.Now,
                         ValidTo = dialogUser.ValidTo ?? DateTime.Now.AddDays(365),
                         UserRole = dialogUser.UserRole.Trim(),
-                        Password = Encrypt.EncryptPassword("defaultpass1234"),
+                        Password = Encrypt.EncryptPassword(generatedTempPassword),
                         LicenseKey = GenerateRandomString(),
                         RowState = "Active",
                         CreatedBy = GlobalData.UserId == null ? "User1" : GlobalData.UserId
@@ -328,6 +329,91 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     bool authResponse = new AuthPlatnedPass().CreateNewUser(pass_User);
                     if (authResponse)
                     {
+
+                        //Create Email content
+                        string emailContent = $@"
+<table
+     style=""width: 100%; margin-top: 50px; table-layout: fixed; border-collapse: collapse; font-family: 'Open Sans', Helvetica, Arial, sans-serif;""
+     width=""100%""
+     border=""0""
+     cellpadding=""0""
+     cellspacing=""0""
+>
+     <tbody>
+          <tr>
+               <td align=""center"">
+                    <div style=""min-width: 318px; max-width: 520px; margin: auto"">
+                         <!-- Header Section -->
+                         <div
+                              style=""font-family: 'Open Sans', Helvetica, Arial, sans-serif; border-bottom: thin solid #dadce0; color: rgba(0, 0, 0, 0.87); line-height: 32px; padding-bottom: 24px; text-align: center;""
+                         >
+                              <div style=""font-size: 44px; font-weight: 600;"">Welcome</div>
+                              <div style=""font-size: 14px; color: rgba(0, 0, 0, 0.87); margin-top: 8px"">
+                                   <a href=""mailto:{pass_User.UserEmail}"" style=""color: inherit; text-decoration: none;"">
+                                        akila.madurangana@platned.com
+                                   </a>
+                              </div>
+                         </div>
+
+                         <!-- Image Section -->
+                         <div style=""margin-top: 16px"">
+                              <img
+                                   src=""https://res.cloudinary.com/dqmgkczgk/image/upload/v1734420452/Platned_mahara/5568706_lw26go.png""
+                                   style=""border-radius: 28px; max-width: 100%; display: block;""
+                                   alt=""Welcome Image""
+                              />
+                         </div>
+
+                         <!-- Body Content -->
+                         <div style=""text-align: left; font-family: 'Open Sans', Helvetica, Arial, sans-serif; margin: 20px;"">
+                              <p style=""color: #3c4043; font-size: 14px; line-height: 20px;"">Hi{pass_User.UserName},</p>
+                              <p style=""color: #3c4043; font-size: 14px; line-height: 20px;"">
+                                   Welcome to <strong>Platned Mahara</strong>! <br> We are excited to have you on board. To get started, please log in to your
+                                   account and complete the initial setup.
+                              </p>
+
+                              <div style=""margin-top: 20px; background-color: #fafbff; padding: 20px; border-radius: 8px;"">
+                                   <p style=""color: #212121; font-size: 22px; font-weight: 400;"">Here are your login details:</p>
+                                   <ul style=""color: #3c4043; font-size: 14px;"">
+                                        <li><strong>Username:</strong> {pass_User.UserName}</li>
+                                        <li><strong>Temporary Password:</strong> {generatedTempPassword}</li>
+                                        <li><strong>License Key:</strong> {pass_User.LicenseKey}</li>
+                                   </ul>
+                                   <p style=""color: #3c4043; font-size: 14px; line-height: 20px;"">
+                                        For security purposes, please reset your password during your first login.
+                                   </p>
+                                   <ol style=""color: #3c4043; font-size: 14px;"">
+                                        <li>Go to Platned Mahara</li>
+                                        <li>Enter your username and temporary password.</li>
+                                        <li>Follow the instructions to reset your password.</li>
+                                   </ol>
+                              </div>
+                              <p style=""color: #3c4043; font-size: 14px;"">
+                                   If the issue persists, contact us at 
+                                   <a href=""mailto:mahara@platned.com"" style=""color: inherit;"">
+                                        mahara@platned.com
+                                   </a> for further assistance.
+                              </p>
+                         </div>
+
+                         <!-- Footer -->
+                         <div style=""margin: 16px 0; text-align: center; font-size: 12px; color: #70757a;"">
+                              <img
+                                   src=""https://res.cloudinary.com/dqmgkczgk/image/upload/v1734331807/Platned_mahara/PlatnedLogo_v2rddw.png""
+                                   style=""width: 80px; margin-bottom: 8px;""
+                                   alt=""Platned Logo""
+                              />
+                              <div>Platned Mahara</div>
+                         </div>
+                    </div>
+               </td>
+          </tr>
+     </tbody>
+</table>";
+
+                        //send mail as asynconyce 
+                        bool emailSent = await EmailSender.MailSenderAsync(pass_User.UserEmail, "Mahara New User Account Create", emailContent, true);
+
                         if (App.MainWindow is MainWindow mainWindow)
                         {
                             mainWindow.ShowInfoBar("Success!", $"Operation Success for User: {pass_User.UserID}", InfoBarSeverity.Success);
