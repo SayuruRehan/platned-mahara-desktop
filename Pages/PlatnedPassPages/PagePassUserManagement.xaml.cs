@@ -330,7 +330,7 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
                     if (authResponse)
                     {
 
-                        //Create Email content
+                        // Mahara-99 - Create Email content - START
                         string emailContent = $@"
 <table
      style=""width: 100%; margin-top: 50px; table-layout: fixed; border-collapse: collapse; font-family: 'Open Sans', Helvetica, Arial, sans-serif;""
@@ -410,8 +410,8 @@ namespace PlatnedMahara.Pages.PlatnedPassPages
           </tr>
      </tbody>
 </table>";
-
-                        //send mail as asynconyce 
+                        // Mahara - 99 - END
+                        //send mail as asynchronous
                         bool emailSent = await EmailSender.MailSenderAsync(pass_User.UserEmail, "Mahara New User Account Create", emailContent, true);
 
                         if (App.MainWindow is MainWindow mainWindow)
