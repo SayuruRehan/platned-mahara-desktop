@@ -95,7 +95,9 @@ namespace PlatnedMahara
             mnuItmSubProfileLogin.Click += baseUi.mnuItmSubProfileLogin_Click;
             mnuItmSubProfileLogout.Click += baseUi.mnuItmSubProfileLogout_Click;
             mnuItmPlatnedPass.Click += baseUi.mnuItmPlatnedPass_Click;
-
+            // Mahara-97 - Template Manager - START
+            mnuItmSubAssistTempManager.Click += baseUi.mnuItmTemplateManager_Click;
+            // Mahara-97 - END
             if (GlobalData.IsLoggedIn)
             {
                 mnuItmSubProfileLogin.Visibility = Visibility.Collapsed;
@@ -274,6 +276,13 @@ namespace PlatnedMahara
                     newItem.Header = "Administration | Platned Pass";
                     frame.Navigate(typeof(PagePlatnedPass));
                     break;
+                // Mahara-97 - START
+                case 104:
+                    newItem.Header = "Assistant | Template Manager";
+                    frame.Navigate(typeof(PageTemplateManager));
+                    break;
+                    break;
+                // Mahara-97 - END
                 default:
                     frame.Navigate(typeof(PageHome));
                     break;

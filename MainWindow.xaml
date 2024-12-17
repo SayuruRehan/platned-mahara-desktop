@@ -29,6 +29,9 @@
                     <MenuFlyoutItem x:Name="mnuItmSubConfAuth" Text="Authentication"/>
                     <MenuFlyoutItem x:Name="mnuItmSubConfLogs" Text="Application Logs"/>
                 </MenuFlyoutSubItem>
+                <MenuFlyoutSubItem Text="Assistants">
+                    <MenuFlyoutItem x:Name="mnuItmSubAssistTempManager" Text="Template Manager"/>
+                </MenuFlyoutSubItem>
                 <MenuFlyoutItem x:Name="mnuItmPlatnedPass" Text="Platned Pass"/>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutItem x:Name="mnuItmExit" Text="Exit"/>
