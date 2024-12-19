@@ -1,81 +1,78 @@
 image: atlassian/default-image:2
- 
+
 pipelines:
-    pull-requests:
-        DEV:
-          - step:
-              name: Mirror PR to GitHub DEV
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - DEV"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:DEV --force
-                - git push github --tags --force
+  pull-requests:
+    "**":  # Matches all branches for PRs
+      - step:
+          name: Mirror Pull Request to GitHub
+          script:
+            # Set Git configuration
+            - git config --global user.email "mahara@platned.com"
+            - git config --global user.name "Platned Mahara Release Management"
 
-        Release-TEST:
-          - step:
-              name: Mirror PR to GitHub Release-TEST
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - TEST"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:Release-TEST --force
-                - git push github --tags --force
+            # Add GitHub as a remote if not already present
+            - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
 
-        Release-PROD:
-          - step:
-              name: Mirror PR to GitHub Release-PROD
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - PROD"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:Release-PROD --force
-                - git push github --tags --force
-    branches:
-        DEV:
-          - step:
-              name: Mirror DEV branch to GitHub DEV
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - DEV"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:DEV --force
-                - git push github --tags --force
- 
-        Release-TEST:
-          - step:
-              name: Mirror Release-TEST branch to GitHub Release-TEST
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - TEST"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:Release-TEST --force
-                - git push github --tags --force
- 
-        Release-PROD:
-          - step:
-              name: Mirror Release-PROD branch to GitHub Release-PROD
-              script:
-                - git config --global user.email "mahara@platned.com"
-                - git config --global user.name "Platned Mahara Release Management - PROD"
-                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
-                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
-                - git fetch --unshallow || git fetch --all
-                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
-                - git push github HEAD:Release-PROD --force
-                - git push github --tags --force
+            # Set GitHub remote using secured environment variable for the token
+            - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+
+            # Ensure unshallow clone and fetch all branches
+            - git fetch --unshallow || git fetch --all
+
+            # Checkout the PR branch
+            - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+
+            # Push the PR branch to GitHub under the same branch name
+            - git push github HEAD:$BITBUCKET_BRANCH --force
+            - git push github --tags --force
+
+  branches:
+    DEV:
+      - step:
+          name: Mirror DEV branch to GitHub DEV
+          script:
+            # Set Git configuration
+            - git config --global user.email "mahara@platned.com"
+            - git config --global user.name "Platned Mahara Release Management - DEV"
+
+            # Add GitHub as a remote if not already present
+            - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+
+            # Set GitHub remote using secured environment variable for the token
+            - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+
+            # Ensure unshallow clone and fetch all branches
+            - git fetch --unshallow || git fetch --all
+
+            # Checkout the DEV branch
+            - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+
+            # Push the DEV branch to GitHub
+            - git push github HEAD:DEV --force
+            - git push github --tags --force
+
+    Release-TEST:
+      - step:
+          name: Mirror Release-TEST branch to GitHub Release-TEST
+          script:
+            - git config --global user.email "mahara@platned.com"
+            - git config --global user.name "Platned Mahara Release Management - TEST"
+            - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+            - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+            - git fetch --unshallow || git fetch --all
+            - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+            - git push github HEAD:Release-TEST --force
+            - git push github --tags --force
+
+    Release-PROD:
+      - step:
+          name: Mirror Release-PROD branch to GitHub Release-PROD
+          script:
+            - git config --global user.email "mahara@platned.com"
+            - git config --global user.name "Platned Mahara Release Management - PROD"
+            - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+            - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+            - git fetch --unshallow || git fetch --all
+            - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+            - git push github HEAD:Release-PROD --force
+            - git push github --tags --force
