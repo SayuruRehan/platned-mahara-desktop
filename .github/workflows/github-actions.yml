@@ -3,13 +3,13 @@ name: .NET with Unsafe Code - Branch Specific
 on:
   push:
     branches:
-      - main
       - DEV
+      - Release-PROD
       - Release-TEST
   pull_request:
     branches:
-      - main
       - DEV
+      - Release-PROD
       - Release-TEST
  
 jobs:
@@ -27,13 +27,13 @@ jobs:
       run: dotnet restore
  
     - name: Build with Unsafe Code Enabled
-      run: dotnet build --no-restore -p:AllowUnsafeBlocks=true
-      env:
-        ACTION_NAME: ${{ github.event_name == 'pull_request' ? 'PR Build' : 'Push Build' }}
-      name: ${{ format('{0} - {1}', env.ACTION_NAME, github.ref_name) }}
+      run: |
+        ACTION_NAME=$([[ ${{ github.event_name }} == 'pull_request' ]] && echo 'PR Build' || echo 'Push Build')
+        echo "Running $ACTION_NAME on ${{ github.ref_name }}"
+        dotnet build --no-restore -p:AllowUnsafeBlocks=true
  
     - name: Test with Unsafe Code Enabled
-      run: dotnet test --no-build --verbosity normal -p:AllowUnsafeBlocks=true
-      env:
-        ACTION_NAME: ${{ github.event_name == 'pull_request' ? 'PR Test' : 'Push Test' }}
-      name: ${{ format('{0} - {1}', env.ACTION_NAME, github.ref_name) }}
+      run: |
+        ACTION_NAME=$([[ ${{ github.event_name }} == 'pull_request' ]] && echo 'PR Test' || echo 'Push Test')
+        echo "Running $ACTION_NAME on ${{ github.ref_name }}"
+        dotnet test --no-build --verbosity normal -p:AllowUnsafeBlocks=true
