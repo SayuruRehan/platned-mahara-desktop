@@ -17,12 +17,9 @@ pipelines:
 
           # Fetch all history to ensure continuity in the repository
           - git fetch --unshallow || git fetch --all
-          
-          # Check if DEV branch exists locally, if not, fetch from origin
-          - git checkout -b DEV origin/DEV || git checkout DEV
 
           # Push the DEV branch to GitHub's main branch
-          - git push github DEV:main --force
+          - git push github bitbucketpipelinesyml-created-online-wit-1734607779238:main --force
 
           # Optionally, push tags
           - git push github --tags --force
