@@ -15,11 +15,18 @@ pipelines:
           # Set GitHub remote using secured environment variable for the token
           - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
 
-          # Fetch all history to ensure continuity in the repository
-          - git fetch --unshallow || git fetch --all
+          # Fetch all branches from origin
+          - git fetch --all
+
+          # Checkout the DEV branch, fallback to directly checking it out if it exists
+          - if git show-ref --verify --quiet refs/heads/DEV; then
+              git checkout DEV;
+            else
+              git checkout -b DEV origin/DEV;
+            fi
 
           # Push the DEV branch to GitHub's main branch
-          - git push github bitbucketpipelinesyml-created-online-wit-1734607779238:main --force
+          - git push github DEV:main --force
 
           # Optionally, push tags
           - git push github --tags --force
