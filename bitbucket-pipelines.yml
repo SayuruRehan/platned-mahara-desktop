@@ -18,8 +18,8 @@ pipelines:
           # Fetch all history to ensure continuity in the repository
           - git fetch --unshallow || git fetch --all
 
-          # Push all branches to GitHub
-          - git push github --all --force
+          # Push the DEV branch to GitHub's main branch
+          - git push github DEV:main --force
 
           # Optionally, push tags
           - git push github --tags --force
