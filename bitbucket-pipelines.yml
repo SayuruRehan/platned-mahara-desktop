@@ -1,0 +1,25 @@
+image: atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        name: Mirror to GitHub
+        script:
+          # Set Git configuration
+          - git config --global user.email "you@example.com"
+          - git config --global user.name "Your Name"
+
+          # Add GitHub as a remote if not already present
+          - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+
+          # Set GitHub remote using secured environment variable for the token
+          - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+
+          # Fetch all history to ensure continuity in the repository
+          - git fetch --unshallow || git fetch --all
+
+          # Push all branches to GitHub
+          - git push github --all --force
+
+          # Optionally, push tags
+          - git push github --tags --force
