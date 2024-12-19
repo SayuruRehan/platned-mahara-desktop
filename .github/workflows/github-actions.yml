@@ -1,0 +1,39 @@
+name: .NET with Unsafe Code - Branch Specific
+ 
+on:
+  push:
+    branches:
+      - main
+      - DEV
+      - Release-TEST
+  pull_request:
+    branches:
+      - main
+      - DEV
+      - Release-TEST
+ 
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+ 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+ 
+    - name: Restore dependencies
+      run: dotnet restore
+ 
+    - name: Build with Unsafe Code Enabled
+      run: dotnet build --no-restore -p:AllowUnsafeBlocks=true
+      env:
+        ACTION_NAME: ${{ github.event_name == 'pull_request' ? 'PR Build' : 'Push Build' }}
+      name: ${{ format('{0} - {1}', env.ACTION_NAME, github.ref_name) }}
+ 
+    - name: Test with Unsafe Code Enabled
+      run: dotnet test --no-build --verbosity normal -p:AllowUnsafeBlocks=true
+      env:
+        ACTION_NAME: ${{ github.event_name == 'pull_request' ? 'PR Test' : 'Push Test' }}
+      name: ${{ format('{0} - {1}', env.ACTION_NAME, github.ref_name) }}
