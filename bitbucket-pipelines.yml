@@ -15,11 +15,12 @@ pipelines:
           # Set GitHub remote using secured environment variable for the token
           - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
 
-          # Fetch all branches from the origin (ensure we have DEV)
+          # Fetch all branches from the origin, ensuring unshallow clone
           - git fetch --unshallow || git fetch --all
-          - git branch -a  # Debug: list all branches to verify if DEV exists
+          - git fetch origin DEV || true
+          - git branch -a  # Debug: List all branches to verify if DEV exists
 
-          # Checkout the DEV branch from origin (case sensitive)
+          # Checkout the DEV branch, fallback to directly checking it out if it exists
           - if git show-ref --verify --quiet refs/remotes/origin/DEV; then 
               git checkout -b DEV origin/DEV; 
             elif git show-ref --verify --quiet refs/remotes/origin/dev; then 
