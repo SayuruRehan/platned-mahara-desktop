@@ -1,5 +1,5 @@
 name: .NET with Unsafe Code - Branch Specific
- 
+
 on:
   push:
   pull_request:
@@ -7,29 +7,31 @@ on:
       - DEV
       - Release-PROD
       - Release-TEST
- 
+
 jobs:
   build:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
- 
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
- 
+
     - name: Restore dependencies
       run: dotnet restore
- 
+
     - name: Build with Unsafe Code Enabled
+      shell: bash
       run: |
-        ACTION_NAME=$([[ ${{ github.event_name }} == 'pull_request' ]] && echo 'PR Build' || echo 'Push Build')
+        ACTION_NAME=$([[ "${{ github.event_name }}" == "pull_request" ]] && echo "PR Build" || echo "Push Build")
         echo "Running $ACTION_NAME on ${{ github.ref_name }}"
         dotnet build --no-restore -p:AllowUnsafeBlocks=true
- 
+
     - name: Test with Unsafe Code Enabled
+      shell: bash
       run: |
-        ACTION_NAME=$([[ ${{ github.event_name }} == 'pull_request' ]] && echo 'PR Test' || echo 'Push Test')
+        ACTION_NAME=$([[ "${{ github.event_name }}" == "pull_request" ]] && echo "PR Test" || echo "Push Test")
         echo "Running $ACTION_NAME on ${{ github.ref_name }}"
         dotnet test --no-build --verbosity normal -p:AllowUnsafeBlocks=true
