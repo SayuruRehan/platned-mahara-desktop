@@ -17,7 +17,6 @@
 	<SelfContained>true</SelfContained>
 	<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 	<ApplicationIcon>Assets\PlatnedLogo.ico</ApplicationIcon>
-    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="ACP Releases\**" />
