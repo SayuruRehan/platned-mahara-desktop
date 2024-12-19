@@ -40,3 +40,42 @@ pipelines:
                 - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
                 - git push github HEAD:Release-PROD --force
                 - git push github --tags --force
+    branches:
+        DEV:
+          - step:
+              name: Mirror DEV branch to GitHub DEV
+              script:
+                - git config --global user.email "mahara@platned.com"
+                - git config --global user.name "Platned Mahara Release Management - DEV"
+                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+                - git fetch --unshallow || git fetch --all
+                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+                - git push github HEAD:DEV --force
+                - git push github --tags --force
+ 
+        Release-TEST:
+          - step:
+              name: Mirror Release-TEST branch to GitHub Release-TEST
+              script:
+                - git config --global user.email "mahara@platned.com"
+                - git config --global user.name "Platned Mahara Release Management - TEST"
+                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+                - git fetch --unshallow || git fetch --all
+                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+                - git push github HEAD:Release-TEST --force
+                - git push github --tags --force
+ 
+        Release-PROD:
+          - step:
+              name: Mirror Release-PROD branch to GitHub Release-PROD
+              script:
+                - git config --global user.email "mahara@platned.com"
+                - git config --global user.name "Platned Mahara Release Management - PROD"
+                - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
+                - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+                - git fetch --unshallow || git fetch --all
+                - git checkout -b bitbucket-branch origin/$BITBUCKET_BRANCH
+                - git push github HEAD:Release-PROD --force
+                - git push github --tags --force
