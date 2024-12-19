@@ -2,10 +2,6 @@ name: .NET with Unsafe Code - Branch Specific
  
 on:
   push:
-    branches:
-      - DEV
-      - Release-PROD
-      - Release-TEST
   pull_request:
     branches:
       - DEV
