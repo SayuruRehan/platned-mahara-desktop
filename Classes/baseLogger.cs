@@ -16,7 +16,7 @@ namespace PlatnedMahara.Classes
 
         static Logger()
         {
-            // Temp comment
+            // Temp comment 1
             // Determine the application-specific temporary folder
             string tempFolderPath = GlobalData.tempFolderPath;
 
