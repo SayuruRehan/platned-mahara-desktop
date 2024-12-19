@@ -21,7 +21,7 @@ pipelines:
           - git branch -a  # Debug: List all branches to verify if DEV exists
 
           # Checkout the DEV branch, fallback to directly checking it out if it exists
-          - if git show-ref --verify --quiet remotes/origin/Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238; then 
+          - if git show-ref --verify --quiet Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238; then 
               echo "Branch 'DEV' found";
               git checkout -b DEV origin/DEV; 
             elif git show-ref --verify --quiet origin/dev; then 
