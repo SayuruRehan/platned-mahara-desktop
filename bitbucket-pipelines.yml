@@ -21,9 +21,9 @@ pipelines:
           - git branch -a  # Debug: List all branches to verify if DEV exists
 
           # Checkout the DEV branch, fallback to directly checking it out if it exists
-          - if git show-ref --verify --quiet refs/remotes/origin/DEV; then 
+          - if git show-ref --verify --quiet DEV; then 
               git checkout -b DEV origin/DEV; 
-            elif git show-ref --verify --quiet refs/remotes/origin/dev; then 
+            elif git show-ref --verify --quiet dev; then 
               git checkout -b dev origin/dev; 
             else 
               echo "Branch 'DEV' or 'dev' not found in remote branches"; 
