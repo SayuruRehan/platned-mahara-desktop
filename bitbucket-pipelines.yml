@@ -3,7 +3,7 @@ image: atlassian/default-image:2
 pipelines:
   default:
     - step:
-        name: Mirror to GitHub
+        name: Mirror DEV to GitHub Main
         script:
           # Set Git configuration
           - git config --global user.email "you@example.com"
@@ -15,18 +15,22 @@ pipelines:
           # Set GitHub remote using secured environment variable for the token
           - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
 
-          # Fetch all branches from origin
-          - git fetch --all
+          # Fetch all branches from the origin (ensure we have DEV)
+          - git fetch --unshallow || git fetch --all
+          - git branch -a  # Debug: list all branches to verify if DEV exists
 
-          # Checkout the DEV branch, fallback to directly checking it out if it exists
-          - if git show-ref --verify --quiet refs/heads/DEV; then
-              git checkout dev;
-            else
-              git checkout -b dev origin/dev;
+          # Checkout the DEV branch from origin (case sensitive)
+          - if git show-ref --verify --quiet refs/remotes/origin/DEV; then 
+              git checkout -b DEV origin/DEV; 
+            elif git show-ref --verify --quiet refs/remotes/origin/dev; then 
+              git checkout -b dev origin/dev; 
+            else 
+              echo "Branch 'DEV' or 'dev' not found in remote branches"; 
+              exit 1; 
             fi
 
           # Push the DEV branch to GitHub's main branch
-          - git push github dev:main --force
+          - git push github HEAD:main --force
 
           # Optionally, push tags
           - git push github --tags --force
