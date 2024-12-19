@@ -3,7 +3,7 @@ image: atlassian/default-image:2
 pipelines:
   default:
     - step:
-        name: Mirror DEV to GitHub Main
+        name: Mirror Sayuru-Bopitiya branch to GitHub Main
         script:
           # Set Git configuration
           - git config --global user.email "you@example.com"
@@ -17,21 +17,19 @@ pipelines:
 
           # Fetch all branches from the origin, ensuring unshallow clone
           - git fetch --unshallow || git fetch --all
-          - git fetch origin DEV || true
-          - git branch -a  # Debug: List all branches to verify if DEV exists
+          - git fetch origin Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238 || true
+          - git branch -a  # Debug: List all branches to verify if Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238 exists
 
-          # Checkout the DEV branch, fallback to directly checking it out if it exists
-          - if git show-ref --verify --quiet Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238; then 
-              echo "Branch 'DEV' found";
-              git checkout -b DEV origin/DEV; 
-            elif git show-ref --verify --quiet origin/dev; then 
-              git checkout -b dev origin/dev; 
+          # Checkout the Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238 branch
+          - if git show-ref --verify --quiet refs/remotes/origin/Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238; then 
+              echo "Branch 'Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238' found";
+              git checkout -b bitbucket-branch origin/Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238; 
             else 
-              echo "Branch 'DEV' or 'dev' not found in remote branches"; 
+              echo "Branch 'Sayuru-Bopitiya/bitbucketpipelinesyml-created-online-wit-1734607779238' not found in remote branches"; 
               exit 1; 
             fi
 
-          # Push the DEV branch to GitHub's main branch
+          # Push the branch to GitHub's main branch
           - git push github HEAD:main --force
 
           # Optionally, push tags
