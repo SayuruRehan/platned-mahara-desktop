@@ -699,4 +699,8 @@
     <ItemGroup>
       <Folder Include="Classes\Db\Scripts\" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Include=".github\workflows\github-actions.yml" />
+    </ItemGroup>
 </Project>
