@@ -650,6 +650,24 @@ namespace PlatnedMahara.Pages
                         apiResponse = await api.SendMultipartRequest(url, headers, requestBody, token, method, "SendMultipartRequest", entitySet, entitySetParam, entitySetArray);
                         break;
                     }
+                    // Mahara-105 - Handling errors for NULL values and Missing Pre-condition in req header - START
+                    if (apiResponse.ResponseBody.Contains("DATABASE_ERROR") && (apiResponse.ResponseBody.Contains("Error.NULLVALUE")))
+                    {
+                        requestBody = BuildRequestBody(csvParameters);
+                        Logger.Log("POST - Request body when needed value is filtered out: " + requestBody);
+                        apiResponse = await api.Post(url, headers, requestBody, token);
+                        break;
+                    }
+                    if (apiResponse.ResponseBody.Contains("ODP_MISSING_PRECONDITION"))
+                    {
+                        requestBody = BuildRequestBody(csvParameters);
+                        Logger.Log("POST - Request body when needed value is filtered out: " + tempRequestBody);
+                        headers += "\r\nIf-Match: *";
+                        Logger.Log("POST - Adding Pre-Condition to Request Header: " + headers);
+                        apiResponse = await api.Post(url, headers, tempRequestBody, token);
+                        break;
+                    }
+                    // Mahara-105 - END
 
                     break;
 

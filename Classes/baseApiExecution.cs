@@ -183,6 +183,9 @@ namespace PlatnedMahara.Classes
         {
             token = receivedToken;
             string requestBodyForValidation = requestBody;
+            // Mahara-105 - Preserving requestBody for GET calls when errors found - START
+            string requestBodyForGet = requestBody;
+            // Mahara-105 - END
 
             Logger.Log($"Request URL: {url}");
             Logger.Log($"Request method: {method}");
@@ -327,6 +330,14 @@ namespace PlatnedMahara.Classes
 
                                 Logger.Log($"Response Body: {responseBody}");
 
+                                // Mahara-105 - Setting body for corrections of GET calls - START
+                                if (method == "GET")
+                                {                                    
+                                    requestBody = requestBodyForGet;
+                                    Logger.Log($"Error in GET URL or Body found. Setting body for corrections: {requestBody}");
+                                }
+                                // Mahara-105 - END
+
                                 if (!string.IsNullOrEmpty(requestBody))
                                 {
                                     dynamic parsedRequestBody = JsonConvert.DeserializeObject<dynamic>(requestBody);
@@ -386,6 +397,21 @@ namespace PlatnedMahara.Classes
                                         Logger.Log($"Corrected Request Body: {correctedRequestBody}");
 
                                         Logger.Log($"Retrying the request with the corrected property '{propertyName}'...");
+
+                                        // Mahara-105 - Reconstructing the URL for GET issues - START
+                                        if(method == "GET")
+                                        {
+                                            try
+                                            {
+                                                url = UrlReconstructor.ReconstructUrl(url, requestBody, true);
+                                                Logger.Log("GET - Constructed URL: " + url);
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Logger.Log("No parameters found in the URL. Skipping URL Construction.");
+                                            }
+                                        }                                        
+                                        // Mahara-105 - END
 
                                         return await SendRequest(url, method, headers, correctedRequestBody, token);
                                     }
