@@ -14,7 +14,7 @@ pipelines:
             - git remote add github https://github.com/SayuruRehan/platned-mahara-desktop.git || true
 
             # Set GitHub remote using secured environment variable for the token
-            - git remote set-url github https://SayuruRehan:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
+            - git remote set-url github https://PlatnedMaharaReleaseManagement:${GITHUB_TOKEN}@github.com/SayuruRehan/platned-mahara-desktop.git
 
             # Ensure unshallow clone and fetch all branches
             - git fetch --unshallow || git fetch --all
