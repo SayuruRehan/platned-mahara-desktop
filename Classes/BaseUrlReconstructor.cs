@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -7,8 +8,10 @@ namespace PlatnedMahara.Classes
 {
     public class UrlReconstructor
     {
-        public static string ReconstructUrl(string url, string requestBody)
+        // Mahara-105 - Allowed to call URL constructor when GET url has issues - START
+        public static string ReconstructUrl(string url, string requestBody, bool errorUrl = false)
         {
+        // Mahara-105 - END
             // Extract the parameters part from the URL
             string pattern = @"\.svc/[^/]+?\((.*?)\)";
             Match match = Regex.Match(url, pattern);
@@ -68,7 +71,24 @@ namespace PlatnedMahara.Classes
                 // Only update if original value is not null
                 if (!urlParams[paramKey].IsNull && requestBodyJson.ContainsKey(paramKey))
                 {
-                    string newValue = requestBodyJson[paramKey].ToString();
+                    // Mahara-105 - Correcting URL boolean value format - START
+                    string newValue = ""; 
+                    if (errorUrl)
+                    {
+                        if (bool.TryParse(requestBodyJson[paramKey]?.ToString(), out bool boolValue))
+                        {
+                            newValue = boolValue.ToString().ToLower(); // Converts to "True" or "False"
+                        }
+                        else
+                        {
+                            newValue = requestBodyJson[paramKey]?.ToString(); // Keeps the original value for non-boolean
+                        }
+                    }
+                    else
+                    {
+                        newValue = requestBodyJson[paramKey].ToString();
+                    }
+                    // Mahara-105 - END
 
                     // Check if the original value has embedded quotes and format accordingly
                     string originalValue = urlParams[paramKey].Value;
@@ -91,12 +111,19 @@ namespace PlatnedMahara.Classes
                     }
 
                     // Check if the original value is in datetime format
-                    if (urlParams[paramKey].Value != null && DateTime.TryParse(urlParams[paramKey].Value, out DateTime originalDate))
+                    // Mahara-105 - Correcting URL date value format if errors - START
+                    if (urlParams[paramKey].Value != null && DateTime.TryParse(urlParams[paramKey].Value, out DateTime originalDate) && !errorUrl)
                     {
                         // If it's a valid DateTime, format it to the desired string format
                         newValue = DateTime.Parse(newValue).ToString("yyyy-MM-ddTHH:mm:ssZ");
                         urlParams[paramKey] = (newValue, urlParams[paramKey].PreserveQuotes, false);
                     }
+                    else if (urlParams[paramKey].Value != null && DateTime.TryParse(urlParams[paramKey].Value, out originalDate) && errorUrl)
+                    {
+                        newValue = DateTime.Parse(newValue).ToString("yyyy-MM-d"); // Converts to format yyyy-MM-d
+                        urlParams[paramKey] = (newValue, urlParams[paramKey].PreserveQuotes, false);
+                    }
+                    // Mahara-105 - END
                 }
             }
 
