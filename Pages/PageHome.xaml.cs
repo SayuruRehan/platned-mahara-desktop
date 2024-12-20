@@ -1101,7 +1101,9 @@ namespace PlatnedMahara.Pages
             {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
                 FileTypeChoices = { { "Excel Files", new List<string> { ".xlsx" } } },
-                SuggestedFileName = "Platned-TestMatic_Report"
+                // Mahara-105 - Updated report name - START
+                SuggestedFileName = "PlatnedMahara_Report" + DateTime.Now.ToString()
+                // Mahara-105 - END
             };
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindow);
